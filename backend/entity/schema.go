@@ -17,3 +17,12 @@ type PatientRight struct {
 
 	//Bills		[]Bill		`gorm:"foreignKey:PatientRightID"`
 }
+
+type PayType struct {
+
+	gorm.Model
+
+	Type 		string
+
+	//Bills		[]Bill		`gorm:"foreignKey:PayTypeID"`
+}
