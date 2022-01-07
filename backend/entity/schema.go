@@ -1,7 +1,7 @@
 package entity
 
 import (
-	//"time"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -25,4 +25,31 @@ type PayType struct {
 	Type 		string
 
 	//Bills		[]Bill		`gorm:"foreignKey:PayTypeID"`
+}
+type Bill struct {
+
+	gorm.Model
+
+	//ExaminationID	*uint	
+
+	//Examination		Examination		`gorm:"references:id"`
+
+	PatientRightID	*uint
+
+	PatientRight	PatientRight	`gorm:"references:id"`
+
+	PayTypeID		*uint
+
+	PayType			PayType			`gorm:"references:id"`
+
+	BillTime	time.Time
+
+	Total 			uint
+
+	Note			string
+
+	//CashierID		*uint
+
+	//Cashier		Cashier	`gorm:"references:id"`
+
 }
