@@ -36,6 +36,10 @@ type Patient struct {
 	//PatientTypeID ทำหน้าที่เป็น ForeignKey
 	PatientTypeID 	*uint
 	PatientType 	PatientType `gorm:"references:id"`
+
+	//PatientRightID ทำหน้าที่เป็น ForeignKey
+	PatientRightID 	*uint
+	PatientRight 	PatientRight `gorm:"references:id"`
 }
 type PatientRight struct {
 
@@ -45,6 +49,7 @@ type PatientRight struct {
 
 	Discount	uint
 
+	Patient		[]Patient	`gorm:"foreignKey:PatientRightID"`
 	//Bills		[]Bill		`gorm:"foreignKey:PatientRightID"`
 }
 
