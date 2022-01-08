@@ -12,6 +12,11 @@ type Gender struct {
 	//Patient	[]Patient	`gorm:"foreignKey:GenderID"`
 }
 
+type PatientType struct {
+	gorm.Model
+	Typename	string
+	//Patient	[]Patient	`gorm:"foreignKey:PatientTypeID"`
+}
 type PatientRight struct {
 
 	gorm.Model
