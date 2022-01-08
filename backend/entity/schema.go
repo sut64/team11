@@ -6,6 +6,11 @@ import (
 	"gorm.io/gorm"
 )
 
+type Gender struct {
+	gorm.Model
+	Identity	string
+	//Patient	[]Patient	`gorm:"foreignKey:GenderID"`
+}
 
 type PatientRight struct {
 
