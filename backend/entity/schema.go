@@ -8,84 +8,107 @@ import (
 
 type Gender struct {
 	gorm.Model
-	Identity	string
-	Patient	[]Patient	`gorm:"foreignKey:GenderID"`
+	Identity string
+	Patient  []Patient `gorm:"foreignKey:GenderID"`
 }
 
 type PatientType struct {
 	gorm.Model
-	Typename	string
-	Patient	[]Patient	`gorm:"foreignKey:PatientTypeID"`
+	Typename string
+	Patient  []Patient `gorm:"foreignKey:PatientTypeID"`
 }
 
 type Patient struct {
-	
 	gorm.Model
-	HN			 string `gorm:"uniqueIndex"`
-	Pid   		 string `gorm:"uniqueIndex"`
-	FirstName 	 string
-	LastName  	 string
-	Birthdate 	 time.Time
-	Age       	 uint
-	DateAdmit 	 time.Time
-	Symptom  	 string
+	HN        string `gorm:"uniqueIndex"`
+	Pid       string `gorm:"uniqueIndex"`
+	FirstName string
+	LastName  string
+	Birthdate time.Time
+	Age       uint
+	DateAdmit time.Time
+	Symptom   string
 
-	 //GenderID ทำหน้าที่เป็น ForeignKey
-	GenderID 	*uint
-	Gender   	Gender `gorm:"references:id"`
+	//GenderID ทำหน้าที่เป็น ForeignKey
+	GenderID *uint
+	Gender   Gender `gorm:"references:id"`
 
 	//PatientTypeID ทำหน้าที่เป็น ForeignKey
-	PatientTypeID 	*uint
-	PatientType 	PatientType `gorm:"references:id"`
+	PatientTypeID *uint
+	PatientType   PatientType `gorm:"references:id"`
 
 	//PatientRightID ทำหน้าที่เป็น ForeignKey
-	PatientRightID 	*uint
-	PatientRight 	PatientRight `gorm:"references:id"`
+	PatientRightID *uint
+	PatientRight   PatientRight `gorm:"references:id"`
+
+	// 1 patient มีได้หลาย Appointment
+	Appointments []Appointment `gorm:"foreignKey:PatientID"`
 }
 type PatientRight struct {
-
 	gorm.Model
 
-	Name 		string
+	Name string
 
-	Discount	uint
+	Discount uint
 
-	Patient		[]Patient	`gorm:"foreignKey:PatientRightID"`
+	Patient []Patient `gorm:"foreignKey:PatientRightID"`
 	//Bills		[]Bill		`gorm:"foreignKey:PatientRightID"`
 }
 
 type PayType struct {
-
 	gorm.Model
 
-	Type 		string
+	Type string
 
 	//Bills		[]Bill		`gorm:"foreignKey:PayTypeID"`
 }
 type Bill struct {
-
 	gorm.Model
 
-	//ExaminationID	*uint	
+	//ExaminationID	*uint
 
 	//Examination		Examination		`gorm:"references:id"`
 
-	PatientRightID	*uint
+	PatientRightID *uint
 
-	PatientRight	PatientRight	`gorm:"references:id"`
+	PatientRight PatientRight `gorm:"references:id"`
 
-	PayTypeID		*uint
+	PayTypeID *uint
 
-	PayType			PayType			`gorm:"references:id"`
+	PayType PayType `gorm:"references:id"`
 
-	BillTime	time.Time
+	BillTime time.Time
 
-	Total 			uint
+	Total uint
 
-	Note			string
+	Note string
 
 	//CashierID		*uint
 
 	//Cashier		Cashier	`gorm:"references:id"`
 
+}
+
+type Appointment struct {
+	gorm.Model
+
+	AppointmentTime time.Time
+	Note            string
+	RoomNumber      *uint
+
+	//PatientID ทำหน้าที่เป็น FK
+	PatientID *uint
+	Patient   Patient
+
+	//DoctorID ทำหน้าที่เป็น FK
+	//DoctorID *uint
+	//Doctor   Doctor
+
+	//ClinicID ทำหน้าที่เป็น FK
+	//ClinicID *uint
+	//Clinic   Clinic
+
+	//NurseID ทำหน้าที่เป็น FK
+	//NurseID *uint
+	//Nurse   Nurse
 }
