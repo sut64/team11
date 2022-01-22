@@ -21,8 +21,9 @@ func SetupDatabase() {
 	}
 
 	// Migrate the schema
+	database.AutoMigrate(&Gender{},)
+	db = database
 
-	database.AutoMigrate()
 
 	Pr1 := PatientRight{
 		Name: "สิทธิ์สุขภาพถ้วนหน้า",
@@ -36,6 +37,15 @@ func SetupDatabase() {
 	}
 	db.Model(&PatientRight{}).Create(&Pr2)
 
+	// Gender Data (ข้อมูลเพศ)
+	male := Gender{
+		Identity: "ชาย",
+	}
+	db.Model(&Gender{}).Create(&male)
+	female := Gender{
+		Identity: "หญิง",
+	}
+	db.Model(&Gender{}).Create(&female)
 
-	db = database
+
 }
