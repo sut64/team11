@@ -69,24 +69,32 @@ type Bill struct {
 
 	//Examination		Examination		`gorm:"references:id"`
 
-	PatientRightID *uint
+	PatientRightID 				*uint
 
-	PatientRight PatientRight `gorm:"references:id"`
+	PatientRight PatientRight 	`gorm:"references:id"`
 
-	PayTypeID *uint
+	PayTypeID 					*uint
 
-	PayType PayType `gorm:"references:id"`
+	PayType PayType 			`gorm:"references:id"`
 
-	BillTime time.Time
+	BillTime 					time.Time
 
-	Total uint
+	Total 						uint
 
-	Note string
+	Telephone 					string
 
-	//CashierID		*uint
+	//CashierID					*uint
 
-	//Cashier		Cashier	`gorm:"references:id"`
+	//Cashier					Cashier	`gorm:"references:id"`
 
+}
+
+type BillItem struct {
+
+	gorm.Model
+
+	//ExaminationID			*uint
+	//Examination			Examination	`gorm:"references:id"`
 }
 
 type Appointment struct {
