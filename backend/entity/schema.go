@@ -192,17 +192,17 @@ type Examination struct {
 
 	// DiseaseID ทำหน้าที่เป็น FK
 	DiseaseID *uint
-	//Disease   Disease `gorm:"references:id"`
+	Disease   Disease `gorm:"references:id"`
 
 	// MedicineID ทำหน้าที่เป็น FK
 	//MedicineID *uint
 	//Medicine   Medicine `gorm:"references:id"`
 }
 
-/*type Disease struct {
+type Disease struct {
 	gorm.Model
 	Name string `gorm:"uniqueIndex"`
 
 	// 1 Disease มีได้หลาย Examination
 	Examinations []Examination `gorm:"foreignKey: DiseaseID"`
-}*/
+}
