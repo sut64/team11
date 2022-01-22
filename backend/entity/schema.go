@@ -129,3 +129,11 @@ type Employee struct {
 	RoleID *uint
 	Role   Role `gorm:"references:id"`
 }
+
+type Clinic struct {
+	gorm.Model
+	ClinicName	string
+	ClinicLog  []ClinicLog `gorm:"foreignKey:ClinicID"`
+}
+
+
