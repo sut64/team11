@@ -116,4 +116,16 @@ type Appointment struct {
 type Role struct {
 	gorm.Model
 	Position string
+	Employee []Employee `gorm:"foreignKey:RoleID"`
+}
+
+type Employee struct {
+	gorm.Model
+	Name     string
+	Email    string
+	Password string
+
+	//RoleID ทำหน้าที่เป็น ForeignKey
+	RoleID *uint
+	Role   Role `gorm:"references:id"`
 }
