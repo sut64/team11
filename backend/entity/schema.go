@@ -137,3 +137,21 @@ type Clinic struct {
 }
 
 
+type ClinicLog struct {
+	gorm.Model
+	SendingTime	time.Time
+	Note	string
+	ClinicRoom uint
+
+	//ClinicID ทำหน้าที่เป็น ForeignKey
+	ClinicID *uint
+	Clinic   Clinic `gorm:"references:id"`
+
+	//PatientID ทำหน้าที่เป็น FK
+	PatientID *uint
+	Patient   Patient
+
+	//RecorderID ทำหน้าที่เป็น FK
+	//RecorderID *uint
+	//Recorder	Recorder
+}
