@@ -43,6 +43,9 @@ type Patient struct {
 
 	// 1 patient มีได้หลาย Appointment
 	Appointments []Appointment `gorm:"foreignKey:PatientID"`
+
+	// 1 Patient มีได้หลาย Examination
+	Examinations []Examination `gorm:"foreignKey:PatientID"`
 }
 type PatientRight struct {
 	gorm.Model
@@ -69,19 +72,19 @@ type Bill struct {
 
 	//Examination		Examination		`gorm:"references:id"`
 
-	PatientRightID 				*uint
+	PatientRightID *uint
 
-	PatientRight PatientRight 	`gorm:"references:id"`
+	PatientRight PatientRight `gorm:"references:id"`
 
-	PayTypeID 					*uint
+	PayTypeID *uint
 
-	PayType PayType 			`gorm:"references:id"`
+	PayType PayType `gorm:"references:id"`
 
-	BillTime 					time.Time
+	BillTime time.Time
 
-	Total 						uint
+	Total uint
 
-	Telephone 					string
+	Telephone string
 
 	//CashierID					*uint
 
@@ -90,7 +93,6 @@ type Bill struct {
 }
 
 type BillItem struct {
-
 	gorm.Model
 
 	//ExaminationID			*uint
@@ -136,20 +138,25 @@ type Employee struct {
 	//RoleID ทำหน้าที่เป็น ForeignKey
 	RoleID *uint
 	Role   Role `gorm:"references:id"`
+
+	// 1 Employee มีได้หลาย Examination
+	Examinations []Examination `gorm:"foreignKey:EmployeeID"`
 }
 
 type Clinic struct {
 	gorm.Model
-	ClinicName	string
+	ClinicName string
 	ClinicLog  []ClinicLog `gorm:"foreignKey:ClinicID"`
-}
 
+	// 1 Clinic มีได้หลาย Examination
+	Examinations []Examination `gorm:"foreignKey:ClinicID"`
+}
 
 type ClinicLog struct {
 	gorm.Model
-	SendingTime	time.Time
-	Note	string
-	ClinicRoom uint
+	SendingTime time.Time
+	Note        string
+	ClinicRoom  uint
 
 	//ClinicID ทำหน้าที่เป็น ForeignKey
 	ClinicID *uint
@@ -163,3 +170,39 @@ type ClinicLog struct {
 	//RecorderID *uint
 	//Recorder	Recorder
 }
+
+type Examination struct {
+	gorm.Model
+	ChiefComplaint string
+	Treatment      string
+	Cost           uint
+	DiagnosisTime  time.Time
+
+	// EmployeeID ทำหน้าที่เป็น FK
+	EmployeeID *uint
+	Employee   Employee `gorm:"references:id"`
+
+	// PatientID ทำหน้าที่เป็น FK
+	PatientID *uint
+	Patient   Patient `gorm:"references:id"`
+
+	// ClinicID ทำหน้าที่เป็น FK
+	ClinicID *uint
+	Clinic   Clinic `gorm:"references:id"`
+
+	// DiseaseID ทำหน้าที่เป็น FK
+	DiseaseID *uint
+	//Disease   Disease `gorm:"references:id"`
+
+	// MedicineID ทำหน้าที่เป็น FK
+	//MedicineID *uint
+	//Medicine   Medicine `gorm:"references:id"`
+}
+
+/*type Disease struct {
+	gorm.Model
+	Name string `gorm:"uniqueIndex"`
+
+	// 1 Disease มีได้หลาย Examination
+	Examinations []Examination `gorm:"foreignKey: DiseaseID"`
+}*/
