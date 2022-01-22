@@ -112,3 +112,8 @@ type Appointment struct {
 	//NurseID *uint
 	//Nurse   Nurse
 }
+
+type Role struct {
+	gorm.Model
+	Position string
+}
