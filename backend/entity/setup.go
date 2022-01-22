@@ -21,7 +21,7 @@ func SetupDatabase() {
 	}
 
 	// Migrate the schema
-	database.AutoMigrate(&Gender{},)
+	database.AutoMigrate(&Gender{},&PatientType{},)
 	db = database
 
 
@@ -46,6 +46,24 @@ func SetupDatabase() {
 		Identity: "หญิง",
 	}
 	db.Model(&Gender{}).Create(&female)
+
+	// PatientType Data
+	t1 := PatientType{
+		Typename: "ปกติ",
+	}
+	db.Model(&PatientType{}).Create(&t1)
+	t2 := PatientType{
+		Typename: "อุบัติเหตุ",
+	}
+	db.Model(&PatientType{}).Create(&t2)
+	t3 := PatientType{
+		Typename: "คลอดบุตร",
+	}
+	db.Model(&PatientType{}).Create(&t3)
+	t4 := PatientType{
+		Typename: "แรกเกิด",
+	}
+	db.Model(&PatientType{}).Create(&t4)
 
 
 }
