@@ -1,12 +1,10 @@
-
 package entity
 
 import (
 	"gorm.io/gorm"
 
-	"gorm.io/driver/sqlite"
 	"golang.org/x/crypto/bcrypt"
-	
+	"gorm.io/driver/sqlite"
 )
 
 var db *gorm.DB
@@ -23,7 +21,7 @@ func SetupDatabase() {
 	}
 
 	// Migrate the schema
-	database.AutoMigrate(&Employee{},&Gender{},&PatientType{},&PatientRight{},&Patient{})
+	database.AutoMigrate(&Employee{}, &Gender{}, &PatientType{}, &PatientRight{}, &Patient{})
 	db = database
 
 	//Role Data
@@ -41,13 +39,13 @@ func SetupDatabase() {
 	db.Model(&Role{}).Create(&pharmacist)
 
 	Pr1 := PatientRight{
-		Name: "สิทธิ์สุขภาพถ้วนหน้า",
+		Name:     "สิทธิ์สุขภาพถ้วนหน้า",
 		Discount: 80,
 	}
 	db.Model(&PatientRight{}).Create(&Pr1)
 
 	Pr2 := PatientRight{
-		Name: "สิทธิ์นักศึกษา",
+		Name:     "สิทธิ์นักศึกษา",
 		Discount: 50,
 	}
 	db.Model(&PatientRight{}).Create(&Pr2)
@@ -88,4 +86,17 @@ func SetupDatabase() {
 		Password: string(password),
 		Role:     nurse,
 	})
+	db.Model(&Employee{}).Create(&Employee{
+		Name:     "ชฎาพร ไทยคณา",
+		Email:    "som@email.com",
+		Password: string(password),
+		Role:     nurse,
+	})
+	db.Model(&Employee{}).Create(&Employee{
+		Name:     "แพทย์หญิงนรมน ไทยคณา",
+		Email:    "nor@email.com",
+		Password: string(password),
+		Role:     doctor,
+	})
+
 }
