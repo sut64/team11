@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 
 	"gorm.io/driver/sqlite"
-	//"golang.org/x/crypto/bcrypt"
+	"golang.org/x/crypto/bcrypt"
 	
 )
 
@@ -23,7 +23,7 @@ func SetupDatabase() {
 	}
 
 	// Migrate the schema
-	database.AutoMigrate(&Employee{},&Gender{},&PatientType{},)
+	database.AutoMigrate(&Employee{},&Gender{},&PatientType{},&PatientRight{},&Patient{})
 	db = database
 
 	//Role Data
@@ -80,4 +80,12 @@ func SetupDatabase() {
 	}
 	db.Model(&PatientType{}).Create(&t4)
 
+	// Employee Data
+	password, err := bcrypt.GenerateFromPassword([]byte("123456"), 14)
+	db.Model(&Employee{}).Create(&Employee{
+		Name:     "ภูวดล เดชารัมย์",
+		Email:    "phu@email.com",
+		Password: string(password),
+		Role:     nurse,
+	})
 }

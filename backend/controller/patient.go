@@ -15,7 +15,7 @@ func CreatePatients(c *gin.Context) {
 	var gender entity.Gender
 	var patientright entity.PatientRight
 
-	// ผลลัพธ์ที่ได้จากขั้นตอนที่ จะถูก bind เข้าตัวแปร patient
+	// bind เข้าตัวแปร patient
 	if err := c.ShouldBindJSON(&patient); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -29,13 +29,13 @@ func CreatePatients(c *gin.Context) {
 
 	// : ค้นหา gender ด้วย id
 	if tx := entity.DB().Where("id = ?", patient.GenderID).First(&gender); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "underlying_disease not found"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Gender not found"})
 		return
 	}
 
 	// : ค้นหา patientright ด้วย id
 	if tx := entity.DB().Where("id = ?", patient.PatientRightID).First(&patientright); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Allergy not found"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "patientright not found"})
 		return
 	}
 
@@ -55,7 +55,7 @@ func CreatePatients(c *gin.Context) {
 		Symptom: 			patient.Symptom,    // ตั้งค่าฟิลด์ Symptom ให้เท่ากับค่าที่รับมา
 	}
 
-	// 15: บันทึก
+	// : บันทึก
 	if err := entity.DB().Create(&pt).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

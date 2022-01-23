@@ -32,7 +32,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 import Home from "./components/Home";
 import SignIn from "./components/SignIn";
-//import CreatePatient from "./components/CreatePatient"
+import CreatePatient from "./components/CreatePatient"
 import { EmployeeInterface } from "./models/IEmployee";
 import { RoleInterface } from "./models/IRole";
 
@@ -157,7 +157,7 @@ export default function MiniDrawer() {
 
   const menu = [
     { name: "หน้าแรก", icon: <HomeIcon style={{ color: '#009688', fontSize: 30 }} />, path: "/" },
-    //{ name: "บันทึกการรับเข้าผู้ป่วย", icon: <PersonAddIcon />, path: "/CreatePatient" },
+    { name: "บันทึกการรับเข้าผู้ป่วย", icon: <PersonAddIcon />, path: "/CreatePatient" },
   ];
 
   useEffect(() => {
@@ -263,7 +263,7 @@ export default function MiniDrawer() {
             <div>
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/CreatePatient" element={""} />
+                <Route path="/CreatePatient" element={<CreatePatient />} />
               </Routes>
             </div>
           </main>
