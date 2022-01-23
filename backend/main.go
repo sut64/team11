@@ -53,6 +53,13 @@ func main() {
 			protected.PATCH("/appointments", controller.UpdateAppointment)
 			protected.DELETE("/appointments/:id", controller.DeleteAppointment)
 
+			// Clinic Routes
+			protected.GET("/clinics", controller.ListClinics)
+			protected.GET("/clinic/:id", controller.GetClinic)
+			protected.POST("/clinics", controller.CreateClinics)
+			protected.PATCH("/clinics", controller.UpdateClinic)
+			protected.DELETE("/clinics/:id", controller.DeleteClinics)
+
 		}
 	}
 	// User Routes
