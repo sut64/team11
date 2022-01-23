@@ -8,7 +8,7 @@ import (
 )
 
 // POST /examinations
-func CreateExamiation(c *gin.Context) {
+func CreateExamination(c *gin.Context) {
 
 	var clinic entity.Clinic
 	var disease entity.Disease

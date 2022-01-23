@@ -64,6 +64,13 @@ func main() {
 			protected.GET("/diseases", controller.ListDiseases)
 			protected.GET("/disease/:id", controller.GetDisease)
 
+			// Examination Routes
+			protected.GET("/examinations", controller.ListExaminations)
+			protected.GET("/examination/:id", controller.GetExamination)
+			protected.POST("/examinations", controller.CreateExamination)
+			protected.PATCH("/examinations", controller.UpdateExamination)
+			protected.DELETE("/examinations/:id", controller.DeleteExamination)
+
 		}
 	}
 	// User Routes
