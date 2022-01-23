@@ -66,11 +66,8 @@ type PayType struct {
 	//Bills		[]Bill		`gorm:"foreignKey:PayTypeID"`
 }
 type Bill struct {
+
 	gorm.Model
-
-	//ExaminationID	*uint
-
-	//Examination		Examination		`gorm:"references:id"`
 
 	PatientRightID *uint
 
@@ -86,17 +83,21 @@ type Bill struct {
 
 	Telephone string
 
-	//CashierID					*uint
+	BillItemID 		*uint
+	BillItem		BillItem `gorm:"references:id"`
 
-	//Cashier					Cashier	`gorm:"references:id"`
+	EmployeeID *uint
+	Employee   Employee		`gorm:"references:id"`
 
 }
 
 type BillItem struct {
+
 	gorm.Model
 
-	//ExaminationID			*uint
-	//Examination			Examination	`gorm:"references:id"`
+	ExaminationID			*uint
+	Examination				Examination	`gorm:"references:id"`
+	
 }
 
 type Appointment struct {
@@ -140,6 +141,9 @@ type Employee struct {
 
 	// 1 Employee มีได้หลาย Appointment
 	Appointments []Appointment `gorm:"foreignKey:EmployeeID"`
+
+	//1 Employee มีได้หลาย Bill
+	Bills 		[]Bill	`gorm:"foreignKey:EmployeeID"`
 }
 
 type Clinic struct {
@@ -199,6 +203,8 @@ type Examination struct {
 	// MedicineID ทำหน้าที่เป็น FK
 	//MedicineID *uint
 	//Medicine   Medicine `gorm:"references:id"`
+
+	Examinations 		[]Examination  `gorm:"foreignKey:ExaminationID"`
 }
 
 type Disease struct {
