@@ -144,11 +144,16 @@ type Employee struct {
 
 	//1 Employee มีได้หลาย Bill
 	Bills 		[]Bill	`gorm:"foreignKey:EmployeeID"`
+
+	//1 Employee มีได้หลาย ClinicLog
+	ClinicLogs 		[]ClinicLog	`gorm:"foreignKey:EmployeeID"`
 }
 
 type Clinic struct {
 	gorm.Model
 	ClinicName string
+
+	// 1 Clinic มีได้หลาย ClinicLog
 	ClinicLog  []ClinicLog `gorm:"foreignKey:ClinicID"`
 
 	// 1 Clinic มีได้หลาย Examination
@@ -166,15 +171,15 @@ type ClinicLog struct {
 
 	//ClinicID ทำหน้าที่เป็น ForeignKey
 	ClinicID *uint
-	Clinic   Clinic `gorm:"references:id"`
+	Clinic   Clinic 		`gorm:"references:id"`
 
 	//PatientID ทำหน้าที่เป็น FK
 	PatientID *uint
-	Patient   Patient
+	Patient   Patient		`gorm:"references:id"`
 
-	//RecorderID ทำหน้าที่เป็น FK
-	//RecorderID *uint
-	//Recorder	Recorder
+	//EmployeeID ทำหน้าที่เป็น FK
+	EmployeeID *uint
+	Employee   Employee		`gorm:"references:id"`
 }
 
 type Examination struct {
