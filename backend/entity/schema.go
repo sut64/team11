@@ -104,23 +104,19 @@ type Appointment struct {
 
 	AppointmentTime time.Time
 	Note            string
-	RoomNumber      *uint
+	RoomNumber      uint
 
 	//PatientID ทำหน้าที่เป็น FK
 	PatientID *uint
 	Patient   Patient
 
-	//DoctorID ทำหน้าที่เป็น FK
-	//DoctorID *uint
-	//Doctor   Doctor
+	//EmployeeID ทำหน้าที่เป็น FK
+	EmployeeID *uint
+	Employee   Employee
 
 	//ClinicID ทำหน้าที่เป็น FK
-	//ClinicID *uint
-	//Clinic   Clinic
-
-	//NurseID ทำหน้าที่เป็น FK
-	//NurseID *uint
-	//Nurse   Nurse
+	ClinicID *uint
+	Clinic   Clinic
 }
 
 type Role struct {
@@ -141,6 +137,9 @@ type Employee struct {
 
 	// 1 Employee มีได้หลาย Examination
 	Examinations []Examination `gorm:"foreignKey:EmployeeID"`
+
+	// 1 Employee มีได้หลาย Appointment
+	Appointments []Appointment `gorm:"foreignKey:EmployeeID"`
 }
 
 type Clinic struct {
@@ -150,6 +149,9 @@ type Clinic struct {
 
 	// 1 Clinic มีได้หลาย Examination
 	Examinations []Examination `gorm:"foreignKey:ClinicID"`
+
+	// 1 Clinic มีได้หลาย Appointment
+	Appointments []Appointment `gorm:"foreignKey:ClinicID"`
 }
 
 type ClinicLog struct {
