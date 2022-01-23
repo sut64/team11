@@ -209,7 +209,7 @@ type Examination struct {
 	//MedicineID *uint
 	//Medicine   Medicine `gorm:"references:id"`
 
-	Examinations 		[]Examination  `gorm:"foreignKey:ExaminationID"`
+	BillItems 		[]BillItem  `gorm:"foreignKey:ExaminationID"`
 }
 
 type Disease struct {
