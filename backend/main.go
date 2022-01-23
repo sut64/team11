@@ -17,14 +17,15 @@ func main() {
 		protected := api.Use(middlewares.Authorizes())
 		{
 			// user Routes
-			protected.GET("/employees",controller.ListEmployees)
-			protected.GET("/employee/:id",controller.GetEmployee)
-			protected.PATCH("/emplotees",controller.UpdateEmployee)
-			protected.DELETE("/emplotees/:id",controller.DeleteEmployee)
+			protected.GET("/employees", controller.ListEmployees)
+			protected.GET("/employee/:id", controller.GetEmployee)
+			protected.GET("/employeerole/:roleid", controller.GetEmployeerole)
+			protected.PATCH("/emplotees", controller.UpdateEmployee)
+			protected.DELETE("/emplotees/:id", controller.DeleteEmployee)
 
 			// role Routes
-			protected.GET("/roles",controller.ListRoles)
-			protected.GET("/role/:id",controller.GetRole)
+			protected.GET("/roles", controller.ListRoles)
+			protected.GET("/role/:id", controller.GetRole)
 
 			// patient Routes
 			protected.GET("/patients", controller.ListPatients)
@@ -44,7 +45,14 @@ func main() {
 			// gender Routes
 			protected.GET("/genders", controller.ListGenders)
 			protected.GET("/gender/:id", controller.GetGender)
-			
+
+			// Appointment Routes
+			protected.GET("/appointments", controller.ListAppointments)
+			protected.GET("/appointment/:id", controller.GetAppointment)
+			protected.POST("/appointments", controller.CreateAppointment)
+			protected.PATCH("/appointments", controller.UpdateAppointment)
+			protected.DELETE("/appointments/:id", controller.DeleteAppointment)
+
 		}
 	}
 	// User Routes
