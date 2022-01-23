@@ -25,6 +25,25 @@ func main() {
 			// role Routes
 			protected.GET("/roles",controller.ListRoles)
 			protected.GET("/role/:id",controller.GetRole)
+
+			// patient Routes
+			protected.GET("/patients", controller.ListPatients)
+			protected.GET("/patient/:id", controller.GetPatient)
+			protected.POST("/patients", controller.CreatePatients)
+			protected.PATCH("/patients", controller.UpdatePatient)
+			protected.DELETE("/patients/:id", controller.DeletePatient)
+
+			// patientType Routes
+			protected.GET("/patienttypes", controller.ListPatientType)
+			r.GET("/patienttype/:id", controller.GetPatientType)
+
+			// patientRight Routes
+			protected.GET("/patientrights", controller.ListPatientRights)
+			r.GET("/patientright/:id", controller.GetPatientRight)
+
+			// gender Routes
+			protected.GET("/genders", controller.ListGenders)
+			protected.GET("/gender/:id", controller.GetGender)
 			
 		}
 	}
