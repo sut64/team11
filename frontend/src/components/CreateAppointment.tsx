@@ -18,7 +18,7 @@ import Select from "@material-ui/core/Select";
 import { FormControl } from "@material-ui/core";
 
 import { EmployeeInterface } from "../models/IEmployee";
-import { ClinicsInterface } from "../models/IClinic";
+import { ClinicInterface } from "../models/IClinic";
 import { PatientInterface } from "../models/IPatient";
 import { AppointmentInterface } from "../models/IAppointment";
 import {
@@ -57,7 +57,7 @@ function AppointmentCreate() {
 
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [clinics, setClinics] = useState<ClinicsInterface[]>([]);
+  const [clinics, setClinics] = useState<ClinicInterface[]>([]);
   const [patients, setPatients] = useState<PatientInterface[]>([]);
   const [appointment, setAppointment] = useState<Partial<AppointmentInterface>>({});
   const [doctors, setDoctors] = useState<EmployeeInterface[]>([]);
@@ -281,7 +281,7 @@ function AppointmentCreate() {
                 <option aria-label="None" value="">
                   กรุณาเลือกคลินิก
                 </option>
-                {clinics.map((item: ClinicsInterface) => (
+                {clinics.map((item: ClinicInterface) => (
                   <option value={item.ID} key={item.ID}>
                     {item.Name}
                   </option>
