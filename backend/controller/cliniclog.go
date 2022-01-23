@@ -10,9 +10,9 @@ import (
 // POST /cliniclogs
 func CreateClinicLogs(c *gin.Context) {
 
-	var cliniclog entity.Clinic
+	var cliniclog entity.ClinicLog
 	var clinic entity.Clinic
-	//var recorder entity.Recorder
+	var employee entity.Employee
 	var patient entity.Patient
 
 	// ผลลัพธ์ที่ได้จากขั้นตอนที่ จะถูก bind เข้าตัวแปร cliniclog
@@ -34,7 +34,7 @@ func CreateClinicLogs(c *gin.Context) {
 	}
 
 	// : ค้นหา recorder ด้วย id
-	if tx := entity.DB().Where("id = ?", cliniclog.RecorderID).First(&recorder); tx.RowsAffected == 0 {
+	if tx := entity.DB().Where("id = ?", cliniclog.EmployeeID).First(&employee); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Recorder not found"})
 		return
 	}
@@ -42,7 +42,7 @@ func CreateClinicLogs(c *gin.Context) {
 	// : สร้าง cliniclog
 	cl := entity.ClinicLog{
 
-		clinic:             clinic,             	// โยงความสัมพันธ์กับ Entity Clinic
+		Clinic:             clinic,             	// โยงความสัมพันธ์กับ Entity Clinic
 		Patient:      		patient,        		// โยงความสัมพันธ์กับ Entity Patient
 		//Recorder:      	recorder,      			// โยงความสัมพันธ์กับ Entity Recorder
 		ClinicRoom: 		cliniclog.ClinicRoom,	// ตั่งค่าของ ClinicRoom ให้เท่ากับค่าที่รับมา
