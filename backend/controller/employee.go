@@ -33,6 +33,19 @@ func GetEmployee(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": Employee})
 }
 
+// GET /Employeerole/:roleid
+// Get Employeerole by roleid
+func GetEmployeerole(c *gin.Context) {
+	var Employee []entity.Employee
+	roleid := c.Param("roleid")
+	if err := entity.DB().Preload("Role").Raw("SELECT * FROM employees WHERE role_id = ?", roleid).Find(&Employee).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": Employee})
+}
+
 // POST /Employees
 func CreateEmployee(c *gin.Context) {
 	var Employee entity.Employee
