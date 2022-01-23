@@ -35,6 +35,8 @@ import SignIn from "./components/SignIn";
 import CreatePatient from "./components/CreatePatient"
 import { EmployeeInterface } from "./models/IEmployee";
 import { RoleInterface } from "./models/IRole";
+import CreateAppointment from "./components/CreateAppointment"
+import AllInboxIcon from '@material-ui/icons/AllInbox';
 
 const drawerWidth = 240;
 
@@ -158,6 +160,8 @@ export default function MiniDrawer() {
   const menu = [
     { name: "หน้าแรก", icon: <HomeIcon style={{ color: '#009688', fontSize: 30 }} />, path: "/" },
     { name: "บันทึกการรับเข้าผู้ป่วย", icon: <PersonAddIcon />, path: "/CreatePatient" },
+    { name: "บันทึกรายการนัดหมาย", icon: <AllInboxIcon />, path: "/CreateAppointment" },
+
   ];
 
   useEffect(() => {
@@ -264,6 +268,7 @@ export default function MiniDrawer() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/CreatePatient" element={<CreatePatient />} />
+                <Route path="/CreateAppointment" element={<CreateAppointment />} />
               </Routes>
             </div>
           </main>

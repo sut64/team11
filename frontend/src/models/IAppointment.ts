@@ -1,6 +1,6 @@
 import { PatientInterface } from "./IPatient";
 import { EmployeeInterface } from "./IEmployee";
-import { ClinicsInterface } from "./IClinic";
+import { ClinicInterface } from "./IClinic";
 
 
 export interface AppointmentInterface {
@@ -10,7 +10,7 @@ export interface AppointmentInterface {
   EmployeeID: number,
   Employee: EmployeeInterface,
   ClinicID: number,
-  Clinic: ClinicsInterface,
+  Clinic: ClinicInterface,
   RoomNumber: number,
   AppointmentTime: Date,
   Note: string,
