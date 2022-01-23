@@ -60,6 +60,10 @@ func main() {
 			protected.PATCH("/clinics", controller.UpdateClinic)
 			protected.DELETE("/clinics/:id", controller.DeleteClinics)
 
+			// Disease Routes
+			protected.GET("/diseases", controller.ListDiseases)
+			protected.GET("/disease/:id", controller.GetDisease)
+
 		}
 	}
 	// User Routes
