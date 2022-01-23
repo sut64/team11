@@ -5,6 +5,8 @@ import (
 	"gorm.io/gorm"
 
 	"gorm.io/driver/sqlite"
+	//"golang.org/x/crypto/bcrypt"
+	
 )
 
 var db *gorm.DB
@@ -21,9 +23,22 @@ func SetupDatabase() {
 	}
 
 	// Migrate the schema
-	database.AutoMigrate(&Gender{},&PatientType{},)
+	database.AutoMigrate(&Employee{},&Gender{},&PatientType{},)
 	db = database
 
+	//Role Data
+	doctor := Role{
+		Position: "Doctor",
+	}
+	db.Model(&Role{}).Create(&doctor)
+	nurse := Role{
+		Position: "Nurse",
+	}
+	db.Model(&Role{}).Create(&nurse)
+	pharmacist := Role{
+		Position: "Pharmacist",
+	}
+	db.Model(&Role{}).Create(&pharmacist)
 
 	Pr1 := PatientRight{
 		Name: "สิทธิ์สุขภาพถ้วนหน้า",
@@ -64,6 +79,5 @@ func SetupDatabase() {
 		Typename: "แรกเกิด",
 	}
 	db.Model(&PatientType{}).Create(&t4)
-
 
 }
