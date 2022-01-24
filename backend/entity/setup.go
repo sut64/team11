@@ -21,7 +21,7 @@ func SetupDatabase() {
 	}
 
 	// Migrate the schema
-	database.AutoMigrate(&Employee{}, &Gender{}, &PatientType{}, &PatientRight{}, &Patient{})
+	database.AutoMigrate(&Employee{}, &Gender{}, &PatientType{}, &PatientRight{}, &Patient{}, &Clinic{}, &Appointment{})
 	db = database
 
 	//Role Data
@@ -98,5 +98,19 @@ func SetupDatabase() {
 		Password: string(password),
 		Role:     doctor,
 	})
+
+	//--Clinic Data
+	clinic01 := Clinic{
+		ClinicName: "อายุรกรรม",
+	}
+	db.Model(&Clinic{}).Create(&clinic01)
+	clinic02 := Clinic{
+		ClinicName: "สูตินรีเวช",
+	}
+	db.Model(&Clinic{}).Create(&clinic02)
+	clinic03 := Clinic{
+		ClinicName: "กุมารเวชกรรม",
+	}
+	db.Model(&Clinic{}).Create(&clinic03)
 
 }
