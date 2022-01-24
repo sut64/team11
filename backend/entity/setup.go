@@ -98,6 +98,12 @@ func SetupDatabase() {
 		Password: string(password),
 		Role:     doctor,
 	})
+	db.Model(&Employee{}).Create(&Employee{
+		Name:     "ภาคิน ศิลปเสริฐ",
+		Email:    "au@email.com",
+		Password: string(password),
+		Role:     nurse,
+	})
 
 	//--Clinic Data
 	clinic01 := Clinic{
