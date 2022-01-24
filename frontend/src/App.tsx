@@ -39,6 +39,8 @@ import CreateAppointment from "./components/CreateAppointment"
 import Appointments from "./components/Appointment"
 import CreateClinicLog from "./components/CreateClinicLog"
 import AllInboxIcon from '@material-ui/icons/AllInbox';
+import BillCreate from "./components/BillCreate";
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 
 const drawerWidth = 240;
 
@@ -164,6 +166,7 @@ export default function MiniDrawer() {
     { name: "บันทึกการรับเข้าผู้ป่วย", icon: <PersonAddIcon />, path: "/CreatePatient" },
     { name: "บันทึกรายการนัดหมาย", icon: <AllInboxIcon />, path: "/Appointment" },
     { name: "บันทึกการส่งตรวจคลินิก", icon: <AllInboxIcon />, path: "/CreateClinicLog" },
+    { name: "ใบแจ้งค่าใช้จ่าย", icon: <AccountBalanceIcon />, path: "/CreateBill" },
 
   ];
 
@@ -274,6 +277,7 @@ export default function MiniDrawer() {
                 <Route path="/CreateAppointment" element={<CreateAppointment />} />
                 <Route path="/Appointment" element={<Appointments />} />
                 <Route path="/CreateClinicLog" element={<CreateClinicLog />} />
+                <Route path="/CreateBill" element={<BillCreate />} />
               </Routes>
             </div>
           </main>
