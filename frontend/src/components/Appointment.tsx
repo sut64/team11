@@ -152,7 +152,7 @@ function Appointments() {
                                     <TableRow key={item.ID}>
                                         <TableCell align="center">{item.Patient.FirstName}{"  "}{item.Patient.LastName}</TableCell>
                                         <TableCell align="center">{item.Employee.Name}</TableCell>
-                                        <TableCell align="center">{item.Clinic.Name}</TableCell>
+                                        <TableCell align="center">{item.Clinic.ClinicName}</TableCell>
                                         <TableCell align="center">{item.RoomNumber}</TableCell>
                                         <TableCell align="center">{moment(item.AppointmentTime).format('D MMMM YYYY,HH:mm:ss')}</TableCell>
                                         <TableCell align="center">{item.Note}</TableCell>

@@ -283,7 +283,7 @@ function AppointmentCreate() {
                 </option>
                 {clinics.map((item: ClinicInterface) => (
                   <option value={item.ID} key={item.ID}>
-                    {item.Name}
+                    {item.ClinicName}
                   </option>
                 ))}
               </Select>
