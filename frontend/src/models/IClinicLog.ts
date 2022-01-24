@@ -1,7 +1,7 @@
 import { ClinicInterface } from './IClinic';
 import { PatientInterface } from './IPatient';
 import { EmployeeInterface } from './IEmployee';
-export interface ClinicLog {
+export interface ClinicLogInterface {
     ID: number,
     Note: string,
     ClinicRoom: number,
