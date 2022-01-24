@@ -71,6 +71,12 @@ func main() {
 			protected.PATCH("/examinations", controller.UpdateExamination)
 			protected.DELETE("/examinations/:id", controller.DeleteExamination)
 
+			// ClinicLog Routes
+			protected.GET("/cliniclogs", controller.ListCliniclogs)
+			protected.GET("/cliniclog/:id", controller.GetClinicLog)
+			protected.POST("/cliniclogs", controller.CreateClinicLogs)
+			protected.PATCH("/cliniclogs", controller.UpdateClinicLog)
+			protected.DELETE("/cliniclogs/:id", controller.DeleteClinicLog)
 		}
 	}
 	// User Routes

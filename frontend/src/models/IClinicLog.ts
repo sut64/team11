@@ -6,10 +6,13 @@ export interface ClinicLogInterface {
     Note: string,
     ClinicRoom: number,
     SendingTime: Date,
+
     ClinicID: number,
     Clinic: ClinicInterface,
+
     PatientID: number,
     Patient: PatientInterface
+    
     EmployeeID: number,
     Employee: EmployeeInterface,
 }

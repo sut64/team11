@@ -29,6 +29,7 @@ import FaceIcon from '@material-ui/icons/Face';
 import Chip from '@material-ui/core/Chip';
 import HomeIcon from "@material-ui/icons/Home";
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import NoteIcon from '@mui/icons-material/Note';
 
 import Home from "./components/Home";
 import SignIn from "./components/SignIn";
@@ -165,7 +166,7 @@ export default function MiniDrawer() {
     { name: "หน้าแรก", icon: <HomeIcon style={{ color: '#009688', fontSize: 30 }} />, path: "/" },
     { name: "บันทึกการรับเข้าผู้ป่วย", icon: <PersonAddIcon />, path: "/CreatePatient" },
     { name: "บันทึกรายการนัดหมาย", icon: <AllInboxIcon />, path: "/Appointment" },
-    { name: "บันทึกการส่งตรวจคลินิก", icon: <AllInboxIcon />, path: "/CreateClinicLog" },
+    { name: "บันทึกการส่งตรวจคลินิก", icon: <NoteIcon />, path: "/CreateClinicLog" },
     { name: "ใบแจ้งค่าใช้จ่าย", icon: <AccountBalanceIcon />, path: "/CreateBill" },
 
   ];
