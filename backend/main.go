@@ -36,11 +36,11 @@ func main() {
 
 			// patientType Routes
 			protected.GET("/patienttypes", controller.ListPatientType)
-			r.GET("/patienttype/:id", controller.GetPatientType)
+			protected.GET("/patienttype/:id", controller.GetPatientType)
 
 			// patientRight Routes
 			protected.GET("/patientrights", controller.ListPatientRights)
-			r.GET("/patientright/:id", controller.GetPatientRight)
+			protected.GET("/patientright/:id", controller.GetPatientRight)
 
 			// gender Routes
 			protected.GET("/genders", controller.ListGenders)
