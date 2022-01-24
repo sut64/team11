@@ -21,7 +21,7 @@ func SetupDatabase() {
 	}
 
 	// Migrate the schema
-	database.AutoMigrate(&Employee{}, &Gender{}, &PatientType{}, &PatientRight{}, &Patient{}, &Clinic{}, &Appointment{})
+	database.AutoMigrate(&Employee{}, &Gender{}, &PatientType{}, &PatientRight{}, &Patient{}, &Clinic{}, &Appointment{}, ClinicLog{})
 	db = database
 
 	//Role Data
