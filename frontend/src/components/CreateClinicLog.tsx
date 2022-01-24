@@ -60,7 +60,7 @@ function ClinicLogCreate() {
   const [clinics, setClinics] = useState<ClinicInterface[]>([]);
   const [patients, setPatients] = useState<PatientInterface[]>([]);
   const [cliniclog, setClinicLog] = useState<Partial<ClinicLogInterface>>({});
-  const [nurse, setNurse] = useState<EmployeeInterface[]>([]);
+  const [nurse, setNurse] = useState<EmployeeInterface>();
 
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -134,18 +134,21 @@ function ClinicLogCreate() {
       });
   };
   console.log("Patient",nurse);
+  
   const getNurse = async () => {
-    fetch(`${apiUrl}/employeerole/1`, requestOptions)
+    let uid = localStorage.getItem("uid");
+    fetch(`${apiUrl}/employee/${uid}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
+        cliniclog.EmployeeID = res.data.ID
         if (res.data) {
+          console.log(res.data)
           setNurse(res.data);
         } else {
           console.log("else");
         }
       });
   };
-  console.log("Nurse",nurse);
 
   useEffect(() => {
     getClinic();
@@ -163,8 +166,8 @@ function ClinicLogCreate() {
       PatientID: convertType(cliniclog.PatientID),
       EmployeeID: convertType(cliniclog.EmployeeID),
       ClinicID: convertType(cliniclog.ClinicID),
-      RoomNumber: convertType(cliniclog.ClinicRoom),
-      AppointmentTime: SendingTime,
+      ClinicRoom: convertType(cliniclog.ClinicRoom),
+      SendingTime: SendingTime,
       Note: cliniclog.Note ?? "",
     };
     console.log(data)
@@ -178,7 +181,7 @@ function ClinicLogCreate() {
       body: JSON.stringify(data),
     };
 
-    fetch(`${apiUrl}/appointments`, requestOptionsPost)
+    fetch(`${apiUrl}/cliniclogs`, requestOptionsPost)
       .then((response) => response.json())
       .then((res) => {
         if (res.data) {
@@ -221,34 +224,13 @@ function ClinicLogCreate() {
         </Box>
         <Divider />
         <Grid container spacing={3} className={classes.root}>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth variant="outlined">
-              <p style={{color:"#006A7D",fontSize: "10"}}>หมายเลขบัตรประชาชน</p>
-              <Select
-                native
-                value={cliniclog.PatientID}
-                onChange={handleChange}
-                inputProps={{
-                  name: "PatientID",
-                }}
-              >
-                <option aria-label="None" value="">
-                  กรุณาเลือกหมายเลขบัตรประชาชน
-                </option>
-                {patients.map((item: PatientInterface) => (
-                  <option value={item.ID} key={item.ID}>
-                    {item.Pid}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+          
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth variant="outlined">
               <p style={{color:"#006A7D",fontSize: "10"}}>คนไข้</p>
               <Select
                 native
-                value={cliniclog.EmployeeID}
+                value={cliniclog.PatientID}
                 onChange={handleChange}
                 inputProps={{
                   name: "PatientID",
@@ -291,7 +273,7 @@ function ClinicLogCreate() {
             <FormControl fullWidth variant="outlined">
               <p style={{color:"#006A7D",fontSize: "10"}}>หมายเลขห้อง :</p>
               <TextField
-                id="RoomNumber"
+                id="ClinicRoom"
                 variant="outlined"
                 type="number"
                 size="medium"
@@ -327,6 +309,24 @@ function ClinicLogCreate() {
                 value={cliniclog.Note || ""}
                 onChange={handleInputChange}
               />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth variant="outlined">
+              <p style={{color:"#006A7D",fontSize: "10"}}>เจ้าหน้าที่</p>
+              <Select
+                native
+                value={cliniclog.EmployeeID}
+                onChange={handleChange}
+                disabled
+                inputProps={{
+                  name: "EmployeeID",
+                }}
+              >
+                <option value={nurse?.ID} key={nurse?.ID}>
+                  {nurse?.Name}
+                </option>
+              </Select>
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={12} >
