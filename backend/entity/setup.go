@@ -104,13 +104,44 @@ func SetupDatabase() {
 		ClinicName: "อายุรกรรม",
 	}
 	db.Model(&Clinic{}).Create(&clinic01)
+
 	clinic02 := Clinic{
 		ClinicName: "สูตินรีเวช",
 	}
 	db.Model(&Clinic{}).Create(&clinic02)
+
 	clinic03 := Clinic{
 		ClinicName: "กุมารเวชกรรม",
 	}
 	db.Model(&Clinic{}).Create(&clinic03)
 
+	clinic04 := Clinic{
+		ClinicName: "จักษุ",
+	}
+	db.Model(&Clinic{}).Create(&clinic04)
+
+	clinic05 := Clinic{
+		ClinicName: "วัณโรค",
+	}
+	db.Model(&Clinic{}).Create(&clinic05)
+
+	clinic06 := Clinic{
+		ClinicName: "จิตเวช",
+	}
+	db.Model(&Clinic{}).Create(&clinic06)
+
+	clinic07 := Clinic{
+		ClinicName: "กระดูกและข้อ",
+	}
+	db.Model(&Clinic{}).Create(&clinic07)
+
+	clinic08 := Clinic{
+		ClinicName: "ทันตกรรม",
+	}
+	db.Model(&Clinic{}).Create(&clinic08)
+
+	clinic09 := Clinic{
+		ClinicName: "โสต คอ นาสิก",
+	}
+	db.Model(&Clinic{}).Create(&clinic09)
 }
