@@ -104,6 +104,12 @@ func SetupDatabase() {
 		Password: string(password),
 		Role:     nurse,
 	})
+	db.Model(&Employee{}).Create(&Employee{
+		Name:     "ฉัตรพัฒน์ รัชอินทร์",
+		Email:    "force@email.com",
+		Password: string(password),
+		Role:     nurse,
+	})
 
 	//--Clinic Data
 	clinic01 := Clinic{
