@@ -108,7 +108,7 @@ func SetupDatabase() {
 		Name:     "ฉัตรพัฒน์ รัชอินทร์",
 		Email:    "force@email.com",
 		Password: string(password),
-		Role:     nurse,
+		Role:     pharmacist,
 	})
 
 	//--Clinic Data
