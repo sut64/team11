@@ -104,6 +104,7 @@ function CreatePatient() {
     },
   };
 
+  //Get Gender
   const getGender = async () => {
     fetch(`${apiUrl}/genders`, requestOptions)
       .then((response) => response.json())
@@ -116,6 +117,7 @@ function CreatePatient() {
       });
   };
 
+  //Get PatientType
   const getPatienttype = async () => {
     fetch(`${apiUrl}/patienttypes`, requestOptions)
       .then((response) => response.json())
@@ -128,6 +130,7 @@ function CreatePatient() {
       });
   };
 
+  //Get PatientRight
   const getPatientright = async () => {
     fetch(`${apiUrl}/patientrights`, requestOptions)
       .then((response) => response.json())
