@@ -219,3 +219,34 @@ type Disease struct {
 	// 1 Disease มีได้หลาย Examination
 	Examinations []Examination `gorm:"foreignKey: DiseaseID"`
 }
+type Disease struct {
+	gorm.Model
+	Name string `gorm:"uniqueIndex"`
+
+	// 1 Disease มีได้หลาย Examination
+	Examinations []Examination `gorm:"foreignKey: DiseaseID"`
+}
+
+type PayMedicine struct {
+	gorm.Model
+	Pid                 string
+	Prescription_number string
+	PayMedicineTime     time.Time
+
+	//PatientID ทำหน้าที่เป็น ForeignKey
+	PatientID *uint
+	Patient   Patient `gorm:"references:id"`
+
+	//MedicineID ทำหน้าที่เป็น ForeignKey
+	MedicineID *uint
+	Medicine   Medicine `gorm:"references:id"`
+}
+
+type Medicine struct {
+	gorm.Model
+	Name string
+	Cost uint
+
+	// 1 Medicine มีได้หลาย PayMedicines
+	PayMedicines []PayMedicine `gorm:"foreignKey: MedicineID"`
+}
