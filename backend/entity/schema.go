@@ -219,13 +219,6 @@ type Disease struct {
 	// 1 Disease มีได้หลาย Examination
 	Examinations []Examination `gorm:"foreignKey: DiseaseID"`
 }
-type Disease struct {
-	gorm.Model
-	Name string `gorm:"uniqueIndex"`
-
-	// 1 Disease มีได้หลาย Examination
-	Examinations []Examination `gorm:"foreignKey: DiseaseID"`
-}
 
 type PayMedicine struct {
 	gorm.Model
