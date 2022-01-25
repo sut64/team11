@@ -1,5 +1,5 @@
 import { PatientRightInterface } from './IPatientRight';
-import { PatienttypeInterface } from './IPatienttype';
+import { PatientTypeInterface } from './IPatientType';
 import { GenderInterface } from './IGender';
 export interface PatientInterface {
     ID: number,
@@ -13,8 +13,8 @@ export interface PatientInterface {
     Symptom: string,
     GenderID: number,
     Gender: GenderInterface,
-    PatienttypeID: number,
-    Patienttype: PatienttypeInterface
+    PatientTypeID: number,
+    PatientType: PatientTypeInterface
     PatientRightID: number,
     PatientRight: PatientRightInterface,
 }
