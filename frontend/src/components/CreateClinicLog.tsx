@@ -330,27 +330,33 @@ function ClinicLogCreate() {
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={12} >
-            <p></p>
+          <p></p>
           </Grid>
-          <Grid item xs={12}>
-            <Button
-              component={RouterLink}
-              to="/appointment"
-              variant="contained"
-            >
-              กลับ
-            </Button>
-            <Button
-              style={{ float: "right" }}
-              variant="contained"
-              onClick={submit}
-              color="primary"
-            >
-              บันทึก
-            </Button>
-          </Grid>
-        </Grid>
+          
+        </Grid> 
+          
       </Paper>
+      <br/>
+      <Grid container justifyContent="center" spacing={3}>
+            <Grid item xs={3}>
+              <Button
+                component={RouterLink}
+                to="/cliniclog"
+                variant="contained"
+                color="primary"
+              >
+                การส่งตรวจ
+              </Button>
+              <Button
+                style={{ float: "right" }}
+                variant="contained"
+                onClick={submit}
+                color="primary"
+              >
+                บันทึก
+              </Button>
+            </Grid>
+          </Grid>
     </Container>
   );
 }

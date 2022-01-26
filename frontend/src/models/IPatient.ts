@@ -1,5 +1,5 @@
 import { PatientRightInterface } from './IPatientRight';
-import { PatientTypeInterface } from './IPatientType';
+import { PatientTypeInterface } from './IPatienttype';
 import { GenderInterface } from './IGender';
 export interface PatientInterface {
     ID: number,

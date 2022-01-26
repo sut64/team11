@@ -43,6 +43,7 @@ import AllInboxIcon from '@material-ui/icons/AllInbox';
 import BillCreate from "./components/BillCreate";
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import ListPatient from "./components/listPatient"; 
+import ClinicLogs from "./components/ClinigLog";
 
 const drawerWidth = 240;
 
@@ -279,6 +280,7 @@ export default function MiniDrawer() {
                 <Route path="/CreateAppointment" element={<CreateAppointment />} />
                 <Route path="/Appointment" element={<Appointments />} />
                 <Route path="/CreateClinicLog" element={<CreateClinicLog />} />
+                <Route path="/ClinicLog" element={<ClinicLogs />} />
                 <Route path="/CreateBill" element={<BillCreate />} />
                 <Route path="/listPatient" element={<ListPatient/>} />
               </Routes>

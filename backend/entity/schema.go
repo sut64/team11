@@ -86,7 +86,7 @@ type Bill struct {
 	EmployeeID *uint
 	Employee   Employee		`gorm:"references:id"`
 
-	Bills 		[]Bill		`gorm:"foreignKey:BillID"`
+	BillItems 		[]BillItem		`gorm:"foreignKey:BillID"`
 
 }
 
