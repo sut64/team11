@@ -3,6 +3,7 @@ package entity
 import (
 	"time"
 
+	"github.com/asaskevich/govalidator"
 	"gorm.io/gorm"
 )
 
@@ -69,31 +70,33 @@ type Bill struct {
 
 	gorm.Model
 
-	PatientRightID *uint
+	PatientRightID *uint 		
 
-	PatientRight PatientRight `gorm:"references:id"`
+	PatientRight PatientRight `gorm:"references:id" valid:"-"`
 
-	PayTypeID *uint
+	PayTypeID *uint		
 
-	PayType PayType `gorm:"references:id"`
+	PayType PayType `gorm:"references:id" valid:"-"`
 
-	BillTime time.Time
+	BillTime time.Time `valid:"Now~BillTime must be in the now"`
 
-	Total uint
+	Total uint 		`valid:"required~Total cannot be zero"`
 
-	Telephone string
+	Telephone string 	`valid:"required~Telephone cannot be blank, matches(^[0]{1}[0-9]{9}$)" `	
 
-	BillItemID 		*uint
-	BillItem		BillItem `gorm:"references:id"`
+	EmployeeID *uint		
+	Employee   Employee		`gorm:"references:id" valid:"-"`
 
-	EmployeeID *uint
-	Employee   Employee		`gorm:"references:id"`
+	Bills		[]Bill		`gorm:"foreignKey:BillID"`
 
 }
 
 type BillItem struct {
 
 	gorm.Model
+
+	BillID					*uint
+	Bill					 Bill	`gorm:"references:id"`
 
 	ExaminationID			*uint
 	Examination				Examination	`gorm:"references:id"`
@@ -218,4 +221,21 @@ type Disease struct {
 
 	// 1 Disease มีได้หลาย Examination
 	Examinations []Examination `gorm:"foreignKey: DiseaseID"`
+}
+
+func init() {
+	govalidator.CustomTypeTagMap.Set("past", func(i interface{}, context interface{}) bool {
+		t := i.(time.Time)
+		return t.Before(time.Now())
+	})
+
+	govalidator.CustomTypeTagMap.Set("future", func(i interface{}, context interface{}) bool {
+		t := i.(time.Time)
+		return t.After(time.Now())
+	})
+
+	govalidator.CustomTypeTagMap.Set("Now", func(i interface{}, context interface{}) bool {
+		t := i.(time.Time)
+		return t.Equal(time.Now())
+	})
 }
