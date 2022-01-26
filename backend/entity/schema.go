@@ -222,20 +222,3 @@ type Disease struct {
 	// 1 Disease มีได้หลาย Examination
 	Examinations []Examination `gorm:"foreignKey: DiseaseID"`
 }
-
-func init() {
-	govalidator.CustomTypeTagMap.Set("past", func(i interface{}, context interface{}) bool {
-		t := i.(time.Time)
-		return t.Before(time.Now())
-	})
-
-	govalidator.CustomTypeTagMap.Set("future", func(i interface{}, context interface{}) bool {
-		t := i.(time.Time)
-		return t.After(time.Now())
-	})
-
-	govalidator.CustomTypeTagMap.Set("Now", func(i interface{}, context interface{}) bool {
-		t := i.(time.Time)
-		return t.Equal(time.Now())
-	})
-}
