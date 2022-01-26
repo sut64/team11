@@ -379,6 +379,12 @@ function BillCreate(){
                             <MenuItem value={0} key={0}>
                                 เลือกผลการรักษา
                             </MenuItem>
+                            {examinations.map((item: ExaminationInterface) => (
+                                <MenuItem value={item.ID} key={item.ID}>
+                                    {item.Treatment} 
+                                </MenuItem>
+                            ))}
+                            
                 
                             </Select>
                             </FormControl>

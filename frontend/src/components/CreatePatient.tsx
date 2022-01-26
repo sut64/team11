@@ -26,7 +26,7 @@ import {
 } from "@material-ui/pickers";
 import Select from "@material-ui/core/Select";
 //import Models
-import { PatientTypeInterface } from "../models/IPatientType";
+import { PatientTypeInterface } from "../models/IPatienttype";
 import { PatientInterface } from "../models/IPatient";
 import { PatientRightInterface } from "../models/IPatientRight";
 import { GenderInterface } from "../models/IGender";

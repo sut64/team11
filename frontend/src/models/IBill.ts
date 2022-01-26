@@ -17,10 +17,7 @@ export interface BillInterface {
     Total : number,
 
     Telephone : string,
-
-    BillItemID : number,
-    BillItem : BillItemInterface
-
+    
     EmployeeID : number,
     Employee : EmployeeInterface
 
