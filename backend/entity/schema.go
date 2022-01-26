@@ -83,17 +83,19 @@ type Bill struct {
 
 	Telephone string
 
-	BillItemID 		*uint
-	BillItem		BillItem `gorm:"references:id"`
-
 	EmployeeID *uint
 	Employee   Employee		`gorm:"references:id"`
+
+	Bills 		[]Bill		`gorm:"foreignKey:BillID"`
 
 }
 
 type BillItem struct {
 
 	gorm.Model
+
+	BillID 					*uint
+	Bill					Bill `gorm:"references:id"`
 
 	ExaminationID			*uint
 	Examination				Examination	`gorm:"references:id"`
