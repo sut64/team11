@@ -62,7 +62,7 @@ func CreateClinicLogs(c *gin.Context) {
 func GetClinicLog(c *gin.Context) {
 	var cliniclog entity.ClinicLog
 	id := c.Param("id")
-	if err := entity.DB().Preload("Clinic").Preload("Patient").Preload("Employee").Raw("SELECT * FROM cliniclogs WHERE id = ?", id).Find(&cliniclog).Error; err != nil {
+	if err := entity.DB().Preload("Clinic").Preload("Patient").Preload("Employee").Raw("SELECT * FROM clinic_logs WHERE id = ?", id).Find(&cliniclog).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -72,7 +72,7 @@ func GetClinicLog(c *gin.Context) {
 // GET /cliniclogs
 func ListCliniclogs(c *gin.Context) {
 	var cliniclogs []entity.ClinicLog
-	if err := entity.DB().Preload("Clinic").Preload("Patient").Preload("Employee").Raw("SELECT * FROM cliniclogs").Find(&cliniclogs).Error; err != nil {
+	if err := entity.DB().Preload("Clinic").Preload("Patient").Preload("Employee").Raw("SELECT * FROM clinic_logs").Find(&cliniclogs).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -82,7 +82,7 @@ func ListCliniclogs(c *gin.Context) {
 // DELETE /cliniclog/:id
 func DeleteClinicLog(c *gin.Context) {
 	id := c.Param("id")
-	if tx := entity.DB().Exec("DELETE FROM cliniclogs WHERE id = ?", id); tx.RowsAffected == 0 {
+	if tx := entity.DB().Exec("DELETE FROM clinic_logs WHERE id = ?", id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "cliniclog not found"})
 		return
 	}
