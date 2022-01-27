@@ -21,4 +21,6 @@ export interface BillInterface {
     EmployeeID : number,
     Employee : EmployeeInterface
 
+    BillItems : BillItemInterface
+
 }
