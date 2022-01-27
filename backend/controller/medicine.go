@@ -7,6 +7,7 @@ import (
 	"github.com/sut64/team11/entity"
 )
 
+//Medicine
 // GET /medicine/:id
 func GetMedicine(c *gin.Context) {
 	var medicine entity.Medicine
