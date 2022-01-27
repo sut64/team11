@@ -67,40 +67,36 @@ type PayType struct {
 	//Bills		[]Bill		`gorm:"foreignKey:PayTypeID"`
 }
 type Bill struct {
-
 	gorm.Model
 
 	PatientRightID *uint
 
-	PatientRight PatientRight `gorm:"references:id" valid:"-"` 
+	PatientRight PatientRight `gorm:"references:id" valid:"-"`
 
 	PayTypeID *uint
 
 	PayType PayType `gorm:"references:id" valid:"-"`
 
-	BillTime time.Time	`valid:"Now~BillTime must be now"`
+	BillTime time.Time `valid:"Now~BillTime must be now"`
 
-	Total uint	`valid:"required~Total cannot be zero"`
+	Total uint `valid:"required~Total cannot be zero"`
 
-	Telephone string	`valid:"required~Telephone cannot be blank, matches(^[0]{1}[0-9]{9})"`
+	Telephone string `valid:"required~Telephone cannot be blank, matches(^[0]{1}[0-9]{9})"`
 
 	EmployeeID *uint
-	Employee   Employee		`gorm:"references:id" valid:"-"`
+	Employee   Employee `gorm:"references:id" valid:"-"`
 
-	BillItems 		[]BillItem		`gorm:"foreignKey:BillID; constraint:OnDelete:CASCADE"`
-
+	BillItems []BillItem `gorm:"foreignKey:BillID; constraint:OnDelete:CASCADE"`
 }
 
 type BillItem struct {
-
 	gorm.Model
 
-	BillID 					*uint
-	Bill					Bill `gorm:"references:id"`
+	BillID *uint
+	Bill   Bill `gorm:"references:id"`
 
-	ExaminationID			*uint
-	Examination				Examination	`gorm:"references:id"`
-	
+	ExaminationID *uint
+	Examination   Examination `gorm:"references:id"`
 }
 
 type Appointment struct {
@@ -146,10 +142,10 @@ type Employee struct {
 	Appointments []Appointment `gorm:"foreignKey:EmployeeID"`
 
 	//1 Employee มีได้หลาย Bill
-	Bills 		[]Bill	`gorm:"foreignKey:EmployeeID"`
+	Bills []Bill `gorm:"foreignKey:EmployeeID"`
 
 	//1 Employee มีได้หลาย ClinicLog
-	ClinicLogs 		[]ClinicLog	`gorm:"foreignKey:EmployeeID"`
+	ClinicLogs []ClinicLog `gorm:"foreignKey:EmployeeID"`
 }
 
 type Clinic struct {
@@ -157,7 +153,7 @@ type Clinic struct {
 	ClinicName string
 
 	// 1 Clinic มีได้หลาย ClinicLog
-	ClinicLog  []ClinicLog `gorm:"foreignKey:ClinicID"`
+	ClinicLog []ClinicLog `gorm:"foreignKey:ClinicID"`
 
 	// 1 Clinic มีได้หลาย Examination
 	Examinations []Examination `gorm:"foreignKey:ClinicID"`
@@ -174,15 +170,15 @@ type ClinicLog struct {
 
 	//ClinicID ทำหน้าที่เป็น ForeignKey
 	ClinicID *uint
-	Clinic   Clinic 		`gorm:"references:id"`
+	Clinic   Clinic `gorm:"references:id"`
 
 	//PatientID ทำหน้าที่เป็น FK
 	PatientID *uint
-	Patient   Patient		`gorm:"references:id"`
+	Patient   Patient `gorm:"references:id"`
 
 	//EmployeeID ทำหน้าที่เป็น FK
 	EmployeeID *uint
-	Employee   Employee		`gorm:"references:id"`
+	Employee   Employee `gorm:"references:id"`
 }
 
 type Examination struct {
@@ -209,10 +205,10 @@ type Examination struct {
 	Disease   Disease `gorm:"references:id"`
 
 	// MedicineID ทำหน้าที่เป็น FK
-	//MedicineID *uint
-	//Medicine   Medicine `gorm:"references:id"`
+	MedicineID *uint
+	Medicine   Medicine `gorm:"references:id"`
 
-	BillItems 		[]BillItem  `gorm:"foreignKey:ExaminationID"`
+	BillItems []BillItem `gorm:"foreignKey:ExaminationID"`
 }
 
 type Disease struct {
@@ -245,6 +241,9 @@ type Medicine struct {
 
 	// 1 Medicine มีได้หลาย PayMedicines
 	PayMedicines []PayMedicine `gorm:"foreignKey: MedicineID"`
+
+	// 1 Medicine มีได้หลาย Examination
+	Examinations []Examination `gorm:"foreignKey: MedicineID"`
 }
 
 func init() {
