@@ -550,9 +550,10 @@ function BillCreate(){
                         <Grid item xs={6}>
                             <Button style={{ float: "left" }}
                                 variant="contained"
-                                onClick={submit}
+                                component={RouterLink}
+                                to="/ListBills"
                                 color="primary">
-                                ยกเลิก
+                                กลับ
                             </Button>
                         </Grid>  
                         
