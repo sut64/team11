@@ -221,9 +221,9 @@ type Disease struct {
 
 type PayMedicine struct {
 	gorm.Model
-	Pid                 string
-	Prescription_number string
-	PayMedicineTime     time.Time
+	Pid             string
+	Prescription    string
+	PayMedicineTime time.Time
 
 	// EmployeeID ทำหน้าที่เป็น FK
 	EmployeeID *uint
