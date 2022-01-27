@@ -21,7 +21,9 @@ func SetupDatabase() {
 	}
 
 	// Migrate the schema
-	database.AutoMigrate(&Employee{}, &Gender{}, &PatientType{}, &PatientRight{}, &Patient{}, &Clinic{}, &Appointment{}, &ClinicLog{})
+	database.AutoMigrate(&Employee{}, &Gender{}, &PatientType{}, &PatientRight{}, &Patient{}, &Clinic{}, &Appointment{}, 
+		&ClinicLog{},&PayType{},&Bill{},&BillItem{})
+		
 	db = database
 
 	//Role Data
@@ -156,4 +158,18 @@ func SetupDatabase() {
 		ClinicName: "โสต คอ นาสิก",
 	}
 	db.Model(&Clinic{}).Create(&clinic09)
+
+	//Paytype Data
+
+	cash := PayType{
+		Type : "เงินสด",
+	}
+	db.Model(&PayType{}).Create(&cash)
+
+	debit := PayType{
+		Type : "บัตรเครดิต",
+	}
+	db.Model(&PayType{}).Create(&debit)
+
 }
+

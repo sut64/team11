@@ -42,6 +42,10 @@ func main() {
 			protected.GET("/patientrights", controller.ListPatientRights)
 			protected.GET("/patientright/:id", controller.GetPatientRight)
 
+			//Paytype Routes 
+			protected.GET("/paytypes", controller.ListPayTypes)
+			protected.GET("/paytype/:id", controller.GetPayType)
+
 			// gender Routes
 			protected.GET("/genders", controller.ListGenders)
 			protected.GET("/gender/:id", controller.GetGender)

@@ -19,6 +19,8 @@ export interface BillInterface {
     Telephone : string,
     
     EmployeeID : number,
-    Employee : EmployeeInterface
+    Employee : EmployeeInterface,
+
+    BillItems : BillItemInterface[],
 
 }

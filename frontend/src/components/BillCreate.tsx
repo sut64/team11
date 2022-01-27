@@ -67,6 +67,7 @@ function BillCreate(){
     const [patientrights, setPatientRights] = useState<PatientRightInterface[]>([]);
     const [paytypes, setPaytypes] = useState<PaytypeInterface[]>([]);
     const [employees, setEmployees] = useState<Partial<EmployeeInterface>>({});
+    const [cashier, setCashier] = useState<EmployeeInterface>();
     const [billitems,setBillitems] = useState<Partial<BillItemInterface>[]>([]);
     const [bill, setBill] = useState<Partial<BillInterface>>(
         {}
@@ -144,6 +145,21 @@ function BillCreate(){
             });
     };
 
+    const getCashier = async () => {
+        let uid = localStorage.getItem("uid");
+        fetch(`${apilUrl}/employee/${uid}`, requesstOptions)
+          .then((response) => response.json())
+          .then((res) => {
+            bill.EmployeeID = res.data.ID
+            if (res.data) {
+              console.log(res.data)
+              setCashier(res.data);
+            } else {
+              console.log("else");
+            }
+          });
+      };
+
 
 
     
@@ -202,6 +218,7 @@ function BillCreate(){
         getPatient();
         getPatientRight();
         getPaytypet();
+        getCashier();
        
     } , []);
     
@@ -219,6 +236,9 @@ function BillCreate(){
             Total : typeof bill.Total === "string" ? parseInt(bill.Total) : 0,
             Telephone : bill.Telephone ?? "",
             BillTime: selectedDate,
+            EmployeeID : convertType(bill.EmployeeID),
+            BillItems : billitems,
+            
         };
 
         const requesstOptionsPost = {
@@ -321,9 +341,10 @@ function BillCreate(){
                             </MenuItem>
                             {patients.map((item: PatientInterface) => (
                                 <MenuItem value={item.PatientRightID} key={item.PatientRightID}>
-                                    {item.PatientRight}
+                                    {item.PatientRight.Name}
                                 </MenuItem>
                             ))}
+                            
                            
                             </Select>
                             </FormControl>
@@ -341,10 +362,10 @@ function BillCreate(){
                                 name: "EmployeeID",
                             }}
                              >
-                            <option value={employees?.ID} key={employees?.ID}>
-                                {employees?.Name}
-                            </option>
-                           
+                                 <option value={cashier?.ID} key={cashier?.ID}>
+                                    {cashier?.Name}
+                                </option>
+                         
                             </Select>
                             </FormControl>    
 

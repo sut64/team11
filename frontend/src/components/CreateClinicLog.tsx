@@ -332,7 +332,12 @@ function ClinicLogCreate() {
           <Grid item xs={12} sm={12} >
             <p></p>
           </Grid>
-          <Grid item xs={12}>
+          
+        </Grid>
+      </Paper>
+      <br/>
+      <Grid container justifyContent="center" spacing={3}>
+         <Grid item xs={3}>
             <Button
               component={RouterLink}
               to="/appointment"
@@ -349,8 +354,9 @@ function ClinicLogCreate() {
               บันทึก
             </Button>
           </Grid>
-        </Grid>
-      </Paper>
+
+      </Grid>
+     
     </Container>
   );
 }
