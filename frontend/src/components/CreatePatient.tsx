@@ -213,7 +213,7 @@ function CreatePatient() {
     <Container className={classes.container} maxWidth="md">
       <Snackbar open={success} autoHideDuration={1500} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
-          <AlertTitle>Error</AlertTitle>
+          <AlertTitle>Success</AlertTitle>
           การบันทึกสำเร็จ —{" "}
           <strong>
             <Link href="/listPatient" style={{ color: "#fff" }}>
