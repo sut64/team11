@@ -21,7 +21,7 @@ func SetupDatabase() {
 	}
 
 	// Migrate the schema
-	database.AutoMigrate(&Employee{}, &Gender{}, &PatientType{}, &PatientRight{}, &Patient{}, &Clinic{}, &Appointment{}, &ClinicLog{}, &Examination{}, &Disease{})
+	database.AutoMigrate(&Employee{}, &Gender{}, &PatientType{}, &PatientRight{}, &Patient{}, &Clinic{}, &Appointment{}, &ClinicLog{}, &Examination{}, &Disease{}, &Medicine{})
 	db = database
 
 	//Role Data
@@ -180,4 +180,41 @@ func SetupDatabase() {
 		Name: "มะเร็ง",
 	}
 	db.Model(&Disease{}).Create(&di4)
+
+	//Medicine Data
+	medicine01 := Medicine{
+		Name: "พาราเซตามอล",
+		Cost: 100,
+	}
+	db.Model(&Medicine{}).Create(&medicine01)
+
+	medicine02 := Medicine{
+		Name: "อะม็อกซีซิลลิน",
+		Cost: 110,
+	}
+	db.Model(&Medicine{}).Create(&medicine02)
+
+	medicine03 := Medicine{
+		Name: "น้ํามันตับปลา",
+		Cost: 90,
+	}
+	db.Model(&Medicine{}).Create(&medicine03)
+
+	medicine04 := Medicine{
+		Name: "วิตามิน C",
+		Cost: 50,
+	}
+	db.Model(&Medicine{}).Create(&medicine04)
+
+	medicine05 := Medicine{
+		Name: "ยาฆ่าเชื้อ",
+		Cost: 70,
+	}
+	db.Model(&Medicine{}).Create(&medicine05)
+
+	medicine06 := Medicine{
+		Name: "ยาแก้แพ้",
+		Cost: 80,
+	}
+	db.Model(&Medicine{}).Create(&medicine06)
 }
