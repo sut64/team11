@@ -225,6 +225,10 @@ type PayMedicine struct {
 	Prescription_number string
 	PayMedicineTime     time.Time
 
+	// EmployeeID ทำหน้าที่เป็น FK
+	EmployeeID *uint
+	Employee   Employee `gorm:"references:id"`
+
 	//PatientID ทำหน้าที่เป็น ForeignKey
 	PatientID *uint
 	Patient   Patient `gorm:"references:id"`
