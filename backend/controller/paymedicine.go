@@ -41,12 +41,12 @@ func CreatePayMedicine(c *gin.Context) {
 
 	// : สร้าง PayMedicine
 	pm := entity.PayMedicine{
-		Patient:             patient,                         // โยงความสัมพันธ์กับ Entity Patient
-		Employee:            employee,                        // โยงความสัมพันธ์กับ Entity Employee
-		Medicine:            medicine,                        // โยงความสัมพันธ์กับ Entity Medicine
-		Pid:                 paymedicine.Pid,                 // ตั้งค่าฟิลด์ Pid
-		Prescription_number: paymedicine.Prescription_number, // ตั้งค่าฟิลด์ Prescription_number
-		PayMedicineTime:     paymedicine.PayMedicineTime,     // ตั้งค่าฟิลด์ PayMedicineTime
+		Patient:         patient,                     // โยงความสัมพันธ์กับ Entity Patient
+		Employee:        employee,                    // โยงความสัมพันธ์กับ Entity Employee
+		Medicine:        medicine,                    // โยงความสัมพันธ์กับ Entity Medicine
+		Pid:             paymedicine.Pid,             // ตั้งค่าฟิลด์ Pid
+		Prescription:    paymedicine.Prescription,    // ตั้งค่าฟิลด์ Prescription_number
+		PayMedicineTime: paymedicine.PayMedicineTime, // ตั้งค่าฟิลด์ PayMedicineTime
 	}
 
 	// : บันทึก
