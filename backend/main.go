@@ -96,7 +96,7 @@ func main() {
 			protected.GET("/paytypes", controller.ListPayTypes)
 			protected.GET("/paytype/:id", controller.GetPayType)
 
-			//Bill Rotes
+			//Bill Routes
 			protected.POST("/bills", controller.CreateBill)
 			protected.GET("/bills", controller.ListBills)
 

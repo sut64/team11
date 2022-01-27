@@ -7,7 +7,7 @@ import (
 	"github.com/sut64/team11/entity"
 )
 
-// GET /patientright/:id
+// GET /billitem/:id
 func GetBillItem(c *gin.Context) {
 	var billitem entity.BillItem
 	id := c.Param("id")
@@ -19,7 +19,7 @@ func GetBillItem(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data":billitem})
 }
 
-// GET /patientrights
+// GET /billitems
 func ListBillItem(c *gin.Context) {
 	var billitems []entity.BillItem
 	if err := entity.DB().Raw("SELECT * FROM bill_items").Scan(&billitems).Error; err != nil {
