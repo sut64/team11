@@ -2,7 +2,7 @@ import { PatientInterface } from "./IPatient";
 import { ClinicInterface } from "./IClinic";
 import { DiseaseInterface } from "./IDisease";
 import { EmployeeInterface } from "./IEmployee";
-//import Medicine Interface
+import { MedicineInterface } from "./IMedicine";
 export interface ExaminationInterface {
     ID: number,
     ChiefComplaint: string,
@@ -17,6 +17,6 @@ export interface ExaminationInterface {
     Clinic: ClinicInterface,
     DiseaseID: number,
     Disease: DiseaseInterface,
-    //MedicineID: number,
-    //Medicine: MedicineInterface,
+    MedicineID: number,
+    Medicine: MedicineInterface,
   }
