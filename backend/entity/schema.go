@@ -135,6 +135,9 @@ type Employee struct {
 	RoleID *uint
 	Role   Role `gorm:"references:id"`
 
+	// 1 Employee มีได้หลาย PayMedicine
+	PayMedicines []PayMedicine `gorm:"foreignKey:EmployeeID"`
+
 	// 1 Employee มีได้หลาย Examination
 	Examinations []Examination `gorm:"foreignKey:EmployeeID"`
 
