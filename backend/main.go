@@ -91,6 +91,17 @@ func main() {
 			protected.POST("/paymedicines", controller.CreatePayMedicine)
 			protected.PATCH("/paymedicines", controller.UpdatePayMedicine)
 			protected.DELETE("/paymedicines/:id", controller.DeletePayMedicine)
+
+			//Paytype Routes 
+			protected.GET("/paytypes", controller.ListPayTypes)
+			protected.GET("/paytype/:id", controller.GetPayType)
+
+			//Bill Rotes
+			protected.POST("/bills", controller.CreateBill)
+			protected.GET("/bills", controller.ListBills)
+
+			//Billitem Routes
+			protected.GET("/billitems", controller.ListBillItem)
 		}
 	}
 	// User Routes
