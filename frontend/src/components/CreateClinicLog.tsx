@@ -337,25 +337,25 @@ function ClinicLogCreate() {
       </Paper>
       <br/>
       <Grid container justifyContent="center" spacing={3}>
-         <Grid item xs={3}>
-            <Button
-              component={RouterLink}
-              to="/appointment"
-              variant="contained"
-            >
-              กลับ
-            </Button>
-            <Button
-              style={{ float: "right" }}
-              variant="contained"
-              onClick={submit}
-              color="primary"
-            >
-              บันทึก
-            </Button>
-          </Grid>
-
-      </Grid>
+      <Grid item xs={3}>
+              <Button
+                component={RouterLink}
+                to="/cliniclog"
+                variant="contained"
+                color="primary"
+              >
+                ประวัติ
+              </Button>
+              <Button
+                style={{ float: "right" }}
+                variant="contained"
+                onClick={submit}
+                color="primary"
+             >
+                บันทึก
+              </Button>
+            </Grid>
+        </Grid>
      
     </Container>
   );
