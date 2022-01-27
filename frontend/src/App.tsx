@@ -47,6 +47,7 @@ import ListPatient from "./components/listPatient";
 import ClinicLogs from "./components/ClinicLog";
 import CreateExamination from "./components/CreateExamination";
 import Examination from "./components/Examination";
+import ListBill from "./components/ListBill";
 
 const drawerWidth = 240;
 
@@ -173,7 +174,7 @@ export default function MiniDrawer() {
     { name: "บันทึกรายการนัดหมาย", icon: <AllInboxIcon />, path: "/Appointment" },
     { name: "บันทึกการส่งตรวจคลินิก", icon: <NoteIcon />, path: "/CreateClinicLog" },
     { name: "บันทึกผลการตรวจรักษา", icon: <SickIcon />, path: "/Examination" },
-    { name: "ใบแจ้งค่าใช้จ่าย", icon: <AccountBalanceIcon />, path: "/CreateBill" },
+    { name: "ใบแจ้งค่าใช้จ่าย", icon: <AccountBalanceIcon />, path: "/ListBills" },
 
   ];
 
@@ -288,6 +289,7 @@ export default function MiniDrawer() {
                 <Route path="/CreateExamination" element={<CreateExamination />} />
                 <Route path="/Examination" element={<Examination />} />
                 <Route path="/CreateBill" element={<BillCreate />} />
+                <Route path="/ListBills" element={<ListBill />} />
                 <Route path="/listPatient" element={<ListPatient/>} />
               </Routes>
             </div>

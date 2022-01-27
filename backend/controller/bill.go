@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sut64/team11/entity"
 
-	"github.com/asaskevich/govalidator"
+	//"github.com/asaskevich/govalidator"
 )
 
 // POST /bills
@@ -39,7 +39,7 @@ func CreateBill(c *gin.Context) {
 
 	// 11: ค้นหา employee ด้วย id
 	if tx := entity.DB().Where("id = ?", bill.EmployeeID).First(&employee); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "cashier not found"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "employee not found"})
 		return
 	}
 
@@ -56,10 +56,10 @@ func CreateBill(c *gin.Context) {
 	}
 
 	// แทรกการ validate ไว้ช่วงนี้ของ controller
-	if _, err := govalidator.ValidateStruct(bill); err != nil {
+	/*if _, err := govalidator.ValidateStruct(bill); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
-	}
+	}*/
 
 	// 13: บันทึก bill
 	if err := entity.DB().Create(&bl).Error; err != nil {
@@ -107,7 +107,7 @@ func CreateBill(c *gin.Context) {
 func GetBill(c *gin.Context) {
 	var bill entity.Bill
 	id := c.Param("id")
-	if err := entity.DB().Preload("Paytype").Preload("BillItem").Preload("PatientRight").Preload("Employee").Raw("SELECT * FROM bills WHERE id = ?", id).Find(&bill).Error; err != nil {
+	if err := entity.DB().Preload("PatientRight").Preload("PayType").Preload("Employee").Raw("SELECT * FROM bills WHERE id = ?", id).Find(&bill).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -117,7 +117,7 @@ func GetBill(c *gin.Context) {
 // GET /bills
 func ListBills(c *gin.Context) {
 	var bills []entity.Bill
-	if err := entity.DB().Preload("Paytype").Preload("BillItem").Preload("PatientRight").Preload("Employee").Raw("SELECT * FROM bills").Find(&bills).Error; err != nil {
+	if err := entity.DB().Preload("PatientRight").Preload("PayType").Preload("Employee").Raw("SELECT * FROM bills").Find(&bills).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

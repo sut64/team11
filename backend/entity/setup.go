@@ -21,7 +21,7 @@ func SetupDatabase() {
 	}
 
 	// Migrate the schema
-	database.AutoMigrate(&Employee{}, &Gender{}, &PatientType{}, &PatientRight{}, &Patient{}, &Clinic{}, &Appointment{}, &ClinicLog{}, &Examination{}, &Disease{}, &Medicine{})
+	database.AutoMigrate(&Employee{}, &Gender{}, &PatientType{}, &PatientRight{}, &Patient{}, &Clinic{}, &Appointment{}, &ClinicLog{}, &Examination{}, &Disease{}, &Medicine{}, &PayType{}, &Bill{}, &BillItem{})
 	db = database
 
 	//Role Data
@@ -40,7 +40,7 @@ func SetupDatabase() {
 	cashier := Role{
 		Position : "Cashier",
 	}
-	db.Model(&Employee{}).Create(&cashier)
+	db.Model(&Role{}).Create(&cashier)
 
 	Pr1 := PatientRight{
 		Name:     "สิทธิ์สุขภาพถ้วนหน้า",

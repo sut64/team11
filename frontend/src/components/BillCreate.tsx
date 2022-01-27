@@ -30,7 +30,7 @@ import { BillItemInterface } from "../models/IBillItem";
 import { EmployeeInterface } from "../models/IEmployee";
 import { PaytypeInterface } from "../models/IPaytype";
 import { ExaminationInterface } from "../models/IExamination";
-//import { MedicineInterface } from "../models/IMedicine";
+import { MedicineInterface } from "../models/IMedicine";
 
 
 const Alert = (props: AlertProps) => {
@@ -60,16 +60,18 @@ const useStyles = makeStyles((theme: Theme) =>
 function BillCreate(){
     const classes = useStyles();
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-    const [getp, Setgetp] = useState<Partial<PatientInterface>>({});
+    const [getp, Setgetp] = useState<Partial<PatientInterface>>({ID:0});
     const [patients, setPatients] = useState<PatientInterface[]>([]);
     const [examinations, setExaminations] = useState<ExaminationInterface[]>([]);
-    //const [medicines, setMedicines] = useState<MedicineInterface[]>([]);
+    const [flieds,setFlied] = useState<Partial<ExaminationInterface>>({});
+    const [medicines, setMedicines] = useState<MedicineInterface[]>([]);
     const [patientrights, setPatientRights] = useState<PatientRightInterface[]>([]);
     const [paytypes, setPaytypes] = useState<PaytypeInterface[]>([]);
     const [employees, setEmployees] = useState<Partial<EmployeeInterface>>({});
+    const [cashier, setCashier] = useState<EmployeeInterface>();
     const [billitems,setBillitems] = useState<Partial<BillItemInterface>[]>([]);
     const [bill, setBill] = useState<Partial<BillInterface>>(
-        {}
+        {PaytypeID:0,PatientRightID:0}
     );
 
     const [success, setSuccess] = useState(false);
@@ -77,7 +79,7 @@ function BillCreate(){
     const [warning, setWarning] = useState(false);
 
     const apilUrl = "http://localhost:8080";
-    const requesstOptions = {
+    const requesstMenuItems = {
         method : "GET",
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -132,7 +134,7 @@ function BillCreate(){
 
 
     const getPatient = async () =>{
-        fetch(`${apilUrl}/patients`, requesstOptions)
+        fetch(`${apilUrl}/patients`, requesstMenuItems)
             .then((response) => response.json())
             .then((res) => {
                 if (res.data){
@@ -144,20 +146,31 @@ function BillCreate(){
             });
     };
 
+    const getCashier = async () => {
+        let uid = localStorage.getItem("uid");
+        fetch(`${apilUrl}/employee/${uid}`, requesstMenuItems)
+          .then((response) => response.json())
+          .then((res) => {
+            bill.EmployeeID = res.data.ID
+            if (res.data) {
+              console.log(res.data)
+              setCashier(res.data);
+            } else {
+              console.log("else");
+            }
+          });
+      };
 
-
-    
-   
     const getExaminationByID = async() => {
-        const apiUrl = "http://localhost:8080/examination/" + getp.ID;
-        const requestOptions = {
+        const apiUrl = "http://localhost:8080/examination/patient/" + getp.ID;
+        const requestMenuItems = {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json"},
         }
 
-        fetch(apiUrl, requestOptions)
+        fetch(apiUrl, requestMenuItems)
         .then((response) => response.json())
         .then((res) => {
             console.log(res.data);
@@ -170,7 +183,7 @@ function BillCreate(){
     } 
 
     const getPatientRight = async () =>{
-        fetch(`${apilUrl}/patientrights`, requesstOptions)
+        fetch(`${apilUrl}/patientrights`, requesstMenuItems)
             .then((response) => response.json())
             .then((res) => {
                 if (res.data){
@@ -183,7 +196,7 @@ function BillCreate(){
     };
 
     const getPaytypet = async () =>{
-        fetch(`${apilUrl}/paytypes`, requesstOptions)
+        fetch(`${apilUrl}/paytypes`, requesstMenuItems)
             .then((response) => response.json())
             .then((res) => {
                 if (res.data){
@@ -202,6 +215,7 @@ function BillCreate(){
         getPatient();
         getPatientRight();
         getPaytypet();
+        getCashier();
        
     } , []);
     
@@ -212,6 +226,7 @@ function BillCreate(){
         return val;
     };
 
+
     function submit(){
         let data = {
             PatientRightID: convertType(bill.PatientRightID),
@@ -219,9 +234,13 @@ function BillCreate(){
             Total : typeof bill.Total === "string" ? parseInt(bill.Total) : 0,
             Telephone : bill.Telephone ?? "",
             BillTime: selectedDate,
+            EmployeeID : convertType(bill.EmployeeID),
+            BillItems : billitems,
+            
         };
+        console.log(data)
 
-        const requesstOptionsPost = {
+        const requesstMenuItemsPost = {
             method : "POST",
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -229,11 +248,13 @@ function BillCreate(){
             body: JSON.stringify(data),
         };
 
-        fetch(`${apilUrl}/bills`, requesstOptionsPost)
+        fetch(`${apilUrl}/bills`, requesstMenuItemsPost)
             .then((response) => response.json())
             .then((res) => {
                 if(res.data) {
                     setSuccess(true);
+                    
+
                 }
                 else{
                     setError(true);
@@ -321,9 +342,10 @@ function BillCreate(){
                             </MenuItem>
                             {patients.map((item: PatientInterface) => (
                                 <MenuItem value={item.PatientRightID} key={item.PatientRightID}>
-                                    {item.PatientRight}
+                                    {item.PatientRight.Name}
                                 </MenuItem>
                             ))}
+                            
                            
                             </Select>
                             </FormControl>
@@ -341,17 +363,17 @@ function BillCreate(){
                                 name: "EmployeeID",
                             }}
                              >
-                            <option value={employees?.ID} key={employees?.ID}>
-                                {employees?.Name}
-                            </option>
-                           
+                                 <option value={cashier?.ID} key={cashier?.ID}>
+                                    {cashier?.Name}
+                                </option>
+                         
                             </Select>
                             </FormControl>    
 
                             <p>ค่าใช้จ่ายทั้งหมด</p>
                                 <FormControl fullWidth variant="outlined">
                                     <TextField
-                                    id="FirstName"
+                                    id="Total"
                                     variant="outlined"
                                     type="number"
                                     size="small"
@@ -370,7 +392,7 @@ function BillCreate(){
                             <p>ใบผลการรักษา</p>
                             <Select 
                             onChange={handleChangItem}
-                            //onOpen={getExaminationByID}
+                            onOpen={getExaminationByID}
                             defaultValue = {0}
                             inputProps={{
                                 name: "ExaminationID",
@@ -441,9 +463,6 @@ function BillCreate(){
                                     />
                                 </FormControl>
 
-
-                        
-
                     </Grid>
    
                     
@@ -485,11 +504,14 @@ function BillCreate(){
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                            {examinations.map((row:Partial<ExaminationInterface>,index)=>{
+                            {billitems.map((row:Partial<BillItemInterface>,index)=>{
                                     return (
                                         <TableRow key={index}>
-                                            <TableCell align="center">{row.Treatment}</TableCell>
-                                               
+                                            <TableCell align="center">{row.ExaminationID}</TableCell>
+                                            <TableCell align="center">{examinations.find(p => p.ID === row.ExaminationID)?.Medicine.Name}</TableCell>
+                                            <TableCell align="center">{examinations.find(p => p.ID === row.ExaminationID)?.Medicine.Cost}</TableCell>
+                                            
+
                                         </TableRow>
                                     )
                                 })}
