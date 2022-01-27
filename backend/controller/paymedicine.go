@@ -8,7 +8,7 @@ import (
 )
 
 // POST /paymedicines
-func CreateMedicine(c *gin.Context) {
+func CreatePayMedicine(c *gin.Context) {
 
 	var employee entity.Employee
 	var medicine entity.Medicine

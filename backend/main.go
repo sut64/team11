@@ -81,9 +81,15 @@ func main() {
 			// Medicine Routes
 			protected.GET("/medicines", controller.ListMedicines)
 			protected.GET("/medicine/:id", controller.GetMedicine)
-			protected.POST("/medicines", controller.CreateMedicine)
 			protected.PATCH("/medicines", controller.UpdateMedicine)
 			protected.DELETE("/medicines/:id", controller.DeleteMedicine)
+
+			// PayMedicine Routes
+			protected.GET("/paymedicines", controller.ListPayMedicines)
+			protected.GET("/paymedicine/:id", controller.GetPayMedicine)
+			protected.POST("/paymedicines", controller.CreatePayMedicine)
+			protected.PATCH("/paymedicines", controller.UpdatePayMedicine)
+			protected.DELETE("/paymedicines/:id", controller.DeletePayMedicine)
 		}
 	}
 	// User Routes
