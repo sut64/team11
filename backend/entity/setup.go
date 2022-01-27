@@ -37,6 +37,10 @@ func SetupDatabase() {
 		Position: "Pharmacist",
 	}
 	db.Model(&Role{}).Create(&pharmacist)
+	cashier := Role{
+		Position : "Cashier",
+	}
+	db.Model(&Employee{}).Create(&cashier)
 
 	Pr1 := PatientRight{
 		Name:     "สิทธิ์สุขภาพถ้วนหน้า",
@@ -115,6 +119,12 @@ func SetupDatabase() {
 		Email:    "phum@email.com",
 		Password: string(password),
 		Role:     doctor,
+	})
+	db.Model(&Employee{}).Create(&Employee{
+		Name:     "นายอนันต์ กระเซ็น",
+		Email:    "pech@email.com",
+		Password: string(password),
+		Role:     cashier,
 	})
 
 	//--Clinic Data
@@ -217,4 +227,14 @@ func SetupDatabase() {
 		Cost: 80,
 	}
 	db.Model(&Medicine{}).Create(&medicine06)
+
+	//Paytype Data
+	cash := PayType{
+		Type: "เงินสด",
+	}
+	db.Model(&PayType{}).Create(&cash)
+	debit := PayType{
+		Type: "บัตรเครดิต",
+	}
+	db.Model(&PayType{}).Create(&debit)
 }
