@@ -77,10 +77,17 @@ func main() {
 			protected.POST("/cliniclogs", controller.CreateClinicLogs)
 			protected.PATCH("/cliniclogs", controller.UpdateClinicLog)
 			protected.DELETE("/cliniclogs/:id", controller.DeleteClinicLog)
+
+			// Medicine Routes
+			protected.GET("/medicines", controller.ListMedicines)
+			protected.GET("/medicine/:id", controller.GetMedicine)
+			protected.POST("/medicines", controller.CreateMedicine)
+			protected.PATCH("/medicines", controller.UpdateMedicine)
+			protected.DELETE("/medicines/:id", controller.DeleteMedicine)
 		}
 	}
 	// User Routes
-	r.POST("/emplotees", controller.CreateEmployee)
+	r.POST("/employees", controller.CreateEmployee)
 
 	// Authentication Routes
 	r.POST("/login", controller.Login)
