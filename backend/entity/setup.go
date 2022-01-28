@@ -38,7 +38,7 @@ func SetupDatabase() {
 	}
 	db.Model(&Role{}).Create(&pharmacist)
 	cashier := Role{
-		Position : "Cashier",
+		Position: "Cashier",
 	}
 	db.Model(&Role{}).Create(&cashier)
 
@@ -175,11 +175,11 @@ func SetupDatabase() {
 
 	// Disease Data
 	di1 := Disease{
-		Name: "เบาหวาน",
+		Name: "-",
 	}
 	db.Model(&Disease{}).Create(&di1)
 	di2 := Disease{
-		Name: "-",
+		Name: "เบาหวาน",
 	}
 	db.Model(&Disease{}).Create(&di2)
 	di3 := Disease{
@@ -190,8 +190,25 @@ func SetupDatabase() {
 		Name: "มะเร็ง",
 	}
 	db.Model(&Disease{}).Create(&di4)
+	di5 := Disease{
+		Name: "ไข้หวัดใหญ่",
+	}
+	db.Model(&Disease{}).Create(&di5.Model)
+	di6 := Disease{
+		Name: "หัวใจ",
+	}
+	db.Model(&Disease{}).Create(&di6)
+	di7 := Disease{
+		Name: "ออฟฟิศซินโดรม",
+	}
+	db.Model(&Disease{}).Create(&di7)
 
 	//Medicine Data
+	medicine00 := Medicine{
+		Name: "-",
+		Cost: 0,
+	}
+	db.Model(&Medicine{}).Create(&medicine00)
 	medicine01 := Medicine{
 		Name: "พาราเซตามอล",
 		Cost: 100,
