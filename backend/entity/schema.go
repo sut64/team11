@@ -249,7 +249,7 @@ type Medicine struct {
 	// 1 Medicine มีได้หลาย PayMedicines
 	PayMedicines []PayMedicine `gorm:"foreignKey: MedicineID"`
 
-	// 1 Medicine มีได้หลาย Examination
+	// 1 Medicine มีได้หลาย Examinations
 	Examinations []Examination `gorm:"foreignKey: MedicineID"`
 }
 
