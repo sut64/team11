@@ -31,6 +31,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import NoteIcon from '@mui/icons-material/Note';
 import SickIcon from '@mui/icons-material/Sick';
+import MedicationIcon from '@mui/icons-material/Medication';
 
 import Home from "./components/Home";
 import SignIn from "./components/SignIn";
@@ -48,6 +49,8 @@ import ClinicLogs from "./components/ClinicLog";
 import CreateExamination from "./components/CreateExamination";
 import Examination from "./components/Examination";
 import ListBill from "./components/ListBill";
+import PayMedicineCreate from "./components/PayMedicineCreate";
+import PayMedicine from "./components/PayMedicine";
 
 const drawerWidth = 240;
 
@@ -174,7 +177,10 @@ export default function MiniDrawer() {
     { name: "บันทึกรายการนัดหมาย", icon: <AllInboxIcon />, path: "/Appointment" },
     { name: "บันทึกการส่งตรวจคลินิก", icon: <NoteIcon />, path: "/CreateClinicLog" },
     { name: "บันทึกผลการตรวจรักษา", icon: <SickIcon />, path: "/Examination" },
+    { name: "บันทึกการจ่ายยา", icon: <MedicationIcon />, path: "/PayMedicine" },
     { name: "ใบแจ้งค่าใช้จ่าย", icon: <AccountBalanceIcon />, path: "/ListBills" },
+
+
 
   ];
 
@@ -288,6 +294,8 @@ export default function MiniDrawer() {
                 <Route path="/ClinicLog" element={<ClinicLogs />} />
                 <Route path="/CreateExamination" element={<CreateExamination />} />
                 <Route path="/Examination" element={<Examination />} />
+                <Route path="/PayMedicine" element={<PayMedicine />} />
+                <Route path="/PayMedicineCreate" element={<PayMedicineCreate />} />
                 <Route path="/CreateBill" element={<BillCreate />} />
                 <Route path="/ListBills" element={<ListBill />} />
                 <Route path="/listPatient" element={<ListPatient/>} />
