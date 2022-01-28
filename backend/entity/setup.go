@@ -193,7 +193,7 @@ func SetupDatabase() {
 	di5 := Disease{
 		Name: "ไข้หวัดใหญ่",
 	}
-	db.Model(&Disease{}).Create(&di5.Model)
+	db.Model(&Disease{}).Create(&di5)
 	di6 := Disease{
 		Name: "หัวใจ",
 	}

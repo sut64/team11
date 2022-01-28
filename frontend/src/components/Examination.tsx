@@ -14,6 +14,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { ExaminationInterface } from "../models/IExamination"
 import { format } from 'date-fns'
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import HomeIcon from "@material-ui/icons/Home";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -82,9 +84,22 @@ function Examination() {
               component={RouterLink}
               to="/CreateExamination"
               variant="contained"
+              startIcon={<AddCircleIcon/>}
               color="primary"
             >
               บันทึกข้อมูลผลการวินิจฉัย
+            </Button>
+          </Box>
+          <Box>
+            <Button style={{marginLeft:20}}
+              component={RouterLink}
+              to="/"
+              variant="contained"
+              size="medium"
+              startIcon={<HomeIcon/>}
+              color="primary"
+            >
+              หน้าแรก
             </Button>
           </Box>
         </Box>
@@ -98,10 +113,11 @@ function Examination() {
                                 color="primary"
                                 gutterBottom
                             >
-                                ผลวินิจฉัย
+                                ประวัติผลวินิจฉัย
                             </Typography>
                         </Box>
                     </Box>
+                    
               <TableContainer component={Paper} className={classes.tableSpace}>
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
