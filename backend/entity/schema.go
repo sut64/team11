@@ -47,6 +47,9 @@ type Patient struct {
 
 	// 1 Patient มีได้หลาย Examination
 	Examinations []Examination `gorm:"foreignKey:PatientID"`
+
+	// 1 Patient มีได้หลาย PayMedicines
+	PayMedicines []PayMedicine `gorm:"foreignKey: PatientID"`
 }
 type PatientRight struct {
 	gorm.Model
