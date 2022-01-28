@@ -12,5 +12,6 @@ export interface PayMedicineInterface {
     PatientID: number,
     Patient: PatientInterface,
     MedicineID: number,
+    Cost: number,
     Medicine: MedicineInterface,
   }
