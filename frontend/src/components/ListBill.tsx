@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import * as React from 'react';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
 import { Link as RouterLink } from "react-router-dom";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -14,8 +17,15 @@ import { PatientInterface } from "../models/IPatient";
 import moment from "moment";
 import HomeIcon from "@material-ui/icons/Home";
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
 import { BillItemInterface } from "../models/IBillItem";
 import { BillInterface } from "../models/IBill";
+import { ExaminationInterface } from "../models/IExamination";
+import { PayMedicineInterface } from "../models/IPayMedicine";
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,6 +52,9 @@ function ListBill() {
   const classes = useStyles();
   const [billitems,setBillitems] = useState<BillItemInterface[]>([]);
   const [bills,setBills] = useState<BillInterface[]>([]);
+  const [exams,setexams] = useState<ExaminationInterface[]>([]);
+  const [medi,setMedi] = useState<PayMedicineInterface[]>([]);
+  const [open, setOpen] = React.useState(false);
 
   const getBillitems = async () => {
     const apiUrl = "http://localhost:8080";
@@ -86,9 +99,58 @@ function ListBill() {
         }
       });
   };
+
+  const getExaminations = async () => {
+    const apiUrl = "http://localhost:8080";
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+    fetch(`${apiUrl}/examinations`, requestOptions)
+      .then((response) => response.json())
+
+      .then((res) => {
+        console.log(res.data);
+        if (res.data) {
+          setexams(res.data);
+        } else {
+          console.log("else");
+        }
+      });
+  };
+
+  const getPayMedicines = async () => {
+    const apiUrl = "http://localhost:8080";
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+    fetch(`${apiUrl}/paymedicines`, requestOptions)
+      .then((response) => response.json())
+
+      .then((res) => {
+        console.log(res.data);
+        if (res.data) {
+          setMedi(res.data);
+        } else {
+          console.log("else");
+        }
+      });
+  };
+
+
+
   useEffect(() => {
     getBillitems();
     getBills();
+    getExaminations();
+    getPayMedicines();
   }, []);
 
   return (
@@ -105,7 +167,7 @@ function ListBill() {
             to="/CreateBill"
             variant="contained"
             color="primary"
-            startIcon={<PersonAddIcon />}
+            startIcon={<AddCircleIcon />}
           >
             สร้างใบแจ้งค่าใช้จ่าย
           </Button>
@@ -139,7 +201,7 @@ function ListBill() {
                 ค่าใช้จ่ายทั้งหมด
               </TableCell>
               <TableCell align="center" className={classes.title}>
-                ใบผลการรักษา
+                ผลการรักษา
               </TableCell>
             </TableRow>
           </TableHead>
@@ -150,13 +212,54 @@ function ListBill() {
                                         <TableCell align="center">{item.ID}</TableCell>
                                         <TableCell align="center">{item.Employee?.Name}</TableCell>
                                         <TableCell align="center">{item.Total}</TableCell>
-                                        <TableCell align="center">{billitems.find(p=>p.ID === item.ID)?.ExaminationID}</TableCell>
-                                        
-                                       
-                                    </TableRow>
-
+                                        <TableCell align="center" >
+                                            <IconButton
+                                              aria-label="expand row"
+                                              size="small"
+                                              onClick={() => setOpen(!open)}
+                                            >
+                                              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                            </IconButton>
+                                        </TableCell>
+                                      </TableRow>
                                 ))}
+                                <TableRow>
+                                  <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                                    <Collapse in={open} timeout="auto" unmountOnExit>
+                                      <Box sx={{ margin: 1 }}>
+                                        <Typography variant="h6" gutterBottom component="div">
+                                          ผลการรักษา
+                                        </Typography>
+                                        <Table size="small" aria-label="purchases">
+                                          <TableHead>
+                                            <TableRow>
+                                              <TableCell align="center">ใบผลการรักษา</TableCell>
+                                              <TableCell align="center">ผลการรักษา</TableCell>
+                                              <TableCell align="center">ค่าใช้จ่าย</TableCell>
+                                            </TableRow>
+                                          </TableHead>
+                                          <TableBody>
+                                            {billitems.map((item) => (
+                                              <TableRow key={item.ID}>
+                                                <TableCell component="th" scope="row" align="center">
+                                                  {item.ExaminationID}
+                                                </TableCell>
+                                                <TableCell component="th" scope="row" align="center">
+                                                  {exams.find(p=>p.ID === item.ExaminationID)?.Treatment}
+                                                </TableCell>
+                                                <TableCell component="th" scope="row" align="center">
+                                                  {exams.find(p=>p.ID === item.ExaminationID)?.Cost}
+                                                </TableCell>
+                                             
 
+                                              </TableRow>
+                                            ))}
+                                          </TableBody>
+                                        </Table>
+                                      </Box>
+                                    </Collapse>
+                                  </TableCell>
+                                </TableRow>
           </TableBody>
         </Table>
       </Paper>

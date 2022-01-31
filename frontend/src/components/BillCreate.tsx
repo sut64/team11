@@ -22,6 +22,8 @@ import { Snackbar } from "@material-ui/core";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Select } from "@material-ui/core";
 import { MenuItem } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from '@mui/material/IconButton';
 
 import { PatientInterface } from "../models/IPatient";
 import { PatientRightInterface } from "../models/IPatientRight";
@@ -131,6 +133,12 @@ function BillCreate(){
         console.log(date);
         setSelectedDate(date);
     };
+
+    const removeFromItem = (index: number) => {
+        let updatedItem = billitems.filter((_, i) => i !== index);
+        setBillitems(updatedItem);
+      }
+
 
 
     const getPatient = async () =>{
@@ -485,7 +493,8 @@ function BillCreate(){
                                             <TableCell align="center">{row.ExaminationID}</TableCell>
                                             <TableCell align="center">{examinations.find(p => p.ID === row.ExaminationID)?.Treatment}</TableCell>
                                             <TableCell align="center">{examinations.find(p => p.ID === row.ExaminationID)?.Cost}</TableCell>
-                                           
+                                            <TableCell width="5%"><IconButton size="small" onClick={() => removeFromItem(index)}><DeleteIcon /></IconButton></TableCell>
+
                                         </TableRow>
                                     )
                                 })}
