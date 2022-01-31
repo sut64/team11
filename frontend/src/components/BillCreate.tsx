@@ -161,6 +161,7 @@ function BillCreate(){
           });
       };
 
+
     const getExaminationByID = async() => {
         const apiUrl = "http://localhost:8080/examination/patient/" + getp.ID;
         const requestMenuItems = {
