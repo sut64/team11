@@ -96,10 +96,10 @@ type BillItem struct {
 	gorm.Model
 
 	BillID *uint
-	Bill   Bill `gorm:"references:id"`
+	Bill   Bill `gorm:"references:id" valid:"-"`
 
 	ExaminationID *uint
-	Examination   Examination `gorm:"references:id"`
+	Examination   Examination `gorm:"references:id" valid:"-"`
 }
 
 type Appointment struct {
