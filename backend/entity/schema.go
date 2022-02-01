@@ -21,7 +21,7 @@ type PatientType struct {
 
 type Patient struct {
 	gorm.Model
-	HN        string `gorm:"uniqueIndex"`
+	HN        string `valid:"matches(^HN\\d{6}$)"`
 	Pid       string `gorm:"uniqueIndex"`
 	FirstName string
 	LastName  string
@@ -32,15 +32,15 @@ type Patient struct {
 
 	//GenderID ทำหน้าที่เป็น ForeignKey
 	GenderID *uint
-	Gender   Gender `gorm:"references:id"`
+	Gender   Gender `gorm:"references:id" valid:"-"`
 
 	//PatientTypeID ทำหน้าที่เป็น ForeignKey
 	PatientTypeID *uint
-	PatientType   PatientType `gorm:"references:id"`
+	PatientType   PatientType `gorm:"references:id" valid:"-"`
 
 	//PatientRightID ทำหน้าที่เป็น ForeignKey
 	PatientRightID *uint
-	PatientRight   PatientRight `gorm:"references:id"`
+	PatientRight   PatientRight `gorm:"references:id" valid:"-"`
 
 	// 1 patient มีได้หลาย Appointment
 	Appointments []Appointment `gorm:"foreignKey:PatientID"`
