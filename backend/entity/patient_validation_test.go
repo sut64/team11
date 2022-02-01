@@ -71,3 +71,43 @@ func TestHNMustBeInValidPattern(t *testing.T) {
 		g.Expect(err.Error()).To(Equal(fmt.Sprintf(`HN: %s does not validate as matches(^HN\d{6}$)`, fixture)))
 	}
 }
+
+// ตรวจสอบหมายเลข PID ต้องขึ้นด้วย 1 ถึง 9 และตามด้วย 0 ถึง 9 จำนวน 12 ตัว
+func TestPIDMustBeInValidPattern(t *testing.T) {
+	g := NewGomegaWithT(t)
+
+	fixtures := []string{
+		"0000000000000",
+		"0123456654321",
+		"000000000000",
+		"100000000000",
+		"10000000000000",
+		"10000000000x",
+		"0",
+		"xxxxxxxxxxxxx",
+	}
+
+	for _, fixture := range fixtures {
+		patient := Patient{
+			HN:        "HN000001",
+			Pid:       fixture, // ผิด
+			FirstName: "ปริญญา",
+			LastName:  "เรียนดี",
+			Birthdate: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+			Age:       20,
+			DateAdmit: time.Now(),
+			Symptom:   "ปวดท้องด้านซ้าย",
+		}
+
+		ok, err := govalidator.ValidateStruct(patient)
+
+		// ok ต้องไม่เป็น true แปลว่าต้องจับ error ได้
+		g.Expect(ok).ToNot(BeTrue())
+
+		// err ต้องไม่เป็น nil แปลว่าต้องจับ error ได้
+		g.Expect(err).ToNot(BeNil())
+
+		// err.Error() ต้องมี message แสดงออกมา
+		g.Expect(err.Error()).To(Equal(fmt.Sprintf(`Pid: %s does not validate as matches(^[1-9]\d{12}$)`, fixture)))
+	}
+}

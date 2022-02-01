@@ -22,7 +22,7 @@ type PatientType struct {
 type Patient struct {
 	gorm.Model
 	HN        string `valid:"matches(^HN\\d{6}$)"`
-	Pid       string `gorm:"uniqueIndex"`
+	Pid       string `valid:"matches(^[1-9]\\d{12}$)"`
 	FirstName string
 	LastName  string
 	Birthdate time.Time
