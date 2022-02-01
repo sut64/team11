@@ -5,6 +5,7 @@ import (
 
     "github.com/gin-gonic/gin"
 	"github.com/sut64/team11/entity"
+	"github.com/asaskevich/govalidator"
 )
 
 // POST /patien
@@ -53,6 +54,12 @@ func CreatePatients(c *gin.Context) {
 		Age:                patient.Age,        // ตั้งค่าฟิลด์ Age ให้เท่ากับค่าที่รับมา
 		DateAdmit: 			patient.DateAdmit,  // ตั้งค่าฟิลด์ DateAdmit ให้เท่ากับค่าที่รับมา
 		Symptom: 			patient.Symptom,    // ตั้งค่าฟิลด์ Symptom ให้เท่ากับค่าที่รับมา
+	}
+
+	// : ขั้นตอนการ validate ข้อมูล
+	if _, err := govalidator.ValidateStruct(pt); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	// : บันทึก
