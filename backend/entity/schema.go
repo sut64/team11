@@ -26,7 +26,7 @@ type Patient struct {
 	FirstName string
 	LastName  string
 	Birthdate time.Time `valid:"past~Birthdate must be in the past"`
-	Age       uint `valid:"range(0|120)"`
+	Age       uint      `valid:"range(0|120)"`
 	DateAdmit time.Time
 	Symptom   string
 
@@ -190,7 +190,7 @@ type ClinicLog struct {
 type Examination struct {
 	gorm.Model
 	ChiefComplaint string
-	Treatment      string
+	Treatment      string `valid:"required~Treatment Not Blank"`
 	Cost           uint
 	DiagnosisTime  time.Time
 
