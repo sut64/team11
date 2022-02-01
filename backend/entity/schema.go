@@ -192,7 +192,7 @@ type Examination struct {
 	ChiefComplaint string
 	Treatment      string    `valid:"required~Treatment Not Blank"`
 	Cost           int       `valid:"positive~Cost cannot less than zero"`
-	DiagnosisTime  time.Time `valid:"Now~DiagnosisTime must be now"`
+	DiagnosisTime  time.Time `valid:"DelayNow3Min~DiagnosisTime must not be past"`
 
 	// EmployeeID ทำหน้าที่เป็น FK
 	EmployeeID *uint
@@ -270,6 +270,11 @@ func init() {
 	govalidator.CustomTypeTagMap.Set("Now", func(i interface{}, context interface{}) bool {
 		t := i.(time.Time)
 		return t.Equal(time.Now())
+	})
+
+	govalidator.CustomTypeTagMap.Set("DelayNow3Min", func(i interface{}, context interface{}) bool {
+		t := i.(time.Time)
+		return t.After(time.Now().Add(3 - time.Minute))
 	})
 
 	govalidator.CustomTypeTagMap.Set("positive", func(i interface{}, context interface{}) bool {

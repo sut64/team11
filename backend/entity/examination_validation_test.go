@@ -78,14 +78,14 @@ func TestCostNotLessThanZero(t *testing.T) {
 }
 
 // ตรวจสอบเวลาการวินิจฉัยต้องไม่เป็นเวลาในอดีต
-func TestDiagnosisTimeMustBeNow(t *testing.T) {
+func TestDiagnosisTimeMustNotBeNow(t *testing.T) {
 	g := NewGomegaWithT(t)
 
 	examination := Examination{
 		ChiefComplaint: "",
 		Treatment:      "aaa",
 		Cost:           500,
-		DiagnosisTime:  time.Now().Add(time.Hour - 1), //ผิด
+		DiagnosisTime:  time.Now().Add(5 - time.Hour), //ผิด
 	}
 
 	// ตรวจสอบด้วย govalidator
@@ -98,5 +98,5 @@ func TestDiagnosisTimeMustBeNow(t *testing.T) {
 	g.Expect(err).ToNot(BeNil())
 
 	// err.Error ต้องมี error message แสดงออกมา
-	g.Expect(err.Error()).To(Equal("DiagnosisTime must be now"))
+	g.Expect(err.Error()).To(Equal("DiagnosisTime must not be past"))
 }
