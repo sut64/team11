@@ -191,7 +191,7 @@ type Examination struct {
 	gorm.Model
 	ChiefComplaint string
 	Treatment      string `valid:"required~Treatment Not Blank"`
-	Cost           uint
+	Cost           int    `valid:"positive~Cost cannot less than zero"`
 	DiagnosisTime  time.Time
 
 	// EmployeeID ทำหน้าที่เป็น FK
@@ -270,5 +270,10 @@ func init() {
 	govalidator.CustomTypeTagMap.Set("Now", func(i interface{}, context interface{}) bool {
 		t := i.(time.Time)
 		return t.Equal(time.Now())
+	})
+
+	govalidator.CustomTypeTagMap.Set("positive", func(i interface{}, context interface{}) bool {
+		num := i
+		return num.(int) >= 0
 	})
 }
