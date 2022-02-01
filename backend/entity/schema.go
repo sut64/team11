@@ -190,29 +190,29 @@ type ClinicLog struct {
 type Examination struct {
 	gorm.Model
 	ChiefComplaint string
-	Treatment      string `valid:"required~Treatment Not Blank"`
-	Cost           int    `valid:"positive~Cost cannot less than zero"`
-	DiagnosisTime  time.Time
+	Treatment      string    `valid:"required~Treatment Not Blank"`
+	Cost           int       `valid:"positive~Cost cannot less than zero"`
+	DiagnosisTime  time.Time `valid:"Now~DiagnosisTime must be now"`
 
 	// EmployeeID ทำหน้าที่เป็น FK
 	EmployeeID *uint
-	Employee   Employee `gorm:"references:id"`
+	Employee   Employee `gorm:"references:id" valid:"-"`
 
 	// PatientID ทำหน้าที่เป็น FK
 	PatientID *uint
-	Patient   Patient `gorm:"references:id"`
+	Patient   Patient `gorm:"references:id" valid:"-"`
 
 	// ClinicID ทำหน้าที่เป็น FK
 	ClinicID *uint
-	Clinic   Clinic `gorm:"references:id"`
+	Clinic   Clinic `gorm:"references:id" valid:"-"`
 
 	// DiseaseID ทำหน้าที่เป็น FK
 	DiseaseID *uint
-	Disease   Disease `gorm:"references:id"`
+	Disease   Disease `gorm:"references:id" valid:"-"`
 
 	// MedicineID ทำหน้าที่เป็น FK
 	MedicineID *uint
-	Medicine   Medicine `gorm:"references:id"`
+	Medicine   Medicine `gorm:"references:id" valid:"-"`
 
 	BillItems []BillItem `gorm:"foreignKey:ExaminationID"`
 }
