@@ -139,3 +139,32 @@ func TestAgeMustBeInRange(t *testing.T) {
 		g.Expect(err.Error()).To(Equal("Age: 121 does not validate as range(0|120)"))
 	
 }
+
+// ตรวจสอบวันเดือนปีเกิดต้องเป็นวันในอดีต
+func TestBirthdateMustBePast(t *testing.T) {
+	g := NewGomegaWithT(t)
+
+	patient := Patient{
+		HN:        "HN123456",
+		Pid:       "6543216543210",
+		FirstName: "จิระพรรณ",
+		LastName:  "ผิวดี",
+		Birthdate: time.Now().Add(24 * time.Hour), // อนาคต, fail
+		Age:       80, // ผิด
+		DateAdmit: time.Now(),
+		Symptom:   "ไอแห้ง",
+	}
+
+	// ตรวจสอบด้วย govalidator
+	ok, err := govalidator.ValidateStruct(patient)
+
+	// ok ต้องไม่เป็นค่า true แปลว่าต้องจับ error ได้
+	g.Expect(ok).ToNot(BeTrue())
+
+	// err ต้องไม่เป็นค่า nil แปลว่าต้องจับ error ได้
+	g.Expect(err).ToNot(BeNil())
+
+	// err.Error ต้องมี error message แสดงออกมา
+	g.Expect(err.Error()).To(Equal("Birthdate must be in the past"))
+
+}

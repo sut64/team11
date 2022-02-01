@@ -25,7 +25,7 @@ type Patient struct {
 	Pid       string `valid:"matches(^[1-9]\\d{12}$)"`
 	FirstName string
 	LastName  string
-	Birthdate time.Time
+	Birthdate time.Time `valid:"past~Birthdate must be in the past"`
 	Age       uint `valid:"range(0|120)"`
 	DateAdmit time.Time
 	Symptom   string
