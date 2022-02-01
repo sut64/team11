@@ -26,7 +26,7 @@ type Patient struct {
 	FirstName string
 	LastName  string
 	Birthdate time.Time
-	Age       uint
+	Age       uint `valid:"range(0|120)"`
 	DateAdmit time.Time
 	Symptom   string
 
