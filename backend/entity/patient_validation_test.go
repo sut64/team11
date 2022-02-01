@@ -111,3 +111,31 @@ func TestPIDMustBeInValidPattern(t *testing.T) {
 		g.Expect(err.Error()).To(Equal(fmt.Sprintf(`Pid: %s does not validate as matches(^[1-9]\d{12}$)`, fixture)))
 	}
 }
+
+// ตรวจสอบอายุต้องเป็นตัวเลขที่อยู่ในช่วง 0-120
+func TestAgeMustBeInRange(t *testing.T) {
+	g := NewGomegaWithT(t)
+
+		patient := Patient{
+			HN:        "HN123456",
+			Pid:       "6543216543210",
+			FirstName: "สมชาย",
+			LastName:  "ตัวโต",
+			Birthdate: time.Date(2022, 1, 26, 0, 0, 0, 0, time.UTC),
+			Age:       121, // ผิด
+			DateAdmit: time.Now(),
+			Symptom:   "ปวดท้อง",
+		}
+
+		ok, err := govalidator.ValidateStruct(patient)
+
+		// ok ต้องไม่เป็น true แปลว่าต้องจับ error ได้
+		g.Expect(ok).ToNot(BeTrue())
+
+		// err ต้องไม่เป็น nil แปลว่าต้องจับ error ได้
+		g.Expect(err).ToNot(BeNil())
+
+		// err.Error() ต้องมี message แสดงออกมา
+		g.Expect(err.Error()).To(Equal("Age: 121 does not validate as range(0|120)"))
+	
+}
