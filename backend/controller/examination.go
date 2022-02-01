@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 	"github.com/sut64/team11/entity"
 )
@@ -63,6 +64,12 @@ func CreateExamination(c *gin.Context) {
 		Treatment:      examination.Treatment,      // ตั้งค่าฟิลด์ Treatment
 		Cost:           examination.Cost,           // ตั้งค่าฟิลด์ Cost
 		DiagnosisTime:  examination.DiagnosisTime,  // ตั้งค่าฟิลด์ DiagnosisTime
+	}
+
+	// : ขั้นตอนการ validate ข้อมูล
+	if _, err := govalidator.ValidateStruct(ex); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	// 17: บันทึก
