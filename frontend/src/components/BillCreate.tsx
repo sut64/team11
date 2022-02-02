@@ -72,6 +72,7 @@ function BillCreate(){
     const [employees, setEmployees] = useState<Partial<EmployeeInterface>>({});
     const [cashier, setCashier] = useState<EmployeeInterface>();
     const [billitems,setBillitems] = useState<Partial<BillItemInterface>[]>([]);
+    const [errorMessage, setErrorMessage] = useState("");
     const [bill, setBill] = useState<Partial<BillInterface>>(
         {PaytypeID:0,PatientRightID:0}
     );
@@ -262,11 +263,13 @@ function BillCreate(){
             .then((res) => {
                 if(res.data) {
                     setSuccess(true);
+                    setErrorMessage("");
                     
 
                 }
                 else{
                     setError(true);
+                    setErrorMessage(res.error);
                 }
             });
     }
@@ -281,7 +284,7 @@ function BillCreate(){
             </Snackbar>
             <Snackbar open={error} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="error">
-                    บันทึกข้อมูลไม่สำเร็จ
+                    บันทึกข้อมูลไม่สำเร็จ : {errorMessage}
                 </Alert>
             </Snackbar>
             <Snackbar open={warning} autoHideDuration={6000} onClose={handleClose}>
