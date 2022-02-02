@@ -24,6 +24,7 @@ import { ClinicInterface } from "../models/IClinic";
 import { DiseaseInterface } from "../models/IDisease";
 import { MedicineInterface } from "../models/IMedicine";
 import { ExaminationInterface } from "../models/IExamination";
+import HomeIcon from "@material-ui/icons/Home";
 
 import {
   MuiPickersUtilsProvider,
@@ -58,12 +59,14 @@ function CreateExamination() {
   const [clinics, setClinics] = useState<ClinicInterface[]>([]);
   const [diseases, setDiseases] = useState<DiseaseInterface[]>([]);
   const [medicines, setMedicines] = useState<MedicineInterface[]>([]);
-  const [examination, setExamination] = useState<Partial<ExaminationInterface>>(
-    {}
-  );
+  const [examination, setExamination] = useState<Partial<ExaminationInterface>>({});
 
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  const [costError, setCostError] = useState(false);
+  const [treatmentError, setTreatmentError] = useState(false);
+  const [dateError, setDateError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const apiUrl = "http://localhost:8080";
   const requestOptions = {
@@ -80,6 +83,9 @@ function CreateExamination() {
     }
     setSuccess(false);
     setError(false);
+    setCostError(false);
+    setTreatmentError(false);
+    setDateError(false);
   };
 
   const handleChange = (
@@ -187,9 +193,9 @@ function CreateExamination() {
       ClinicID: convertType(examination.ClinicID),
       DiseaseID: convertType(examination.DiseaseID),
       MedicineID: convertType(examination.MedicineID),
-      ChiefComplaint: examination.ChiefComplaint ?? "",
-      Treatment: examination.Treatment ?? "",
-      Cost: typeof examination.Cost === "string" ? parseInt(examination.Cost ) : 0,
+      ChiefComplaint: examination.ChiefComplaint,
+      Treatment: examination.Treatment,
+      Cost: convertType(examination.Cost),
       DiagnosisTime: selectedDate,
     };
 
@@ -206,24 +212,94 @@ function CreateExamination() {
       .then((response) => response.json())
       .then((res) => {
         console.log("RES" , res)
-        if (res.data) {
+        var finevalid = null;
+        if (res.error) {
+          var resError = res.error.split(";", 3)
+          var validError = ['Cost cannot less than zero', 'DiagnosisTime must not be past', 'Treatment Not Blank']
+          finevalid = validError.filter(item => resError.indexOf(item) > -1)
+          console.log("Log", finevalid)
+        }
+        if (finevalid?.length != 0 && finevalid) {
+          if (finevalid[0] == 'Cost cannot less than zero') {
+            ClearCost();
+            setCostError(true);
+          }
+          else if (finevalid[0] == 'DiagnosisTime must not be past') {
+            ClearDiagnosisTime();
+            setDateError(true);
+          }
+          else if (finevalid[0] == 'Treatment Not Blank') {
+            setTreatmentError(true);
+          }
+        }
+        else if (res.data) {
           setSuccess(true);
-        } else {
+          ClearForm();
+        } 
+        else {
           setError(true);
+          setErrorMessage(res.error)
         }
       });
   }
 
+  function ClearForm() {
+    setExamination({
+      ChiefComplaint: "",
+      Treatment: "",
+      Cost: 0,
+      DiagnosisTime: new Date(),
+      EmployeeID: 0,
+      PatientID: 0,
+      ClinicID: 0,
+      DiseaseID: 0,
+      MedicineID: 0,
+    });
+  }
+
+  function ClearCost() {
+    setExamination({
+      ChiefComplaint: examination.ChiefComplaint,
+      Treatment: examination.Treatment,
+      Cost: 0,
+      DiagnosisTime: examination.DiagnosisTime,
+      EmployeeID: examination.EmployeeID,
+      PatientID: examination.PatientID,
+      ClinicID: examination.ClinicID,
+      DiseaseID: examination.DiseaseID,
+      MedicineID: examination.MedicineID,
+    });
+  }
+
+  function ClearDiagnosisTime() {
+    setSelectedDate(new Date());
+  }
+
   return (
     <Container className={classes.container} maxWidth="md">
-      <Snackbar open={success} autoHideDuration={2000} onClose={handleClose}>
+      <Snackbar open={success} autoHideDuration={1000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
           บันทึกข้อมูลสำเร็จ
         </Alert>
       </Snackbar>
-      <Snackbar open={error} autoHideDuration={2000} onClose={handleClose}>
+      <Snackbar open={error} autoHideDuration={1000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
-          บันทึกข้อมูลไม่สำเร็จ
+          บันทึกข้อมูลไม่สำเร็จ: {errorMessage}
+        </Alert>
+      </Snackbar>
+      <Snackbar open={treatmentError} autoHideDuration={1000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error">
+          บันทึกข้อมูลไม่สำเร็จ: วิธีการรักษาไม่สามารถเป็นค่าว่างได้
+        </Alert>
+      </Snackbar>
+      <Snackbar open={costError} autoHideDuration={1000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error">
+          บันทึกข้อมูลไม่สำเร็จ: ราคาการรักษาไม่สามารถเป็นค่าคิดลบได้
+        </Alert>
+      </Snackbar>
+      <Snackbar open={dateError} autoHideDuration={1000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error">
+          บันทึกข้อมูลไม่สำเร็จ: เลือกวันที่และเวลาปัจจุบัน
         </Alert>
       </Snackbar>
       <Paper className={classes.paper}>
@@ -237,6 +313,18 @@ function CreateExamination() {
             >
               ผลการตรวจรักษา
             </Typography>
+          </Box>
+          <Box>
+            <Button
+              component={RouterLink}
+              to="/"
+              variant="contained"
+              size="small"
+              startIcon={<HomeIcon/>}
+              color="primary"
+            >
+              หน้าแรก
+            </Button>
           </Box>
         </Box>
         <Divider />
@@ -375,7 +463,7 @@ function CreateExamination() {
               <TextField
                 id="Cost"
                 variant="outlined"
-                type="string"
+                type="number"
                 size="medium"
                 placeholder="กรุณากรอกราคาการรักษา"
                 value={examination.Cost || ""}
