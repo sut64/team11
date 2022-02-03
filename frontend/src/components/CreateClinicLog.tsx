@@ -16,7 +16,7 @@ import Divider from "@material-ui/core/Divider";
 import Snackbar from '@material-ui/core/Snackbar';
 import Select from "@material-ui/core/Select";
 import { FormControl } from "@material-ui/core";
-
+import { AlertTitle } from "@material-ui/lab";
 import { EmployeeInterface } from "../models/IEmployee";
 import { ClinicInterface } from "../models/IClinic";
 import { PatientInterface } from "../models/IPatient";
@@ -61,6 +61,7 @@ function ClinicLogCreate() {
   const [patients, setPatients] = useState<PatientInterface[]>([]);
   const [cliniclog, setClinicLog] = useState<Partial<ClinicLogInterface>>({});
   const [nurse, setNurse] = useState<EmployeeInterface>();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -184,15 +185,29 @@ function ClinicLogCreate() {
     fetch(`${apiUrl}/cliniclogs`, requestOptionsPost)
       .then((response) => response.json())
       .then((res) => {
+        console.log(res.data);
         if (res.data) {
-          console.log("บันทึกสำเร็จ")
           setSuccess(true);
+          setErrorMessage("");
+          ClearForm();
         } else {
-          console.log("บันทึกไม่ไม่สำเร็จ")
           setError(true);
+          setErrorMessage(res.error);
         }
       });
   }
+
+  // function clear form after submit success
+  const ClearForm = () => {
+    setClinicLog({
+      Note: "",
+      ClinicRoom: 0,
+      PatientID: 0,
+      ClinicID: 0,
+      EmployeeID: cliniclog.EmployeeID,
+    });
+    setSendingTime(new Date());
+  };
 
   return (
 
@@ -202,11 +217,14 @@ function ClinicLogCreate() {
           บันทึกข้อมูลสำเร็จ
         </Alert>
       </Snackbar>
+
       <Snackbar open={error} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
-          บันทึกข้อมูลไม่สำเร็จ
+          <AlertTitle>Error</AlertTitle>
+          ลงทะเบียนไม่สำเร็จ : {errorMessage}
         </Alert>
       </Snackbar>
+
       <Paper className={classes.paper}>
         <Box display="flex" >
           <Box flexGrow={1}>
