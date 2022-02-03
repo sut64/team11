@@ -5,6 +5,7 @@ import (
 
     "github.com/gin-gonic/gin"
 	"github.com/sut64/team11/entity"
+	"github.com/asaskevich/govalidator"
 )
 
 // POST /cliniclogs
@@ -48,6 +49,12 @@ func CreateClinicLogs(c *gin.Context) {
 		ClinicRoom: 		cliniclog.ClinicRoom,	// ตั่งค่าของ ClinicRoom ให้เท่ากับค่าที่รับมา
 		Note:				cliniclog.Note,			// ตั่งค่าของ Note ให้เท่ากับค่าที่รับมา
 		SendingTime: 		cliniclog.SendingTime,  // ตั้งค่าฟิลด์ SendingTime ให้เท่ากับค่าที่รับมา
+	}
+
+	// : ขั้นตอนการ validate ข้อมูล
+	if _, err := govalidator.ValidateStruct(cl); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	// 15: บันทึก
