@@ -150,7 +150,7 @@ func TestBirthdateMustBePast(t *testing.T) {
 		FirstName: "จิระพรรณ",
 		LastName:  "ผิวดี",
 		Birthdate: time.Now().Add(24 * time.Hour), // อนาคต, fail
-		Age:       80, // ผิด
+		Age:       80, 
 		DateAdmit: time.Now(),
 		Symptom:   "ไอแห้ง",
 	}
@@ -167,4 +167,58 @@ func TestBirthdateMustBePast(t *testing.T) {
 	// err.Error ต้องมี error message แสดงออกมา
 	g.Expect(err.Error()).To(Equal("Birthdate must be in the past"))
 
+}
+
+func TestFirstnameNotBlankt(t *testing.T) {
+	g := NewGomegaWithT(t)
+
+	patient := Patient{
+		HN:        "HN000001",
+		Pid:       "1000000000001",
+		FirstName: "",
+		LastName:  "นามสกุล",
+		Birthdate: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
+		Age:       2,
+		DateAdmit: time.Now(),
+		Symptom:   "มีไข้มา3วัน",
+	}
+
+	// ตรวจสอบด้วย govalidator
+	ok, err := govalidator.ValidateStruct(patient)
+
+	// ok ต้องไม่เป็นค่า true แปลว่าต้องจับ error ได้
+	g.Expect(ok).ToNot(BeTrue())
+
+	// err ต้องไม่เป็นค่า nil แปลว่าต้องจับ error ได้
+	g.Expect(err).ToNot(BeNil())
+
+	// err.Error ต้องมี error message แสดงออกมา
+	g.Expect(err.Error()).To(Equal("FirstName cannot be blank"))
+}
+
+func TestLastnameNotBlankt(t *testing.T) {
+	g := NewGomegaWithT(t)
+
+	patient := Patient{
+		HN:        "HN000001",
+		Pid:       "1000000000001",
+		FirstName: "ชื่อจริง",
+		LastName:  "",
+		Birthdate: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
+		Age:       2,
+		DateAdmit: time.Now(),
+		Symptom:   "มีไข้มา3วัน",
+	}
+
+	// ตรวจสอบด้วย govalidator
+	ok, err := govalidator.ValidateStruct(patient)
+
+	// ok ต้องไม่เป็นค่า true แปลว่าต้องจับ error ได้
+	g.Expect(ok).ToNot(BeTrue())
+
+	// err ต้องไม่เป็นค่า nil แปลว่าต้องจับ error ได้
+	g.Expect(err).ToNot(BeNil())
+
+	// err.Error ต้องมี error message แสดงออกมา
+	g.Expect(err.Error()).To(Equal("LastName cannot be blank"))
 }

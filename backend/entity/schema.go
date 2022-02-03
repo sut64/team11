@@ -21,10 +21,10 @@ type PatientType struct {
 
 type Patient struct {
 	gorm.Model
-	HN        string `valid:"matches(^HN\\d{6}$)"`
-	Pid       string `valid:"matches(^[1-9]\\d{12}$)"`
-	FirstName string
-	LastName  string
+	HN        string `valid:"matches(^HN\\d{6}$),required"`
+	Pid       string `valid:"matches(^[1-9]\\d{12}$),required"`
+	FirstName string `valid:"required~FirstName cannot be blank"`
+	LastName  string `valid:"required~LastName cannot be blank"`
 	Birthdate time.Time `valid:"past~Birthdate must be in the past"`
 	Age       uint      `valid:"range(0|120)"`
 	DateAdmit time.Time
