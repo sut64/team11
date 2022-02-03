@@ -172,7 +172,7 @@ type ClinicLog struct {
 	gorm.Model
 	SendingTime time.Time	`valid:"DelayNow3Min~SendingTime must not be past."`
 	Note        string		`valid:"required~Note must not be Blank."`
-	ClinicRoom  uint		`valid:"range(0|9)"`
+	ClinicRoom  uint		`valid:"range(1|9)"`
 
 	//ClinicID ทำหน้าที่เป็น ForeignKey
 	ClinicID *uint
