@@ -170,21 +170,21 @@ type Clinic struct {
 
 type ClinicLog struct {
 	gorm.Model
-	SendingTime time.Time
-	Note        string
-	ClinicRoom  uint
+	SendingTime time.Time	`valid:"DelayNow3Min~SendingTime must not be past."`
+	Note        string		`valid:"required~Note must not be Blank."`
+	ClinicRoom  uint		`valid:"range(0|9)"`
 
 	//ClinicID ทำหน้าที่เป็น ForeignKey
 	ClinicID *uint
-	Clinic   Clinic `gorm:"references:id"`
+	Clinic   Clinic `gorm:"references:id" valid:"-"`
 
 	//PatientID ทำหน้าที่เป็น FK
 	PatientID *uint
-	Patient   Patient `gorm:"references:id"`
+	Patient   Patient `gorm:"references:id" valid:"-"`
 
 	//EmployeeID ทำหน้าที่เป็น FK
 	EmployeeID *uint
-	Employee   Employee `gorm:"references:id"`
+	Employee   Employee `gorm:"references:id" valid:"-"`
 }
 
 type Examination struct {
