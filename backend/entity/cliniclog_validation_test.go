@@ -94,5 +94,5 @@ func TestClinicRoomMustBeInRange(t *testing.T) {
 	g.Expect(err).ToNot(BeNil())
 
 	// err.Error ต้องมี error message แสดงออกมา
-	g.Expect(err.Error()).To(Equal("ClinicRoom: 10 does not validate as range(0|9)"))
+	g.Expect(err.Error()).To(Equal("ClinicRoom: 10 does not validate as range(1|9)"))
 }
