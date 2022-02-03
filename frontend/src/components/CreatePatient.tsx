@@ -63,6 +63,8 @@ function CreatePatient() {
   const [patient, setPatient] = useState<Partial<PatientInterface>>({});
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [selectedDateAdmit, setDateAdmit] = React.useState<Date | null>(
     new Date()
   );
@@ -185,36 +187,38 @@ function CreatePatient() {
         console.log(res.data);
         if (res.data) {
           setSuccess(true);
+          setErrorMessage("");
           ClearForm();
         } else {
           setError(true);
+          setErrorMessage(res.error);
         }
       });
   }
 
-  function ClearForm() {
-    //clear form after submit success
+  // function clear form after submit success
+  const ClearForm = () => {
     setPatient({
       HN: "",
       Pid: "",
       FirstName: "",
       LastName: "",
-      Birthdate: new Date(),
       Age: 0,
-      DateAdmit: new Date(),
-      Symptom: "",
       GenderID: 0,
       PatientTypeID: 0,
       PatientRightID: 0,
+      Symptom: "",
     });
-  }
+    setDateAdmit(new Date());
+    setBirthdate(new Date());
+  };
 
   return (
     <Container className={classes.container} maxWidth="md">
       <Snackbar open={success} autoHideDuration={1500} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
           <AlertTitle>Success</AlertTitle>
-          การบันทึกสำเร็จ —{" "}
+          การบันทึกสำเร็จ —
           <strong>
             <Link href="/listPatient" style={{ color: "#fff" }}>
               ดูรายชื่อผู้ป่วย
@@ -224,7 +228,8 @@ function CreatePatient() {
       </Snackbar>
       <Snackbar open={error} autoHideDuration={1000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
-          ลงทะเบียนไม่สำเร็จ
+          <AlertTitle>Error</AlertTitle>
+          ลงทะเบียนไม่สำเร็จ : {errorMessage}
         </Alert>
       </Snackbar>
 
@@ -464,7 +469,8 @@ function CreatePatient() {
       <br />
       <Grid container justifyContent="center" spacing={3}>
         <Grid item xs={12} sm={2}>
-          <Button style={{backgroundColor: '#ff4081',color:'white'}}
+          <Button
+            style={{ backgroundColor: "#ff4081", color: "white" }}
             variant="contained"
             size="medium"
             onClick={submit}
@@ -474,10 +480,11 @@ function CreatePatient() {
           </Button>
         </Grid>
         <Grid item xs={12} sm={2}>
-          <Button style={{backgroundColor: '#7c4dff',color:'white'}}
+          <Button
+            style={{ backgroundColor: "#7c4dff", color: "white" }}
             variant="contained"
             size="medium"
-            startIcon={<ListIcon/>}
+            startIcon={<ListIcon />}
             component={RouterLink}
             to="/listPatient"
           >
@@ -485,12 +492,13 @@ function CreatePatient() {
           </Button>
         </Grid>
         <Grid item xs={12} sm={2}>
-          <Button style={{backgroundColor: '#03a9f4',color:'white'}}
+          <Button
+            style={{ backgroundColor: "#03a9f4", color: "white" }}
             component={RouterLink}
             to="/"
             variant="contained"
             size="medium"
-            startIcon={<HomeIcon/>}
+            startIcon={<HomeIcon />}
           >
             หน้าแรก
           </Button>
