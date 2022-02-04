@@ -107,7 +107,7 @@ type Appointment struct {
 
 	AppointmentTime time.Time `valid:"future~AppointmentTime must be n the future"`
 	Note            string    `valid:"required~Note cannot be blank"`
-	RoomNumber      uint
+	RoomNumber      uint      `valid:"required~RoomNumber more than 0"`
 
 	//PatientID ทำหน้าที่เป็น FK
 	PatientID *uint
