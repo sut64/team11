@@ -80,7 +80,7 @@ type Bill struct {
 
 	PayType PayType `gorm:"references:id" valid:"-"`
 
-	BillTime time.Time `valid:"Now~BillTime must be now"`
+	BillTime time.Time `valid:"past~BillTime must be past"`
 
 	Total uint `valid:"required~Total cannot be zero"`
 
