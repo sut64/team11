@@ -21,10 +21,10 @@ type PatientType struct {
 
 type Patient struct {
 	gorm.Model
-	HN        string `valid:"matches(^HN\\d{6}$),required"`
-	Pid       string `valid:"matches(^[1-9]\\d{12}$),required"`
-	FirstName string `valid:"required~FirstName cannot be blank"`
-	LastName  string `valid:"required~LastName cannot be blank"`
+	HN        string    `valid:"matches(^HN\\d{6}$),required"`
+	Pid       string    `valid:"matches(^[1-9]\\d{12}$),required"`
+	FirstName string    `valid:"required~FirstName cannot be blank"`
+	LastName  string    `valid:"required~LastName cannot be blank"`
 	Birthdate time.Time `valid:"past~Birthdate must be in the past"`
 	Age       uint      `valid:"range(0|120)"`
 	DateAdmit time.Time
@@ -105,21 +105,21 @@ type BillItem struct {
 type Appointment struct {
 	gorm.Model
 
-	AppointmentTime time.Time
+	AppointmentTime time.Time `valid:"future~AppointmentTime must be n the future"`
 	Note            string
 	RoomNumber      uint
 
 	//PatientID ทำหน้าที่เป็น FK
 	PatientID *uint
-	Patient   Patient
+	Patient   Patient `gorm:"references:id" valid:"-"` // ไม่ validate ไปในระดับ relation
 
 	//EmployeeID ทำหน้าที่เป็น FK
 	EmployeeID *uint
-	Employee   Employee
+	Employee   Employee `gorm:"references:id" valid:"-"` // ไม่ validate ไปในระดับ relation
 
 	//ClinicID ทำหน้าที่เป็น FK
 	ClinicID *uint
-	Clinic   Clinic
+	Clinic   Clinic `gorm:"references:id" valid:"-"` // ไม่ validate ไปในระดับ relation
 }
 
 type Role struct {
@@ -170,9 +170,9 @@ type Clinic struct {
 
 type ClinicLog struct {
 	gorm.Model
-	SendingTime time.Time	`valid:"DelayNow3Min~SendingTime must not be past."`
-	Note        string		`valid:"required~Note must not be Blank."`
-	ClinicRoom  uint		`valid:"range(1|9)"`
+	SendingTime time.Time `valid:"DelayNow3Min~SendingTime must not be past."`
+	Note        string    `valid:"required~Note must not be Blank."`
+	ClinicRoom  uint      `valid:"range(1|9)"`
 
 	//ClinicID ทำหน้าที่เป็น ForeignKey
 	ClinicID *uint
