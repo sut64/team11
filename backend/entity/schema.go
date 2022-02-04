@@ -105,7 +105,7 @@ type BillItem struct {
 type Appointment struct {
 	gorm.Model
 
-	AppointmentTime time.Time `valid:"future~AppointmentTime must be n the future"`
+	AppointmentTime time.Time `valid:"future~AppointmentTime must be in the future"`
 	Note            string    `valid:"required~Note cannot be blank"`
 	RoomNumber      uint      `valid:"required~RoomNumber more than 0"`
 

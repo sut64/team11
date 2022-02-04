@@ -31,14 +31,14 @@ func TestAppointmentPass(t *testing.T) {
 func TestAppointmentTime(t *testing.T) {
 	g := NewGomegaWithT(t)
 
-	fixtures := []time.Time{
+	apmt := []time.Time{
 		time.Now(), //ผิดเพราะเวลาต้องไม่เป็นอีตและปัจจุบัน
 		time.Date(2019, 1, 1, 12, 00, 00, 00, time.UTC), //ผิดเพราะเวลาต้องไม่เป็นอีตและปัจจุบัน
 	}
 
-	for _, fixtures := range fixtures {
+	for _, apmt := range apmt {
 		appointment := Appointment{
-			AppointmentTime: fixtures,
+			AppointmentTime: apmt,
 			Note:            "ฉีดวัคซีน",
 			RoomNumber:      111,
 		}
@@ -53,7 +53,7 @@ func TestAppointmentTime(t *testing.T) {
 		g.Expect(err).ToNot(BeNil())
 
 		// err.Error ต้องมี error message แสดงออกมา
-		g.Expect(err.Error()).To(Equal("AppointmentTime must be n the future"))
+		g.Expect(err.Error()).To(Equal("AppointmentTime must be in the future"))
 
 	}
 }
