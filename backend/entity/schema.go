@@ -106,7 +106,7 @@ type Appointment struct {
 	gorm.Model
 
 	AppointmentTime time.Time `valid:"future~AppointmentTime must be n the future"`
-	Note            string
+	Note            string    `valid:"required~Note cannot be blank"`
 	RoomNumber      uint
 
 	//PatientID ทำหน้าที่เป็น FK
