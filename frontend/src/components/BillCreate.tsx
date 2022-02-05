@@ -120,14 +120,39 @@ function BillCreate(){
         Setgetp({...getp, [name]: event.target.value, });
     };
 
+    // เพิ่ม examination ใส่ใน billitem
     const handleChangItem = (event: ChangeEvent<{name?: string, value: unknown}>) =>{
         let currentItem = [...billitems];
+        console.log("before push lenght:",currentItem)
         if (Number(event.target.value)===0)
             return
-        currentItem.push({
-            ExaminationID : event.target.value as number
-        })
-        setBillitems(currentItem);
+        if (currentItem.length === 0){
+            currentItem.push({
+                ExaminationID : event.target.value as number
+            })
+            setBillitems(currentItem);
+        }
+        var error = true;
+        if (currentItem.length !== 0){
+            for(var index in currentItem){
+                if(currentItem[index].ExaminationID === event.target.value){
+                     error = false;
+                     break;
+                }
+                else{
+                     error = true;
+                }
+            }
+            if (error){
+                currentItem.push({
+                    ExaminationID : event.target.value as number
+                })
+                setBillitems(currentItem);
+            }
+        }
+        
+        
+        console.log("after push lenght:",currentItem)
     }
 
     const handleDateChange = (date : Date | null) =>{
