@@ -32,6 +32,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import NoteIcon from '@mui/icons-material/Note';
 import SickIcon from '@mui/icons-material/Sick';
 import MedicationIcon from '@mui/icons-material/Medication';
+import Popover from "@material-ui/core/Popover";
 
 import Home from "./components/Home";
 import SignIn from "./components/SignIn";
@@ -125,6 +126,13 @@ const useStyles = makeStyles((theme: Theme) =>
       textDecoration: "none",
       color: "inherit",
     },
+    popover: {
+      pointerEvents: "none",
+    },
+    paper: {
+      padding: theme.spacing(1),
+      borderRadius: "5%",
+    },
   })
 );
 const theme = createTheme({
@@ -143,6 +151,8 @@ export default function MiniDrawer() {
   const [open, setOpen] = React.useState(false);
   const [token, setToken] = React.useState<String>("");
   const [employee, setEmploree] = React.useState<EmployeeInterface>();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [index, setIndex] = React.useState<number>(0);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -150,6 +160,22 @@ export default function MiniDrawer() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const handlePopoverOpen = (
+    event: React.MouseEvent<HTMLElement, MouseEvent>
+  ) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const openPopoverIndex = (index: number) => {
+    setIndex(index);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const openP = Boolean(anchorEl);
 
   //Get Data
   const apiUrl = "http://localhost:8080";
@@ -179,9 +205,6 @@ export default function MiniDrawer() {
     { name: "บันทึกผลการตรวจรักษา", icon: <SickIcon />, path: "/Examination" },
     { name: "บันทึกการจ่ายยา", icon: <MedicationIcon />, path: "/PayMedicine" },
     { name: "ใบแจ้งค่าใช้จ่าย", icon: <AccountBalanceIcon />, path: "/ListBills" },
-
-
-
   ];
 
   useEffect(() => {
@@ -266,18 +289,51 @@ export default function MiniDrawer() {
                 <Divider />
                 <List>
                   <>
-                    {
-                      menu.map((item, index) => (
-                        <Link to={item.path} key={item.name} className={classes.a}>
-                          <ListItem button>
-                            <ListItemIcon>{item.icon}</ListItemIcon>
-                            <ListItemText primary={item.name} />
-                          </ListItem>
-                        </Link>
-                      ))
-                    }
+                    {menu.map((item, index) => (
+                      <Link
+                        to={item.path}
+                        key={item.name}
+                        className={classes.a}
+                      >
+                        <ListItem button>
+                          <ListItemIcon
+                            aria-owns={openP ? "mouse-over-popover" : undefined}
+                            aria-haspopup="true"
+                            onMouseEnter={handlePopoverOpen}
+                            onMouseLeave={handlePopoverClose}
+                            onMouseOver={() => openPopoverIndex(index)}
+                          >
+                            {item.icon}
+                          </ListItemIcon>
+                          <ListItemText primary={item.name} />
+                        </ListItem>
+                      </Link>
+                    ))}
                   </>
                 </List>
+                <Popover
+                  id="mouse-over-popover"
+                  className={classes.popover}
+                  classes={{
+                    paper: classes.paper,
+                  }}
+                  open={openP}
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  onClose={handlePopoverClose}
+                  disableRestoreFocus
+                >
+                  <>
+                    <Typography style={{color:"#00bfa5"}}>{menu[index].name}</Typography>
+                  </>
+                </Popover>
               </Drawer>
             </>
           )}
