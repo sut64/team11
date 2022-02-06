@@ -294,7 +294,16 @@ function BillCreate(){
                 }
                 else{
                     setError(true);
-                    setErrorMessage(res.error);
+                    if(res.error == "Total input not match !!"){
+                        setErrorMessage("จำนวนค่าใช้จ่ายที่กรอก ไม่ตรงกันกับค่าใช้จ่ายทั้งหมด")
+                    }
+                    else if (res.error == "The data recorder should be a Cashier !!"){
+                        setErrorMessage("ผู้บันทึกข้อมูลต้องเป็นเจ้าหน้าที่การเงิน")
+                    }
+                    else {
+                        setErrorMessage(res.error);
+                    }
+                    
                 }
             });
     }
