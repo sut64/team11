@@ -16,6 +16,7 @@ func CreateBill(c *gin.Context) {
 	var patientright entity.PatientRight
 	var employee entity.Employee
 	var bill entity.Bill
+	var total uint
 	
 	
 	// ผลลัพธ์ที่ได้จากขั้นตอนที่ 8 จะถูก bind เข้าตัวแปร bill
@@ -40,6 +41,36 @@ func CreateBill(c *gin.Context) {
 	// 11: ค้นหา employee ด้วย id
 	if tx := entity.DB().Where("id = ?", bill.EmployeeID).First(&employee); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "employee not found"})
+		return
+	}
+
+	entity.DB().Joins("Role").Find(&employee)
+
+	if employee.Role.Position != "Cashier" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "The data recorder should be a Cashier !!"})
+		return
+	}
+
+	for _,item := range bill.BillItems{
+
+		var exams entity.Examination
+
+		if tx := entity.DB().Where("id = ?", item.ExaminationID).First(&exams); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "examination not found"})
+			return
+		}
+
+		entity.DB().Joins("Medicine").Find(&exams)
+
+		total += (uint(exams.Cost) + exams.Medicine.Cost);
+
+
+	}
+
+	//ตรวจสอบฟิลด์ว่ามีค่าตรงกันกับ ค่าใช้จ่ายทั้งหมดหรือไหม
+
+	if bill.Total != total {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Total input not match !!"})
 		return
 	}
 
