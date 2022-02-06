@@ -24,7 +24,8 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { BillItemInterface } from "../models/IBillItem";
 import { BillInterface } from "../models/IBill";
 import { ExaminationInterface } from "../models/IExamination";
-import { PayMedicineInterface } from "../models/IPayMedicine";
+
+import { MedicineInterface } from "../models/IMedicine";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -53,7 +54,7 @@ function ListBill() {
   const [billitems,setBillitems] = useState<BillItemInterface[]>([]);
   const [bills,setBills] = useState<BillInterface[]>([]);
   const [exams,setexams] = useState<ExaminationInterface[]>([]);
-  const [medi,setMedi] = useState<PayMedicineInterface[]>([]);
+  const [medi,setMedi] = useState<MedicineInterface[]>([]);
   const [open, setOpen] = React.useState(false);
 
   const getBillitems = async () => {
@@ -122,7 +123,7 @@ function ListBill() {
       });
   };
 
-  const getPayMedicines = async () => {
+  const getMedicines = async () => {
     const apiUrl = "http://localhost:8080";
     const requestOptions = {
       method: "GET",
@@ -131,7 +132,7 @@ function ListBill() {
         "Content-Type": "application/json",
       },
     };
-    fetch(`${apiUrl}/paymedicines`, requestOptions)
+    fetch(`${apiUrl}/medicines`, requestOptions)
       .then((response) => response.json())
 
       .then((res) => {
@@ -150,7 +151,7 @@ function ListBill() {
     getBillitems();
     getBills();
     getExaminations();
-    getPayMedicines();
+    getMedicines();
   }, []);
 
   return (
@@ -201,6 +202,9 @@ function ListBill() {
                 ค่าใช้จ่ายทั้งหมด
               </TableCell>
               <TableCell align="center" className={classes.title}>
+                สิทธิ์การรักษา
+              </TableCell>
+              <TableCell align="center" className={classes.title}>
                 ผลการรักษา
               </TableCell>
             </TableRow>
@@ -212,6 +216,7 @@ function ListBill() {
                                         <TableCell align="center">{item.ID}</TableCell>
                                         <TableCell align="center">{item.Employee?.Name}</TableCell>
                                         <TableCell align="center">{item.Total}</TableCell>
+                                        <TableCell align="center">{item.PatientRight?.Name}</TableCell>
                                         <TableCell align="center" >
                                             <IconButton
                                               aria-label="expand row"
@@ -236,6 +241,8 @@ function ListBill() {
                                               <TableCell align="center">ใบผลการรักษา</TableCell>
                                               <TableCell align="center">ผลการรักษา</TableCell>
                                               <TableCell align="center">ค่าใช้จ่าย</TableCell>
+                                              <TableCell align="center">ยาที่จ่าย</TableCell>
+                                              <TableCell align="center">ค่าใช้จ่าย</TableCell>
                                             </TableRow>
                                           </TableHead>
                                           <TableBody>
@@ -250,6 +257,13 @@ function ListBill() {
                                                 <TableCell component="th" scope="row" align="center">
                                                   {exams.find(p=>p.ID === item.ExaminationID)?.Cost}
                                                 </TableCell>
+                                                <TableCell component="th" scope="row" align="center">
+                                                  {exams.find(p=>p.ID === item.ExaminationID)?.Medicine?.Name}
+                                                </TableCell>
+                                                <TableCell component="th" scope="row" align="center">
+                                                  {exams.find(p=>p.ID === item.ExaminationID)?.Medicine?.Cost}
+                                                </TableCell>
+                                               
                                              
 
                                               </TableRow>
