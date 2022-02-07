@@ -51,6 +51,23 @@ func CreateBill(c *gin.Context) {
 		return
 	}
 
+		
+	// 12: สร้าง Bill
+	bl := entity.Bill{       
+		PatientRight:    patientright,        // โยงความสัมพันธ์กับ Entity PatientRight
+		PayType : paytype,                   // โยงความสัมพันธ์ Entity Paytype
+		Employee:    employee,               // โยงความสัมพันธ์กับ Entity Employee
+		BillTime: bill.BillTime, 			// ตั้งค่าฟิลด์ BillTime
+		Total: bill.Total - patientright.Discount,  //ตั้งค่าฟิลด์ Total
+		Telephone : bill.Telephone,			 //ตั้งค่าฟิลด์ Telephone
+	}
+
+	// แทรกการ validate ไว้ช่วงนี้ของ controller
+	if _, err := govalidator.ValidateStruct(bill); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	for _,item := range bill.BillItems{
 
 		var exams entity.Examination
@@ -73,24 +90,7 @@ func CreateBill(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Total input not match !!"})
 		return
 	}
-
 	
-		
-	// 12: สร้าง Bill
-	bl := entity.Bill{       
-		PatientRight:    patientright,        // โยงความสัมพันธ์กับ Entity PatientRight
-		PayType : paytype,                   // โยงความสัมพันธ์ Entity Paytype
-		Employee:    employee,               // โยงความสัมพันธ์กับ Entity Employee
-		BillTime: bill.BillTime, 			// ตั้งค่าฟิลด์ BillTime
-		Total: bill.Total - patientright.Discount,  //ตั้งค่าฟิลด์ Total
-		Telephone : bill.Telephone,			 //ตั้งค่าฟิลด์ Telephone
-	}
-
-	// แทรกการ validate ไว้ช่วงนี้ของ controller
-	if _, err := govalidator.ValidateStruct(bill); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
 
 	// 13: บันทึก bill
 	if err := entity.DB().Create(&bl).Error; err != nil {
