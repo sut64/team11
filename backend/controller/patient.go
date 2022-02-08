@@ -122,3 +122,14 @@ func UpdatePatient(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": patient})
 }
+
+// GET /patient/bill/:id
+func GetPatientBill(c *gin.Context) {
+	var patient []entity.Patient
+	id := c.Param("id")
+	if err := entity.DB().Preload("Gender").Preload("PatientType").Preload("PatientRight").Raw("SELECT * FROM patients WHERE id = ?", id).Find(&patient).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": patient})
+}
