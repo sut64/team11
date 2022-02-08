@@ -33,6 +33,7 @@ func main() {
 			protected.POST("/patients", controller.CreatePatients)
 			protected.PATCH("/patients", controller.UpdatePatient)
 			protected.DELETE("/patients/:id", controller.DeletePatient)
+			protected.GET("/patient/bill/:id", controller.GetPatientBill)
 
 			// patientType Routes
 			protected.GET("/patienttypes", controller.ListPatientType)
