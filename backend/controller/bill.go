@@ -106,7 +106,7 @@ func CreateBill(c *gin.Context) {
 		var exams entity.Examination
 
 		if tx := entity.DB().Where("id = ?", item.ExaminationID).First(&exams); tx.RowsAffected == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "patientright not found"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "examination not found"})
 			return
 		}
 
@@ -138,7 +138,7 @@ func CreateBill(c *gin.Context) {
 func GetBill(c *gin.Context) {
 	var bill entity.Bill
 	id := c.Param("id")
-	if err := entity.DB().Preload("PatientRight").Preload("PayType").Preload("Employee").Raw("SELECT * FROM bills WHERE id = ?", id).Find(&bill).Error; err != nil {
+	if err := entity.DB().Preload("BillItems").Preload("BillItems.Examination").Preload("BillItems.Examination.Medicine").Preload("PatientRight").Preload("PayType").Preload("Employee").Raw("SELECT * FROM bills WHERE id = ?", id).Find(&bill).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -148,7 +148,7 @@ func GetBill(c *gin.Context) {
 // GET /bills
 func ListBills(c *gin.Context) {
 	var bills []entity.Bill
-	if err := entity.DB().Preload("PatientRight").Preload("PayType").Preload("Employee").Raw("SELECT * FROM bills").Find(&bills).Error; err != nil {
+	if err := entity.DB().Preload("BillItems").Preload("BillItems.Examination").Preload("BillItems.Examination.Medicine").Preload("PatientRight").Preload("PayType").Preload("Employee").Raw("SELECT * FROM bills").Find(&bills).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
