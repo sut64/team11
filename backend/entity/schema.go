@@ -98,7 +98,7 @@ type BillItem struct {
 	BillID *uint
 	Bill   Bill `gorm:"references:id" valid:"-"`
 
-	ExaminationID *uint
+	ExaminationID *uint `gorm:"uniqueIndex"`
 	Examination   Examination `gorm:"references:id" valid:"-"`
 }
 
@@ -214,7 +214,7 @@ type Examination struct {
 	MedicineID *uint
 	Medicine   Medicine `gorm:"references:id" valid:"-"`
 
-	BillItems []BillItem `gorm:"foreignKey:ExaminationID"`
+	BillItems *BillItem `gorm:"foreignKey:ExaminationID"`
 }
 
 type Disease struct {
