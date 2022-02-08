@@ -9,7 +9,6 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-
 func TestPatientPass(t *testing.T) {
 	g := NewGomegaWithT(t)
 
@@ -34,7 +33,6 @@ func TestPatientPass(t *testing.T) {
 	// err ต้องเป็น nil แปลว่าไม่มี error
 	g.Expect(err).To(BeNil())
 }
-
 
 // ตรวจสอบหมายเลข HN ต้องขึ้นต้นด้วย HN และตามด้วยตัวเลข 6 ตัว
 func TestHNMustBeInValidPattern(t *testing.T) {
@@ -116,28 +114,28 @@ func TestPIDMustBeInValidPattern(t *testing.T) {
 func TestAgeMustBeInRange(t *testing.T) {
 	g := NewGomegaWithT(t)
 
-		patient := Patient{
-			HN:        "HN123456",
-			Pid:       "6543216543210",
-			FirstName: "สมชาย",
-			LastName:  "ตัวโต",
-			Birthdate: time.Date(2022, 1, 26, 0, 0, 0, 0, time.UTC),
-			Age:       121, // ผิด
-			DateAdmit: time.Now(),
-			Symptom:   "ปวดท้อง",
-		}
+	patient := Patient{
+		HN:        "HN123456",
+		Pid:       "6543216543210",
+		FirstName: "สมชาย",
+		LastName:  "ตัวโต",
+		Birthdate: time.Date(2022, 1, 26, 0, 0, 0, 0, time.UTC),
+		Age:       121, // ผิด
+		DateAdmit: time.Now(),
+		Symptom:   "ปวดท้อง",
+	}
 
-		ok, err := govalidator.ValidateStruct(patient)
+	ok, err := govalidator.ValidateStruct(patient)
 
-		// ok ต้องไม่เป็น true แปลว่าต้องจับ error ได้
-		g.Expect(ok).ToNot(BeTrue())
+	// ok ต้องไม่เป็น true แปลว่าต้องจับ error ได้
+	g.Expect(ok).ToNot(BeTrue())
 
-		// err ต้องไม่เป็น nil แปลว่าต้องจับ error ได้
-		g.Expect(err).ToNot(BeNil())
+	// err ต้องไม่เป็น nil แปลว่าต้องจับ error ได้
+	g.Expect(err).ToNot(BeNil())
 
-		// err.Error() ต้องมี message แสดงออกมา
-		g.Expect(err.Error()).To(Equal("Age: 121 does not validate as range(0|120)"))
-	
+	// err.Error() ต้องมี message แสดงออกมา
+	g.Expect(err.Error()).To(Equal("Age: 121 does not validate as range(0|120)"))
+
 }
 
 // ตรวจสอบวันเดือนปีเกิดต้องเป็นวันในอดีต
@@ -150,7 +148,7 @@ func TestBirthdateMustBePast(t *testing.T) {
 		FirstName: "จิระพรรณ",
 		LastName:  "ผิวดี",
 		Birthdate: time.Now().Add(24 * time.Hour), // อนาคต, fail
-		Age:       80, 
+		Age:       80,
 		DateAdmit: time.Now(),
 		Symptom:   "ไอแห้ง",
 	}
@@ -221,4 +219,58 @@ func TestLastnameNotBlankt(t *testing.T) {
 
 	// err.Error ต้องมี error message แสดงออกมา
 	g.Expect(err.Error()).To(Equal("LastName cannot be blank"))
+}
+
+func TestHNNotBlankt(t *testing.T) {
+	g := NewGomegaWithT(t)
+
+	patient := Patient{
+		HN:        "",
+		Pid:       "1000000000001",
+		FirstName: "ชื่อจริง",
+		LastName:  "นามสกุล",
+		Birthdate: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
+		Age:       2,
+		DateAdmit: time.Now(),
+		Symptom:   "มีไข้มา3วัน",
+	}
+
+	// ตรวจสอบด้วย govalidator
+	ok, err := govalidator.ValidateStruct(patient)
+
+	// ok ต้องไม่เป็นค่า true แปลว่าต้องจับ error ได้
+	g.Expect(ok).ToNot(BeTrue())
+
+	// err ต้องไม่เป็นค่า nil แปลว่าต้องจับ error ได้
+	g.Expect(err).ToNot(BeNil())
+
+	// err.Error ต้องมี error message แสดงออกมา
+	g.Expect(err.Error()).To(Equal("HN cannot be blank"))
+}
+
+func TestPidNotBlankt(t *testing.T) {
+	g := NewGomegaWithT(t)
+
+	patient := Patient{
+		HN:        "HN100000",
+		Pid:       "",
+		FirstName: "ชื่อจริง",
+		LastName:  "นามสกุล",
+		Birthdate: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
+		Age:       2,
+		DateAdmit: time.Now(),
+		Symptom:   "มีไข้มา3วัน",
+	}
+
+	// ตรวจสอบด้วย govalidator
+	ok, err := govalidator.ValidateStruct(patient)
+
+	// ok ต้องไม่เป็นค่า true แปลว่าต้องจับ error ได้
+	g.Expect(ok).ToNot(BeTrue())
+
+	// err ต้องไม่เป็นค่า nil แปลว่าต้องจับ error ได้
+	g.Expect(err).ToNot(BeNil())
+
+	// err.Error ต้องมี error message แสดงออกมา
+	g.Expect(err.Error()).To(Equal("Identification Number cannot be blank"))
 }
