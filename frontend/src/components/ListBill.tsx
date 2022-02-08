@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,Fragment } from "react";
 import * as React from 'react';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -24,8 +24,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { BillItemInterface } from "../models/IBillItem";
 import { BillInterface } from "../models/IBill";
 import { ExaminationInterface } from "../models/IExamination";
-
-import { MedicineInterface } from "../models/IMedicine";
+import { PayMedicineInterface } from "../models/IPayMedicine";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -49,35 +48,89 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+
+export interface ListBillProps {
+  item : BillInterface,
+
+}
+
+function ListBillItem(row: ListBillProps){
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  
+  return (
+                                
+                           
+                                
+                                <Fragment>
+                                  
+                                  <TableRow>
+                                  <TableCell align="center" scope="row"> {row.item.ID}</TableCell>
+                                  <TableCell align="center" scope="row"> {row.item.Employee.Name}</TableCell>
+                                  <TableCell align="center" scope="row"> {row.item.Total}</TableCell>
+                                  <TableCell align="center" scope="row"> {row.item.PatientRight.Name}</TableCell>
+                             
+                                    <TableCell align="center" >
+                                    <IconButton
+                                              aria-label="expand row"
+                                              size="small"
+                                              onClick={() => setOpen(!open)}
+                                            >
+                                              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                            </IconButton>
+                                    </TableCell>
+                                  </TableRow>
+
+                                  <TableRow>
+                                  <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6} >
+                                    <Collapse in={open} timeout="auto" unmountOnExit>
+                                      <Box sx={{ margin: 1 }}>
+                                        <Typography variant="h6" gutterBottom component="div">
+                                          ผลการรักษา
+                                        </Typography>
+                                        <Table size="small" aria-label="purchases">
+                                          <TableHead>
+                                            <TableRow>
+                                              <TableCell align="center">ใบผลการรักษา</TableCell>
+                                              <TableCell align="center">ผลการรักษา</TableCell>
+                                              <TableCell align="center">ค่าใช้จ่าย</TableCell>
+                                              <TableCell align="center">ยาที่จ่าย</TableCell>
+                                              <TableCell align="center">ค่าใช้จ่าย</TableCell>
+                                            </TableRow>
+                                          </TableHead>
+                                          <TableBody>
+                                          {row.item.BillItems?.map((row:Partial<BillItemInterface>,index)=>{
+                                                  return (
+                                                      <TableRow key={index}>
+                                                          <TableCell align="center">{row.ExaminationID}</TableCell>
+                                                          <TableCell align="center">{row.Examination?.Treatment}</TableCell>
+                                                          <TableCell align="center">{row.Examination?.Cost}</TableCell>
+                                                          <TableCell align="center">{row.Examination?.Medicine.Name}</TableCell>
+                                                          <TableCell align="center">{row.Examination?.Medicine.Cost}</TableCell>
+                                                         
+                                                      </TableRow>
+                                                  )
+                                              })}
+                                               
+                                          </TableBody>
+                                        </Table>
+                                      </Box>
+                                    </Collapse>
+                                  </TableCell>
+                                </TableRow>
+                             
+                                </Fragment>
+                               
+  )
+}
+
+
+
 function ListBill() {
   const classes = useStyles();
-  const [billitems,setBillitems] = useState<BillItemInterface[]>([]);
   const [bills,setBills] = useState<BillInterface[]>([]);
-  const [exams,setexams] = useState<ExaminationInterface[]>([]);
-  const [medi,setMedi] = useState<MedicineInterface[]>([]);
-  const [open, setOpen] = React.useState(false);
-
-  const getBillitems = async () => {
-    const apiUrl = "http://localhost:8080";
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "Content-Type": "application/json",
-      },
-    };
-    fetch(`${apiUrl}/billitems`, requestOptions)
-      .then((response) => response.json())
-
-      .then((res) => {
-        console.log(res.data);
-        if (res.data) {
-          setBillitems(res.data);
-        } else {
-          console.log("else");
-        }
-      });
-  };
+ 
+  
 
   const getBills = async () => {
     const apiUrl = "http://localhost:8080";
@@ -101,57 +154,9 @@ function ListBill() {
       });
   };
 
-  const getExaminations = async () => {
-    const apiUrl = "http://localhost:8080";
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "Content-Type": "application/json",
-      },
-    };
-    fetch(`${apiUrl}/examinations`, requestOptions)
-      .then((response) => response.json())
-
-      .then((res) => {
-        console.log(res.data);
-        if (res.data) {
-          setexams(res.data);
-        } else {
-          console.log("else");
-        }
-      });
-  };
-
-  const getMedicines = async () => {
-    const apiUrl = "http://localhost:8080";
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "Content-Type": "application/json",
-      },
-    };
-    fetch(`${apiUrl}/medicines`, requestOptions)
-      .then((response) => response.json())
-
-      .then((res) => {
-        console.log(res.data);
-        if (res.data) {
-          setMedi(res.data);
-        } else {
-          console.log("else");
-        }
-      });
-  };
-
-
-
+  
   useEffect(() => {
-    getBillitems();
     getBills();
-    getExaminations();
-    getMedicines();
   }, []);
 
   return (
@@ -189,91 +194,34 @@ function ListBill() {
       </Box>
       <p></p>
       <Paper className={classes.paper}>
-        <Table className={classes.table} aria-label="simple table">
+        <Table className={classes.table} aria-label="collapsible table">
           <TableHead>
             <TableRow >
-              <TableCell align="center" className={classes.title}>
+              <TableCell  className={classes.title} align="center" >
                 เลขที่ใบแจ้งค่าใช้จ่าย
               </TableCell>
-              <TableCell align="center" className={classes.title}>
+              <TableCell  className={classes.title} align="center" >
                 ผู้ทำการบันทึก
               </TableCell>
-              <TableCell align="center" className={classes.title}>
+              <TableCell  className={classes.title} align="center" >
                 ค่าใช้จ่ายทั้งหมด
               </TableCell>
-              <TableCell align="center" className={classes.title}>
+              <TableCell  className={classes.title} align="center" >
                 สิทธิ์การรักษา
               </TableCell>
-              <TableCell align="center" className={classes.title}>
+              <TableCell  className={classes.title} align="center" >
                 ผลการรักษา
               </TableCell>
+             
             </TableRow>
           </TableHead>
           <TableBody>
-            
-          {bills.map((item: Partial<BillInterface>) => (
-                                    <TableRow key={item.ID}>
-                                        <TableCell align="center">{item.ID}</TableCell>
-                                        <TableCell align="center">{item.Employee?.Name}</TableCell>
-                                        <TableCell align="center">{item.Total}</TableCell>
-                                        <TableCell align="center">{item.PatientRight?.Name}</TableCell>
-                                        <TableCell align="center" >
-                                            <IconButton
-                                              aria-label="expand row"
-                                              size="small"
-                                              onClick={() => setOpen(!open)}
-                                            >
-                                              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                                            </IconButton>
-                                        </TableCell>
-                                      </TableRow>
+          {bills.map((item: BillInterface) => (
+                                    
+                                        <ListBillItem key={item.ID} item={item}/>
+                                     
                                 ))}
-                                <TableRow>
-                                  <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                                    <Collapse in={open} timeout="auto" unmountOnExit>
-                                      <Box sx={{ margin: 1 }}>
-                                        <Typography variant="h6" gutterBottom component="div">
-                                          ผลการรักษา
-                                        </Typography>
-                                        <Table size="small" aria-label="purchases">
-                                          <TableHead>
-                                            <TableRow>
-                                              <TableCell align="center">ใบผลการรักษา</TableCell>
-                                              <TableCell align="center">ผลการรักษา</TableCell>
-                                              <TableCell align="center">ค่าใช้จ่าย</TableCell>
-                                              <TableCell align="center">ยาที่จ่าย</TableCell>
-                                              <TableCell align="center">ค่าใช้จ่าย</TableCell>
-                                            </TableRow>
-                                          </TableHead>
-                                          <TableBody>
-                                            {billitems.map((item) => (
-                                              <TableRow key={item.ID}>
-                                                <TableCell component="th" scope="row" align="center">
-                                                  {item.ExaminationID}
-                                                </TableCell>
-                                                <TableCell component="th" scope="row" align="center">
-                                                  {exams.find(p=>p.ID === item.ExaminationID)?.Treatment}
-                                                </TableCell>
-                                                <TableCell component="th" scope="row" align="center">
-                                                  {exams.find(p=>p.ID === item.ExaminationID)?.Cost}
-                                                </TableCell>
-                                                <TableCell component="th" scope="row" align="center">
-                                                  {exams.find(p=>p.ID === item.ExaminationID)?.Medicine?.Name}
-                                                </TableCell>
-                                                <TableCell component="th" scope="row" align="center">
-                                                  {exams.find(p=>p.ID === item.ExaminationID)?.Medicine?.Cost}
-                                                </TableCell>
-                                               
-                                             
-
-                                              </TableRow>
-                                            ))}
-                                          </TableBody>
-                                        </Table>
-                                      </Box>
-                                    </Collapse>
-                                  </TableCell>
-                                </TableRow>
+          
           </TableBody>
         </Table>
       </Paper>
