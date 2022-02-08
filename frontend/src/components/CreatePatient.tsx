@@ -465,9 +465,7 @@ function CreatePatient() {
             </Grid>
           </Grid>
         </div>
-      </Paper>
-      <br />
-      <Grid container justifyContent="center" spacing={3}>
+        <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} sm={2}>
           <Button
             style={{ backgroundColor: "#ff4081", color: "white" }}
@@ -504,6 +502,7 @@ function CreatePatient() {
           </Button>
         </Grid>
       </Grid>
+      </Paper>
     </Container>
   );
 }
