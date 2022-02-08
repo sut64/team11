@@ -72,6 +72,7 @@ function BillCreate(){
     const [employees, setEmployees] = useState<Partial<EmployeeInterface>>({});
     const [cashier, setCashier] = useState<EmployeeInterface>();
     const [billitems,setBillitems] = useState<Partial<BillItemInterface>[]>([]);
+    const [patientbill, setPatientbill] = useState<PatientInterface[]>([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [bill, setBill] = useState<Partial<BillInterface>>(
         {PaytypeID:0,PatientRightID:0}
@@ -180,6 +181,21 @@ function BillCreate(){
             });
     };
 
+    const getBillpatient = async () =>{
+        fetch(`${apilUrl}/patient/bill/`+getp.ID, requesstMenuItems)
+            .then((response) => response.json())
+            .then((res) => {
+                if (res.data){
+                    console.log(res.data);
+                    setPatientbill(res.data);
+                }
+                else{
+                    console.log("else");
+                }
+            });
+    };
+
+
     const getCashier = async () => {
         let uid = localStorage.getItem("uid");
         fetch(`${apilUrl}/employee/${uid}`, requesstMenuItems)
@@ -243,6 +259,8 @@ function BillCreate(){
             });
     };
 
+    
+
 
     
 
@@ -260,6 +278,7 @@ function BillCreate(){
         let val = typeof data === "string" ? parseInt(data) : data;
         return val;
     };
+
 
 
     function submit(){
@@ -289,6 +308,7 @@ function BillCreate(){
                 if(res.data) {
                     setSuccess(true);
                     setErrorMessage("");
+                    clearForm();
                     
 
                 }
@@ -307,6 +327,20 @@ function BillCreate(){
                 }
             });
     }
+
+    const clearForm = () => {
+        setBill({
+            PatientRightID:0,
+            PaytypeID:0,
+            Total:0,
+            Telephone:"",
+            BillTime: new Date(),
+        });
+        setBillitems([]);
+        setExaminations([]);
+        Setgetp({ID:0});
+    }
+
 
     return (
 
@@ -378,21 +412,20 @@ function BillCreate(){
                             <Select
                             value={bill.PatientRightID}
                             onChange={handleChange}
+                            onOpen={getBillpatient}
                             defaultValue = {0}
                             inputProps={{
                                 name: "PatientRightID",
                             }}
                             >
-                            <MenuItem value={0} key={0}>
+                                <MenuItem value={0} key={0}>
                                 เลือกสิทธิ์การรักษา
-                            </MenuItem>
-                            {patients.map((item: PatientInterface) => (
-                                <MenuItem value={item.PatientRightID} key={item.PatientRightID}>
-                                    {item.PatientRight.Name}
+                                </MenuItem>
+                                {patientbill.map((item: PatientInterface) => (
+                                <MenuItem value={item.PatientRightID} key={item.ID}>
+                                    {item.PatientRight.Name} 
                                 </MenuItem>
                             ))}
-                            
-                           
                             </Select>
                             </FormControl>
                         </Grid>
