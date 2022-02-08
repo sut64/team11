@@ -53,6 +53,15 @@ func CreateExamination(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "medicine not found"})
 		return
 	}
+
+	// : ค้าหา rold ของ employee
+	entity.DB().Joins("Role").Find(&employee)
+
+	if employee.Role.Position != "Doctor" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "The data recorder should be a Doctor !!"})
+		return
+	}
+
 	// 16: สร้าง Examination
 	ex := entity.Examination{
 		Patient:        patient,                    // โยงความสัมพันธ์กับ Entity Patient
@@ -106,7 +115,7 @@ func ListExaminations(c *gin.Context) {
 func GetExaminationByPatient(c *gin.Context) {
 	var examination []entity.Examination
 	id := c.Param("id")
-	if err := entity.DB().Preload("Patient").Preload("Employee").Preload("Clinic").Preload("Disease").Preload("Medicine").Raw("SELECT * FROM examinations WHERE patient_id = ?", id).Find(&examination).Error; err != nil {
+	if err := entity.DB().Preload("Patient").Preload("Employee").Preload("Clinic").Preload("Disease").Preload("Medicine").Raw("SELECT * FROM examinations WHERE patient_id = ? and id NOT IN (SELECT DISTINCT examination_id FROM bill_items)", id).Find(&examination).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
