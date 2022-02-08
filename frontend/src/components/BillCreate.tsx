@@ -78,6 +78,7 @@ function BillCreate(){
         {PaytypeID:0,PatientRightID:0}
     );
 
+    //check data status
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [warning, setWarning] = useState(false);
