@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
 function CreateExamination() {
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [employees, setEmployees] = useState<EmployeeInterface[]>([]);
+  const [employees, setEmployees] = useState<EmployeeInterface>();
   const [patients, setPatiens] = useState<PatientInterface[]>([]);
   const [clinics, setClinics] = useState<ClinicInterface[]>([]);
   const [diseases, setDiseases] = useState<DiseaseInterface[]>([]);
@@ -112,9 +112,11 @@ function CreateExamination() {
   };
 
   const getEmployees = async () => {
-    fetch(`${apiUrl}/employeerole/1`, requestOptions)
+    let uid = localStorage.getItem("uid");
+    fetch(`${apiUrl}/employee/${uid}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
+        examination.EmployeeID = res.data.ID
         if (res.data) {
           setEmployees(res.data);
         } else {
@@ -238,7 +240,12 @@ function CreateExamination() {
         } 
         else {
           setError(true);
-          setErrorMessage(res.error)
+          if (res.error == "The data recorder should be a Doctor !!"){
+            setErrorMessage("ผู้บันทึกข้อมูลต้องเป็นแพทย์")
+          }
+          else{
+            setErrorMessage(res.error)
+          }
         }
       });
   }
@@ -277,27 +284,27 @@ function CreateExamination() {
 
   return (
     <Container className={classes.container} maxWidth="md">
-      <Snackbar open={success} autoHideDuration={1000} onClose={handleClose}>
+      <Snackbar open={success} autoHideDuration={2000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
           บันทึกข้อมูลสำเร็จ
         </Alert>
       </Snackbar>
-      <Snackbar open={error} autoHideDuration={1000} onClose={handleClose}>
+      <Snackbar open={error} autoHideDuration={2000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
           บันทึกข้อมูลไม่สำเร็จ: {errorMessage}
         </Alert>
       </Snackbar>
-      <Snackbar open={treatmentError} autoHideDuration={1000} onClose={handleClose}>
+      <Snackbar open={treatmentError} autoHideDuration={2000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
           บันทึกข้อมูลไม่สำเร็จ: วิธีการรักษาไม่สามารถเป็นค่าว่างได้
         </Alert>
       </Snackbar>
-      <Snackbar open={costError} autoHideDuration={1000} onClose={handleClose}>
+      <Snackbar open={costError} autoHideDuration={2000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
           บันทึกข้อมูลไม่สำเร็จ: ราคาการรักษาไม่สามารถเป็นค่าคิดลบได้
         </Alert>
       </Snackbar>
-      <Snackbar open={dateError} autoHideDuration={1000} onClose={handleClose}>
+      <Snackbar open={dateError} autoHideDuration={2000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
           บันทึกข้อมูลไม่สำเร็จ: เลือกวันที่และเวลาปัจจุบัน
         </Alert>
@@ -358,20 +365,16 @@ function CreateExamination() {
               <p style={{color:"#135B1A",fontSize: "10"}}>แพทย์ผู้วินิจฉัย</p>
               <Select
                 native
+                disabled
                 value={examination.EmployeeID}
                 onChange={handleChange}
                 inputProps={{
                   name: "EmployeeID",
                 }}
-              >
-                <option aria-label="None" value="">
-                  กรุณาเลือกแพทย์ผู้วินิจฉัย
-                </option>
-                {employees.map((item: EmployeeInterface) => (
-                  <option value={item.ID} key={item.ID}>
-                    {item.Name}
-                  </option>
-                ))}
+                >
+                  <option value={employees?.ID} key={employees?.ID}>
+                    {employees?.Name}
+                 </option>
               </Select>
             </FormControl>
           </Grid>
