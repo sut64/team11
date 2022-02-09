@@ -98,7 +98,7 @@ type BillItem struct {
 	BillID *uint
 	Bill   Bill `gorm:"references:id" valid:"-"`
 
-	ExaminationID *uint `gorm:"uniqueIndex"`
+	ExaminationID *uint       `gorm:"uniqueIndex"`
 	Examination   Examination `gorm:"references:id" valid:"-"`
 }
 
@@ -107,7 +107,7 @@ type Appointment struct {
 
 	AppointmentTime time.Time `valid:"future~AppointmentTime must be in the future"`
 	Note            string    `valid:"required~Note cannot be blank"`
-	RoomNumber      uint      `valid:"required~RoomNumber more than 0"`
+	RoomNumber      uint      `valid:"required~RoomNumber more than 0 and cannot be blank"`
 
 	//PatientID ทำหน้าที่เป็น FK
 	PatientID *uint

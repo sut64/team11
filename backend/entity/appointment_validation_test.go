@@ -99,5 +99,6 @@ func TestAppointmentRoomNumber(t *testing.T) {
 	g.Expect(err).ToNot(BeNil())
 
 	// err.Error ต้องมี error message แสดงออกมา
-	g.Expect(err.Error()).To(Equal("RoomNumber more than 0"))
+	g.Expect(err.Error()).To(Equal("RoomNumber more than 0 and cannot be blank"))
+
 }
