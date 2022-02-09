@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import clsx from "clsx";
+import './App.css';
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import {
   createStyles,
@@ -33,7 +34,6 @@ import NoteIcon from '@mui/icons-material/Note';
 import SickIcon from '@mui/icons-material/Sick';
 import MedicationIcon from '@mui/icons-material/Medication';
 import Popover from "@material-ui/core/Popover";
-
 import Home from "./components/Home";
 import SignIn from "./components/SignIn";
 import CreatePatient from "./components/CreatePatient"
@@ -62,9 +62,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
-      fontFamily: "Monospace",
+      fontFamily: "Chakra Petch",
       fontSize: "1.5rem",
       color: "#fff",
+      fontWeight: "bold",
+      letterSpacing:2
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
@@ -250,7 +252,7 @@ export default function MiniDrawer() {
                     <MenuIcon />
                   </IconButton>
                   <Typography variant="h6" className={classes.title}>
-                    523332 Software Engineering
+                  G-11  ระบบจัดการคนไข้ใน
                   </Typography>
                   <Chip
                     size="medium"

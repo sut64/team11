@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@100;400&display=swap');
+.font-prompt{
+  font-family: 'Prompt', sans-serif;
+}
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400&display=swap');
