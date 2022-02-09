@@ -66,12 +66,8 @@ function CreatePatient() {
   const [errorMessage, setErrorMessage] = useState("");
   const [InputErrors, setInputErrors] = useState<Partial<PatientInterface>>({});
   const [errorAge, setErrorAge] = useState<{ Age: String }>();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<PatientInterface>();
+  const {register,handleSubmit,watch,formState: { errors },} = useForm<PatientInterface>();
+  const [errorBirthdate, setErrorBirthdate] = useState<{ Birthdate: String }>();
 
   const [selectedDateAdmit, setDateAdmit] = React.useState<Date | null>(
     new Date()
@@ -122,6 +118,11 @@ function CreatePatient() {
   };
   const handleBirthdate = (date: Date | null) => {
     setBirthdate(date);
+    setErrorBirthdate({ ...errorBirthdate, Birthdate: "" });
+    let Birthdate = date as Date;
+    if (Birthdate > new Date()) {
+      setErrorBirthdate({ Birthdate: "Birthdate must be in the past" });
+    }
   };
 
   //Get Data
@@ -267,8 +268,8 @@ function CreatePatient() {
         </Typography>
         <Divider />
 
-        <div style={{ marginBottom: 10 }}>
-          <Grid container spacing={3} style={{ marginTop: 3 }}>
+        <div style={{ marginBottom: 5 }}>
+          <Grid container spacing={3} style={{ marginTop: 2 }}>
             <Grid item xs={3}>
               <p className={classes.text}>หมายเลขประจำตัวผู้ป่วย</p>
             </Grid>
@@ -333,8 +334,8 @@ function CreatePatient() {
           </Grid>
           <Divider />
         </div>
-        <div style={{ marginBottom: 10 }}>
-          <Grid container spacing={3} style={{ marginTop: 3 }}>
+        <div style={{ marginBottom: 5 }}>
+          <Grid container spacing={3} style={{ marginTop: 2 }}>
             <Grid item xs={3}>
               <p className={classes.text}>หมายเลขประจำตัวประชาชน</p>
             </Grid>
@@ -427,6 +428,8 @@ function CreatePatient() {
                   format="dd/MM/yyyy"
                   value={selectedBirthdate}
                   onChange={handleBirthdate}
+                  error={Boolean(errorBirthdate?.Birthdate)}
+                  helperText={errorBirthdate?.Birthdate}
                 />
               </MuiPickersUtilsProvider>
             </Grid>
@@ -454,7 +457,7 @@ function CreatePatient() {
           </Grid>
           <Divider />
         </div>
-        <div style={{ marginBottom: 10 }}>
+        <div style={{ marginBottom: 5 }}>
           <Grid container spacing={3} style={{ marginTop: 3 }}>
             <Grid item xs={3}>
               <p className={classes.text}>สิทธิการรักษาพยาบาล</p>
