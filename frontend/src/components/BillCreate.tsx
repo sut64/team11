@@ -32,7 +32,7 @@ import { BillItemInterface } from "../models/IBillItem";
 import { EmployeeInterface } from "../models/IEmployee";
 import { PaytypeInterface } from "../models/IPaytype";
 import { ExaminationInterface } from "../models/IExamination";
-import { MedicineInterface } from "../models/IMedicine";
+
 
 
 const Alert = (props: AlertProps) => {
@@ -62,16 +62,15 @@ const useStyles = makeStyles((theme: Theme) =>
 function BillCreate(){
     const classes = useStyles();
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+
     const [getp, Setgetp] = useState<Partial<PatientInterface>>({ID:0});
     const [patients, setPatients] = useState<PatientInterface[]>([]);
     const [examinations, setExaminations] = useState<ExaminationInterface[]>([]);
-    const [flieds,setFlied] = useState<Partial<ExaminationInterface>>({});
-    const [medicines, setMedicines] = useState<MedicineInterface[]>([]);
-    const [patientrights, setPatientRights] = useState<PatientRightInterface[]>([]);
     const [paytypes, setPaytypes] = useState<PaytypeInterface[]>([]);
     const [employees, setEmployees] = useState<Partial<EmployeeInterface>>({});
     const [cashier, setCashier] = useState<EmployeeInterface>();
     const [billitems,setBillitems] = useState<Partial<BillItemInterface>[]>([]);
+
     const [patientbill, setPatientbill] = useState<PatientInterface[]>([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [bill, setBill] = useState<Partial<BillInterface>>(
@@ -81,7 +80,6 @@ function BillCreate(){
     //check data status
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
-    const [warning, setWarning] = useState(false);
 
     const apilUrl = "http://localhost:8080";
     const requesstMenuItems = {
@@ -97,7 +95,6 @@ function BillCreate(){
         }
         setSuccess(false);
         setError(false);
-        setWarning(false);
 
     };
 
@@ -162,6 +159,7 @@ function BillCreate(){
         setSelectedDate(date);
     };
 
+    //delete item from billitem
     const removeFromItem = (index: number) => {
         let updatedItem = billitems.filter((_, i) => i !== index);
         setBillitems(updatedItem);
@@ -182,12 +180,12 @@ function BillCreate(){
             });
     };
 
+    //get patient right when select patient
     const getBillpatient = async () =>{
         fetch(`${apilUrl}/patient/bill/`+getp.ID, requesstMenuItems)
             .then((response) => response.json())
             .then((res) => {
                 if (res.data){
-                    console.log(res.data);
                     setPatientbill(res.data);
                 }
                 else{
@@ -225,7 +223,6 @@ function BillCreate(){
         fetch(apiUrl, requestMenuItems)
         .then((response) => response.json())
         .then((res) => {
-            console.log(res.data);
                 if(res.data) {
                     setExaminations(res.data)
                 } else {
@@ -233,19 +230,6 @@ function BillCreate(){
                 }
             });
     } 
-
-    const getPatientRight = async () =>{
-        fetch(`${apilUrl}/patientrights`, requesstMenuItems)
-            .then((response) => response.json())
-            .then((res) => {
-                if (res.data){
-                    setPatientRights(res.data);
-                }
-                else{
-                    console.log("else");
-                }
-            });
-    };
 
     const getPaytypet = async () =>{
         fetch(`${apilUrl}/paytypes`, requesstMenuItems)
@@ -267,19 +251,16 @@ function BillCreate(){
 
     useEffect(() => {
         getPatient();
-        getPatientRight();
         getPaytypet();
         getCashier();
        
     } , []);
     
 
-
     const convertType = (data: string | number | undefined) => {
         let val = typeof data === "string" ? parseInt(data) : data;
         return val;
     };
-
 
 
     function submit(){
@@ -311,7 +292,6 @@ function BillCreate(){
                     setErrorMessage("");
                     clearForm();
                     
-
                 }
                 else{
                     setError(true);
@@ -319,7 +299,7 @@ function BillCreate(){
                         setErrorMessage("จำนวนค่าใช้จ่ายที่กรอก ไม่ตรงกันกับค่าใช้จ่ายทั้งหมด")
                     }
                     else if (res.error == "The data recorder should be a Cashier !!"){
-                        setErrorMessage("ผู้บันทึกข้อมูลต้องเป็นเจ้าหน้าที่การเงิน")
+                        setErrorMessage("ผู้บันทึกข้อมูลต้องเป็นเจ้าหน้าที่การเงินเท่านั้น")
                     }
                     else {
                         setErrorMessage(res.error);
@@ -354,11 +334,6 @@ function BillCreate(){
             <Snackbar open={error} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="error">
                     บันทึกข้อมูลไม่สำเร็จ : {errorMessage}
-                </Alert>
-            </Snackbar>
-            <Snackbar open={warning} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="warning">
-                    มีการบันทึกใบแจ้งค่าใช้จ่าย สำหรับผลการรักษานี้แล้ว กรุณาเลือกผลการรักษาใหม่
                 </Alert>
             </Snackbar>
             <Paper className={classes.paper}  >
