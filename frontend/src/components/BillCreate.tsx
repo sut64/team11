@@ -231,8 +231,9 @@ function BillCreate(){
             });
     } 
 
-    const getPaytypet = async () =>{
-        fetch(`${apilUrl}/paytypes`, requesstMenuItems)
+    const getPaytype = async () =>{
+        if (getp.ID !== 0 ){
+            fetch(`${apilUrl}/paytypes`, requesstMenuItems)
             .then((response) => response.json())
             .then((res) => {
                 if (res.data){
@@ -242,6 +243,11 @@ function BillCreate(){
                     console.log("else");
                 }
             });
+        }
+        else {
+            setPaytypes([]);
+        }
+        
     };
 
     
@@ -251,7 +257,6 @@ function BillCreate(){
 
     useEffect(() => {
         getPatient();
-        getPaytypet();
         getCashier();
        
     } , []);
@@ -473,6 +478,7 @@ function BillCreate(){
                             <Select 
                             value={bill.PaytypeID}
                             onChange={handleChange}
+                            onOpen={getPaytype}
                             defaultValue = {0}
                             inputProps={{
                                 name: "PaytypeID",
