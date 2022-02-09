@@ -306,6 +306,15 @@ function BillCreate(){
                     else if (res.error == "The data recorder should be a Cashier !!"){
                         setErrorMessage("ผู้บันทึกข้อมูลต้องเป็นเจ้าหน้าที่การเงินเท่านั้น")
                     }
+                    else if (res.error == "Total cannot be zero"){
+                        setErrorMessage("กรุณากรอกจำนวนค่าใช้จ่าย")
+                    }
+                    else if (res.error == "Telephone cannot be blank"){
+                        setErrorMessage("กรุณากรอกเบอร์โทรศัพท์")
+                    }
+                    else if (res.error == "BillTime must be past"){
+                        setErrorMessage("กรุณาเลือกวันและเวลาปัจจุบัน")
+                    }
                     else {
                         setErrorMessage(res.error);
                     }
