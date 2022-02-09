@@ -13,7 +13,6 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { AlertTitle } from "@material-ui/lab";
 import SaveIcon from "@material-ui/icons/Save";
-import ReplyIcon from "@material-ui/icons/Reply";
 import Divider from "@material-ui/core/Divider";
 import DateFnsUtils from "@date-io/date-fns";
 import Link from "@material-ui/core/Link";
@@ -25,6 +24,7 @@ import {
   KeyboardDateTimePicker,
 } from "@material-ui/pickers";
 import Select from "@material-ui/core/Select";
+import { useForm } from "react-hook-form";
 //import Models
 import { PatientTypeInterface } from "../models/IPatienttype";
 import { PatientInterface } from "../models/IPatient";
@@ -64,6 +64,14 @@ function CreatePatient() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [InputErrors, setInputErrors] = useState<Partial<PatientInterface>>({});
+  const [errorAge, setErrorAge] = useState<{ Age: String }>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<PatientInterface>();
 
   const [selectedDateAdmit, setDateAdmit] = React.useState<Date | null>(
     new Date()
@@ -87,6 +95,26 @@ function CreatePatient() {
       ...patient,
       [name]: event.target.value,
     });
+    setInputErrors({ ...InputErrors, [name]: "" });
+    let HN = new RegExp(/^HN\d{6}$/).test(event.target.value as string);
+    if (name == "HN" && !HN) {
+      setInputErrors({
+        ...InputErrors,
+        [name]: "HN must be prefix with HN and number of 6 digits",
+      });
+    }
+    let Pid = new RegExp(/^[1-9]\d{12}$/).test(event.target.value as string);
+    if (name == "Pid" && !Pid) {
+      setInputErrors({
+        ...InputErrors,
+        [name]: "Pid must be prefix with 1 to 9 and number of 12 digits",
+      });
+    }
+    setErrorAge({ ...errorAge, Age: "" });
+    let Age = event.target.value as number;
+    if (name == "Age" && (Age <= 0 || Age >= 121)) {
+      setErrorAge({ Age: "Age must be between 1 and 120" });
+    }
   };
 
   const handleDateAdmit = (date: Date | null) => {
@@ -232,7 +260,7 @@ function CreatePatient() {
           ลงทะเบียนไม่สำเร็จ : {errorMessage}
         </Alert>
       </Snackbar>
-
+      <form onSubmit={handleSubmit(submit)}>
       <Paper className={classes.paper}>
         <Typography variant="h5" color="primary">
           <p>ระบบบันทึกการรับเข้าผู้ป่วย</p>
@@ -256,6 +284,8 @@ function CreatePatient() {
                 variant="outlined"
                 fullWidth
                 size="small"
+                error={Boolean(InputErrors?.HN)}
+                helperText={InputErrors?.HN}
               />
             </Grid>
           </Grid>
@@ -318,6 +348,8 @@ function CreatePatient() {
                 variant="outlined"
                 fullWidth
                 size="small"
+                error={Boolean(InputErrors?.Pid)}
+                helperText={InputErrors?.Pid}
               />
             </Grid>
           </Grid>
@@ -344,6 +376,7 @@ function CreatePatient() {
             </Grid>
             <Grid item xs={4}>
               <TextField
+                required
                 inputProps={{ name: "LastName" }}
                 value={patient.LastName}
                 placeholder="กรุณากรอกนามสกุล"
@@ -406,7 +439,7 @@ function CreatePatient() {
             <Grid item xs={3}>
               <TextField
                 required
-                inputProps={{ name: "Age", min: 0, max: 120 }}
+                inputProps={{ name: "Age", min: 0}}
                 value={patient.Age}
                 placeholder="กรุณากรอกอายุ"
                 onChange={handleChange}
@@ -414,6 +447,8 @@ function CreatePatient() {
                 type="number"
                 fullWidth
                 size="small"
+                error={Boolean(errorAge?.Age)}
+                helperText={errorAge?.Age}
               />
             </Grid>
           </Grid>
@@ -466,43 +501,45 @@ function CreatePatient() {
           </Grid>
         </div>
         <Grid container justifyContent="center" spacing={2}>
-        <Grid item xs={12} sm={2}>
-          <Button
-            style={{ backgroundColor: "#ff4081", color: "white" }}
-            variant="contained"
-            size="medium"
-            onClick={submit}
-            startIcon={<SaveIcon />}
-          >
-            บันทึกข้อมูล
-          </Button>
+          <Grid item xs={12} sm={2}>
+            <Button
+              style={{ backgroundColor: "#ff4081", color: "white" }}
+              variant="contained"
+              size="medium"
+              //onClick={submit}
+              type="submit"
+              startIcon={<SaveIcon />}
+            >
+              บันทึกข้อมูล
+            </Button>
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <Button
+              style={{ backgroundColor: "#7c4dff", color: "white" }}
+              variant="contained"
+              size="medium"
+              startIcon={<ListIcon />}
+              component={RouterLink}
+              to="/listPatient"
+            >
+              รายชื่อผู้ป่วย
+            </Button>
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <Button
+              style={{ backgroundColor: "#03a9f4", color: "white" }}
+              component={RouterLink}
+              to="/"
+              variant="contained"
+              size="medium"
+              startIcon={<HomeIcon />}
+            >
+              หน้าแรก
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={2}>
-          <Button
-            style={{ backgroundColor: "#7c4dff", color: "white" }}
-            variant="contained"
-            size="medium"
-            startIcon={<ListIcon />}
-            component={RouterLink}
-            to="/listPatient"
-          >
-            รายชื่อผู้ป่วย
-          </Button>
-        </Grid>
-        <Grid item xs={12} sm={2}>
-          <Button
-            style={{ backgroundColor: "#03a9f4", color: "white" }}
-            component={RouterLink}
-            to="/"
-            variant="contained"
-            size="medium"
-            startIcon={<HomeIcon />}
-          >
-            หน้าแรก
-          </Button>
-        </Grid>
-      </Grid>
       </Paper>
+      </form>
     </Container>
   );
 }
