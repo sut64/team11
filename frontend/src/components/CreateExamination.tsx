@@ -25,6 +25,7 @@ import { DiseaseInterface } from "../models/IDisease";
 import { MedicineInterface } from "../models/IMedicine";
 import { ExaminationInterface } from "../models/IExamination";
 import HomeIcon from "@material-ui/icons/Home";
+import Link from "@material-ui/core/Link";
 
 import {
   MuiPickersUtilsProvider,
@@ -67,6 +68,12 @@ function CreateExamination() {
   const [treatmentError, setTreatmentError] = useState(false);
   const [dateError, setDateError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [userError, setUserError] = useState(false);
+
+  const signout = () => {
+    localStorage.clear();
+    window.location.href = "/";
+  };
 
   const apiUrl = "http://localhost:8080";
   const requestOptions = {
@@ -86,6 +93,8 @@ function CreateExamination() {
     setCostError(false);
     setTreatmentError(false);
     setDateError(false);
+    setUserError(false);
+    setErrorMessage("");
   };
 
   const handleChange = (
@@ -238,14 +247,12 @@ function CreateExamination() {
           setSuccess(true);
           ClearForm();
         } 
+        else if (res.error == "The data recorder should be a Doctor !!") {
+          setUserError(true);
+        }
         else {
           setError(true);
-          if (res.error == "The data recorder should be a Doctor !!"){
-            setErrorMessage("ผู้บันทึกข้อมูลต้องเป็นแพทย์")
-          }
-          else{
-            setErrorMessage(res.error)
-          }
+          setErrorMessage(res.error)
         }
       });
   }
@@ -256,7 +263,7 @@ function CreateExamination() {
       Treatment: "",
       Cost: 0,
       DiagnosisTime: new Date(),
-      EmployeeID: 0,
+      EmployeeID: examination.EmployeeID,
       PatientID: 0,
       ClinicID: 0,
       DiseaseID: 0,
@@ -307,6 +314,21 @@ function CreateExamination() {
       <Snackbar open={dateError} autoHideDuration={2000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
           บันทึกข้อมูลไม่สำเร็จ: เลือกวันที่และเวลาปัจจุบัน
+        </Alert>
+      </Snackbar>
+      <Snackbar open={userError} autoHideDuration={2000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error">
+          บันทึกข้อมูลไม่สำเร็จ: ผู้บันทึกข้อมูลต้องเป็นแพทย์
+          <p></p>
+          <strong>
+            <Link onClick={signout} style={{ color: "#fff" } }>
+              ออกจากระบบ
+            </Link>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <Link href="/" style={{ color: "#fff" }}>
+              กลับหน้าหลัก
+            </Link>
+          </strong>
         </Alert>
       </Snackbar>
       <Paper className={classes.paper}>
