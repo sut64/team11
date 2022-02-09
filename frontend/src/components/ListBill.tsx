@@ -67,7 +67,7 @@ function ListBillItem(row: ListBillProps){
                                   <TableRow>
                                   <TableCell align="center" scope="row"> {row.item.ID}</TableCell>
                                   <TableCell align="center" scope="row"> {row.item.Employee.Name}</TableCell>
-                                  <TableCell align="center" scope="row"> {row.item.Total}</TableCell>
+                                  <TableCell align="center" scope="row"> {(row.item.Total).toLocaleString('th-TH',{style:"currency",currency:"THB"})}</TableCell>
                                   <TableCell align="center" scope="row"> {row.item.PatientRight.Name}</TableCell>
                              
                                     <TableCell align="center" >
@@ -93,21 +93,20 @@ function ListBillItem(row: ListBillProps){
                                             <TableRow>
                                               <TableCell align="center">ใบผลการรักษา</TableCell>
                                               <TableCell align="center">ผลการรักษา</TableCell>
-                                              <TableCell align="center">ค่าใช้จ่าย</TableCell>
                                               <TableCell align="center">ยาที่จ่าย</TableCell>
-                                              <TableCell align="center">ค่าใช้จ่าย</TableCell>
+                                              <TableCell align="center">ค่าใช้จ่ายทั้งหมด</TableCell>
                                             </TableRow>
                                           </TableHead>
                                           <TableBody>
-                                          {row.item.BillItems?.map((row:Partial<BillItemInterface>,index)=>{
+                                          {row.item.BillItems?.map((row:BillItemInterface,index)=>{
                                                   return (
                                                       <TableRow key={index}>
                                                           <TableCell align="center">{row.ExaminationID}</TableCell>
                                                           <TableCell align="center">{row.Examination?.Treatment}</TableCell>
-                                                          <TableCell align="center">{row.Examination?.Cost}</TableCell>
                                                           <TableCell align="center">{row.Examination?.Medicine.Name}</TableCell>
-                                                          <TableCell align="center">{row.Examination?.Medicine.Cost}</TableCell>
-                                                         
+                                                          <TableCell align="center">{(row.Examination?.Cost+row.Examination?.Medicine.Cost).toLocaleString('th-TH', { style: "currency", currency: "THB" })}</TableCell>
+
+                                                      
                                                       </TableRow>
                                                   )
                                               })}
