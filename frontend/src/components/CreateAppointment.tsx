@@ -10,8 +10,6 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import MenuItem from '@material-ui/core/MenuItem';
-import SaveIcon from '@material-ui/icons/Save';
 import Divider from "@material-ui/core/Divider";
 import Snackbar from '@material-ui/core/Snackbar';
 import Select from "@material-ui/core/Select";
@@ -26,7 +24,8 @@ import {
   KeyboardDateTimePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import AllInboxIcon from '@material-ui/icons/AllInbox';
+import { AlertTitle } from '@material-ui/lab';
+import { useForm } from "react-hook-form";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -64,6 +63,7 @@ function AppointmentCreate() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const {register,handleSubmit,watch,formState: { errors },} = useForm<AppointmentInterface>();
 
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -82,6 +82,7 @@ function AppointmentCreate() {
       ...appointment,
       [name]: event.target.value,
     });
+    
   };
 
   const handleDateChange = (date: Date | null) => {
@@ -95,11 +96,11 @@ function AppointmentCreate() {
 
   ) => {
 
-    const id = event.target.id as keyof typeof appointment;
+    const name = event.target.id as keyof typeof appointment;
 
     const { value } = event.target;
 
-    setAppointment({ ...appointment, [id]: value });
+    setAppointment({ ...appointment, [name]: value });
 
   };
 
@@ -134,6 +135,7 @@ function AppointmentCreate() {
       });
   };
   console.log("Patient",doctors);
+
   const getDoctor = async () => {
     fetch(`${apiUrl}/employeerole/1`, requestOptions)
       .then((response) => response.json())
@@ -185,6 +187,7 @@ function AppointmentCreate() {
           console.log("บันทึกได้")
           setSuccess(true);
           setErrorMessage("")
+          ClearForm();
         } else {
           console.log("บันทึกไม่ได้")
           setError(true);
@@ -193,19 +196,34 @@ function AppointmentCreate() {
       });
   }
 
+  // function clear form after submit success
+  const ClearForm = () => {
+    setAppointment({
+      PatientID: 0,
+      EmployeeID: 0,
+      ClinicID: 0,
+			RoomNumber: 0,
+      Note: "",
+    });
+    setSelectedDate(new Date());
+  };
+
   return (
 
     <Container className={classes.container} maxWidth="md" >
       <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
+          <AlertTitle>Success</AlertTitle>
           บันทึกข้อมูลสำเร็จ
         </Alert>
       </Snackbar>
       <Snackbar open={error} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
+          <AlertTitle>Error</AlertTitle>
           บันทึกข้อมูลไม่สำเร็จ: {errorMessage}
         </Alert>
       </Snackbar>
+      <form onSubmit={handleSubmit(submit)}>
       <Paper className={classes.paper}>
         <Box display="flex" >
           <Box flexGrow={1}>
@@ -356,6 +374,7 @@ function AppointmentCreate() {
           </Grid>
         </Grid>
       </Paper>
+      </form>
     </Container>
   );
 }
