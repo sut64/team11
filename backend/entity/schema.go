@@ -228,20 +228,20 @@ type Disease struct {
 type PayMedicine struct {
 	gorm.Model
 	Pid             string
-	Prescription    string
-	PayMedicineTime time.Time
+	Prescription    uint
+	PayMedicineTime time.Time `valid:"future~PayMedicineTime must be in the future"`
 
 	// EmployeeID ทำหน้าที่เป็น FK
 	EmployeeID *uint
-	Employee   Employee `gorm:"references:id"`
+	Employee   Employee `gorm:"references:id" valid:"-"`
 
 	//PatientID ทำหน้าที่เป็น ForeignKey
 	PatientID *uint
-	Patient   Patient `gorm:"references:id"`
+	Patient   Patient `gorm:"references:id" valid:"-"`
 
 	//MedicineID ทำหน้าที่เป็น ForeignKey
 	MedicineID *uint
-	Medicine   Medicine `gorm:"references:id"`
+	Medicine   Medicine `gorm:"references:id" valid:"-"`
 }
 
 type Medicine struct {
