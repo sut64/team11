@@ -623,7 +623,7 @@ function BillCreate(){
                                 variant="contained"
                                 component={RouterLink}
                                 to="/ListBills"
-                                color="primary">
+                                >
                                 กลับ
                             </Button>
                         </Grid>  
