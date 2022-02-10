@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 	"github.com/sut64/team11/entity"
 )
@@ -44,9 +45,15 @@ func CreatePayMedicine(c *gin.Context) {
 		Patient:         patient,                     // โยงความสัมพันธ์กับ Entity Patient
 		Employee:        employee,                    // โยงความสัมพันธ์กับ Entity Employee
 		Medicine:        medicine,                    // โยงความสัมพันธ์กับ Entity Medicine
-		Pid:             paymedicine.Pid,             // ตั้งค่าฟิลด์ Pid
-		Prescription:    paymedicine.Prescription,    // ตั้งค่าฟิลด์ Prescription_number
+		Cost:            paymedicine.Cost,            // ตั้งค่าฟิลด์ Cost
+		Prescription:    paymedicine.Prescription,    // ตั้งค่าฟิลด์ Prescription
 		PayMedicineTime: paymedicine.PayMedicineTime, // ตั้งค่าฟิลด์ PayMedicineTime
+	}
+
+	// : ขั้นตอนการ validate ข้อมูล
+	if _, err := govalidator.ValidateStruct(pm); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	// : บันทึก
@@ -61,7 +68,7 @@ func CreatePayMedicine(c *gin.Context) {
 func GetPayMedicine(c *gin.Context) {
 	var paymedicine entity.PayMedicine
 	id := c.Param("id")
-	if err := entity.DB().Preload("Patient").Preload("Employee").Preload("Medicine").Raw("SELECT * FROM paymedicines WHERE id = ?", id).Find(&paymedicine).Error; err != nil {
+	if err := entity.DB().Preload("Patient").Preload("Employee").Preload("Medicine").Raw("SELECT * FROM pay_medicines WHERE id = ?", id).Find(&paymedicine).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -71,7 +78,7 @@ func GetPayMedicine(c *gin.Context) {
 // GET /paymedicines
 func ListPayMedicines(c *gin.Context) {
 	var paymedicines []entity.PayMedicine
-	if err := entity.DB().Preload("Patient").Preload("Employee").Preload("Medicine").Raw("SELECT * FROM paymedicines").Find(&paymedicines).Error; err != nil {
+	if err := entity.DB().Preload("Patient").Preload("Employee").Preload("Medicine").Raw("SELECT * FROM pay_medicines").Find(&paymedicines).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -82,7 +89,7 @@ func ListPayMedicines(c *gin.Context) {
 // DELETE /paymedicines/:id
 func DeletePayMedicine(c *gin.Context) {
 	id := c.Param("id")
-	if tx := entity.DB().Exec("DELETE FROM paymedicines WHERE id = ?", id); tx.RowsAffected == 0 {
+	if tx := entity.DB().Exec("DELETE FROM pay_medicines WHERE id = ?", id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "paymedicine not found"})
 		return
 	}

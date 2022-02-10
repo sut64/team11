@@ -4,7 +4,6 @@ import { EmployeeInterface } from "./IEmployee";
 
 export interface PayMedicineInterface {
     ID: number,
-    Pid: string
     Prescription: string,
     PayMedicineTime: Date,
     EmployeeID: number,

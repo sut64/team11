@@ -14,6 +14,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { PayMedicineInterface } from "../models/IPayMedicine";
 import moment from "moment";
+import { isTemplateMiddle } from "typescript";
 
 const useStyles = makeStyles((theme: Theme) =>
  createStyles({
@@ -83,22 +84,22 @@ function PayMedicine() {
          <Table className={classes.table} aria-label="simple table">
            <TableHead>
              <TableRow>
-               <TableCell align="center" width="5%">
-                 ลำดับ
+               <TableCell align="center" width="auto">
+                 เลขที่ใบจ่ายยา
                </TableCell>
-               <TableCell align="center" width="20%">
+               <TableCell align="center" width="auto">
                  ชื่อ-นามสกุลของผู้ป่วย
                </TableCell>
-               <TableCell align="center" width="20%">
+               <TableCell align="center" width="auto">
                 ยาที่จ่าย
                </TableCell>
-               <TableCell align="center" width="10%">
+               <TableCell align="center" width="auto">
                 ค่ายา
                </TableCell>
-               <TableCell align="center" width="20%">
+               <TableCell align="center" width="auto">
                  วันที่จ่ายยา
                </TableCell>
-               <TableCell align="center" width="20%">
+               <TableCell align="center" width="auto">
                  เภสัชกร
                </TableCell>
              </TableRow>
@@ -106,8 +107,8 @@ function PayMedicine() {
            <TableBody>
              {paymedicine.map((item: PayMedicineInterface) => (
                <TableRow key={item.ID}>
-                 <TableCell align="center">{item.ID}</TableCell>
-                 <TableCell align="center">{item.Patient.FirstName}</TableCell>
+                 <TableCell align="center">{item.Prescription}</TableCell>
+                 <TableCell align="center">{item.Patient.FirstName+" "+item.Patient.LastName}</TableCell>
                  <TableCell align="center">{item.Medicine.Name}</TableCell>
                  <TableCell align="center">{item.Medicine.Cost}</TableCell>
                  <TableCell align="center">
