@@ -228,7 +228,7 @@ type Disease struct {
 type PayMedicine struct {
 	gorm.Model
 	Pid             string
-	Prescription    uint
+	Prescription    uint      `valid:"required~Prescription more than 0 and cannot be blank"`
 	PayMedicineTime time.Time `valid:"future~PayMedicineTime must be in the future"`
 
 	// EmployeeID ทำหน้าที่เป็น FK
