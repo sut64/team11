@@ -822,7 +822,7 @@
         ["xpath=//div[@id='root']/div/main/div[2]/div/div/div/div[2]", "xpath:idRelative"],
         ["xpath=//div/div/div[2]", "xpath:position"]
       ],
-      "value": "Error\\nลงทะเบียนไม่สำเร็จ : HN: HN12345 does not validate as matches(^HN\\d{6}$)"
+      "value": "Error\\nลงทะเบียนไม่สำเร็จ : HN12345 รูปแบบไม่ถูกต้อง! หมายเลขประจำตัวผู้ป่วยต้องขึ้นด้วย HN และตามด้วยตัวเลข 6 หลัก"
     }]
   }, {
     "id": "e0e9c847-94e9-4967-af1e-b140eec56c39",
@@ -1213,7 +1213,7 @@
         ["xpath=//div[@id='root']/div/main/div[2]/div/div/div/div[2]", "xpath:idRelative"],
         ["xpath=//div/div/div[2]", "xpath:position"]
       ],
-      "value": "Error\\nลงทะเบียนไม่สำเร็จ : Pid: 12335445557474 does not validate as matches(^[1-9]\\d{12}$)"
+      "value": "Error\\nลงทะเบียนไม่สำเร็จ : 12335445557474 รูปแบบไม่ถูกต้อง! หมายเลขประจำตัวประชาชนประกอบด้วยตัวเลข 13 หลักเท่านั้นและต้องไม่ขึ้นด้วย 0"
     }]
   }, {
     "id": "da2433f5-9763-4623-817f-c3b23159e79f",
@@ -1585,7 +1585,7 @@
         ["xpath=//div[@id='root']/div/main/div[2]/div/div/div/div[2]", "xpath:idRelative"],
         ["xpath=//div/div/div[2]", "xpath:position"]
       ],
-      "value": "Error\\nลงทะเบียนไม่สำเร็จ : Birthdate must be in the past"
+      "value": "Error\\nลงทะเบียนไม่สำเร็จ : วันเดือนปีเกิดไม่ถูกต้อง! ต้องไม่เกินวันที่ในปัจจุบัน"
     }]
   }, {
     "id": "21e100b7-8bf4-4597-85f2-e844db3a1f0b",
@@ -1965,7 +1965,7 @@
         ["xpath=//div[@id='root']/div/main/div[2]/div/div/div/div[2]", "xpath:idRelative"],
         ["xpath=//div/div/div[2]", "xpath:position"]
       ],
-      "value": "Error\\nลงทะเบียนไม่สำเร็จ : Age: 122 does not validate as range(0|120)"
+      "value": "Error\\nลงทะเบียนไม่สำเร็จ : อายุ 122 ปี ไม่ถูกต้อง! อายุผู้ป่วยต้องอยู่ในช่วงตั้งแต่ 0 ถึง 120 ปี"
     }]
   }],
   "suites": [{
