@@ -53,7 +53,9 @@ const useStyles = makeStyles((theme: Theme) =>
 const Alert = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
-
+type MsgError = {
+  [key: string]: string;
+};
 function CreatePatient() {
   const classes = useStyles();
   //set state
@@ -64,10 +66,8 @@ function CreatePatient() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [InputErrors, setInputErrors] = useState<Partial<PatientInterface>>({});
-  const [errorAge, setErrorAge] = useState<{ Age: String }>();
   const {register,handleSubmit,watch,formState: { errors },} = useForm<PatientInterface>();
-  const [errorBirthdate, setErrorBirthdate] = useState<{ Birthdate: String }>();
+  const [errorMsg, setErrorMsg] = useState<MsgError>();
 
   const [selectedDateAdmit, setDateAdmit] = React.useState<Date | null>(
     new Date()
@@ -91,25 +91,27 @@ function CreatePatient() {
       ...patient,
       [name]: event.target.value,
     });
-    setInputErrors({ ...InputErrors, [name]: "" });
+    setErrorMsg({ ...errorMsg, [name]: "" });
     let HN = new RegExp(/^HN\d{6}$/).test(event.target.value as string);
     if (name == "HN" && !HN) {
-      setInputErrors({
-        ...InputErrors,
+      setErrorMsg({
+        ...errorMsg,
         [name]: "HN must be prefix with HN and number of 6 digits",
       });
     }
     let Pid = new RegExp(/^[1-9]\d{12}$/).test(event.target.value as string);
     if (name == "Pid" && !Pid) {
-      setInputErrors({
-        ...InputErrors,
+      setErrorMsg({
+        ...errorMsg,
         [name]: "Pid must be prefix with 1 to 9 and number of 12 digits",
       });
     }
-    setErrorAge({ ...errorAge, Age: "" });
     let Age = event.target.value as number;
     if (name == "Age" && (Age <= 0 || Age >= 121)) {
-      setErrorAge({ Age: "Age must be between 1 and 120" });
+      setErrorMsg({
+        ...errorMsg,
+        [name]: "Age must be between 1 to 120",
+      });
     }
   };
 
@@ -118,10 +120,13 @@ function CreatePatient() {
   };
   const handleBirthdate = (date: Date | null) => {
     setBirthdate(date);
-    setErrorBirthdate({ ...errorBirthdate, Birthdate: "" });
+    setErrorMsg({ ...errorMsg, Birthdate: "" });
     let Birthdate = date as Date;
     if (Birthdate > new Date()) {
-      setErrorBirthdate({ Birthdate: "Birthdate must be in the past" });
+      setErrorMsg({
+        ...errorMsg,
+        Birthdate: "Birthdate must be in the past",
+      });
     }
   };
 
@@ -219,8 +224,18 @@ function CreatePatient() {
           setErrorMessage("");
           ClearForm();
         } else {
+          console.error(res.error);
           setError(true);
-          setErrorMessage(res.error);
+          if (res.error == "patienttype not found") {
+            setErrorMessage("กรุณาเลือกประเภทผู้ป่วย");
+            setErrorMsg({ ...errorMsg, PatientTypeID: "กรุณาเลือกประเภทผู้ป่วย" });
+          } else if (res.error == "patientright not found") {
+            setErrorMessage("กรุณาเลือกสิทธิผู้ป่วย");
+            setErrorMsg({ ...errorMsg, PatientRightID: "กรุณาเลือกสิทธิผู้ป่วย" });
+          } else if (res.error == "Gender not found") {
+            setErrorMessage("กรุณาเลือกเพศของผู้ป่วย")
+            setErrorMsg({ ...errorMsg, GenderID:"กรุณาเลือกเพศของผู้ป่วย"})
+          } else setErrorMessage(res.error);
         }
       });
   }
@@ -285,8 +300,8 @@ function CreatePatient() {
                 variant="outlined"
                 fullWidth
                 size="small"
-                error={Boolean(InputErrors?.HN)}
-                helperText={InputErrors?.HN}
+                error={Boolean(errorMsg?.HN)}
+                helperText={errorMsg?.HN}
               />
             </Grid>
           </Grid>
@@ -319,6 +334,7 @@ function CreatePatient() {
                   value={patient.PatientTypeID}
                   onChange={handleChange}
                   inputProps={{ name: "PatientTypeID" }}
+                  error={Boolean(errorMsg?.PatientTypeID)}
                 >
                   <option aria-label="None" value="">
                     กรุณาเลือกประเภทผู้ป่วย
@@ -349,8 +365,8 @@ function CreatePatient() {
                 variant="outlined"
                 fullWidth
                 size="small"
-                error={Boolean(InputErrors?.Pid)}
-                helperText={InputErrors?.Pid}
+                error={Boolean(errorMsg?.Pid)}
+                helperText={errorMsg?.Pid}
               />
             </Grid>
           </Grid>
@@ -401,6 +417,7 @@ function CreatePatient() {
                   inputProps={{
                     name: "GenderID",
                   }}
+                  error={Boolean(errorMsg?.GenderID)}
                 >
                   <option aria-label="None" value="">
                     กรุณาเลือกเพศของผู้ป่วย
@@ -428,8 +445,8 @@ function CreatePatient() {
                   format="dd/MM/yyyy"
                   value={selectedBirthdate}
                   onChange={handleBirthdate}
-                  error={Boolean(errorBirthdate?.Birthdate)}
-                  helperText={errorBirthdate?.Birthdate}
+                  error={Boolean(errorMsg?.Birthdate)}
+                  helperText={errorMsg?.Birthdate}
                 />
               </MuiPickersUtilsProvider>
             </Grid>
@@ -450,8 +467,8 @@ function CreatePatient() {
                 type="number"
                 fullWidth
                 size="small"
-                error={Boolean(errorAge?.Age)}
-                helperText={errorAge?.Age}
+                error={Boolean(errorMsg?.Age)}
+                helperText={errorMsg?.Age}
               />
             </Grid>
           </Grid>
