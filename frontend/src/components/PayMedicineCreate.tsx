@@ -50,6 +50,7 @@ function PayMedicineCreate() {
 
  const [success, setSuccess] = React.useState(false);
  const [error, setError] = React.useState(false);
+ const [errorMessage, setErrorMessage] = useState("");
  
  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
    if (reason === "clickaway") {
@@ -146,6 +147,7 @@ const handleChange = (
      PatientID : convertType(paymedicine.PatientID),
      MedicineID : convertType(paymedicine.MedicineID),
      Cost: convertType(paymedicine.Cost),
+     Prescription: paymedicine.Prescription,
      PayMedicineTime: selectedDate,
 
    };
@@ -165,11 +167,14 @@ const handleChange = (
        .then((response) => response.json())
        .then((res) => {
          if (res.data) {
+           setErrorMessage("")
            console.log("บันทึกได้")
            setSuccess(true);
          } else {
+           setErrorMessage(res.error)
            console.log("บันทึกไม่ได้")
            setError(true);
+           console.log(res.error)
          }
        });
    }
@@ -183,7 +188,7 @@ const handleChange = (
      </Snackbar>
      <Snackbar open={error} autoHideDuration={6000} onClose={handleClose}>
        <Alert onClose={handleClose} severity="error">
-         บันทึกข้อมูลไม่สำเร็จ
+         บันทึกข้อมูลไม่สำเร็จ {errorMessage}
        </Alert>
      </Snackbar>
      <Paper className={classes.paper}>
@@ -221,7 +226,19 @@ const handleChange = (
       </Select>
       </FormControl>
       </Grid>  
-           
+        <Grid item xs={6}>
+            <FormControl fullWidth variant="outlined" size="medium">
+              <p> เลขที่ใบจ่ายยา </p>
+              <TextField
+                id="Prescription"
+                variant="outlined"
+                type="string"
+                size="medium"
+                value={paymedicine.Prescription || ""}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+          </Grid>
             <Grid item xs={12}>
             <FormControl fullWidth variant="outlined" size = "small">
             <p> ยาที่ได้รับ </p>
@@ -263,7 +280,7 @@ const handleChange = (
               native
               disabled
               id="EmployeeID"
-              value={paymedicine.ID}
+              value={paymedicine.EmployeeID}
               defaultValue = {0}
               onChange={handleChange}
               inputProps={{name: "EmployeeID"}}
