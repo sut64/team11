@@ -70,7 +70,7 @@ func TestHNMustBeInValidPattern(t *testing.T) {
 	}
 }
 
-// ตรวจสอบหมายเลข PID ต้องขึ้นด้วย 1 ถึง 9 และตามด้วย 0 ถึง 9 จำนวน 12 ตัว
+// ตรวจสอบหมายเลข Pid ต้องขึ้นด้วย 1 ถึง 9 และตามด้วย 0 ถึง 9 จำนวน 12 ตัว
 func TestPIDMustBeInValidPattern(t *testing.T) {
 	g := NewGomegaWithT(t)
 

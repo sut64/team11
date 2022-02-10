@@ -227,7 +227,7 @@ type Disease struct {
 
 type PayMedicine struct {
 	gorm.Model
-	Pid             string
+	Pid             string    `valid:"matches(^[1-9]\\d{12}$),required"`
 	Prescription    uint      `valid:"required~Prescription more than 0 and cannot be blank"`
 	PayMedicineTime time.Time `valid:"future~PayMedicineTime must be in the future"`
 
