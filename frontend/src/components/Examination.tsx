@@ -32,6 +32,12 @@ const useStyles = makeStyles((theme: Theme) =>
         padding: theme.spacing(2),
         color: theme.palette.text.secondary,
     },
+    root: {
+      "& .MuiTableCell-head": {
+          color: "black",
+          backgroundColor: "#C8EFD1"
+      },
+  }
 
   })
 );
@@ -121,7 +127,7 @@ function Examination() {
               <TableContainer component={Paper} className={classes.tableSpace}>
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
-                    <TableRow>
+                    <TableRow className={classes.root}>
                         <TableCell align="center" width="7%">
                         หมายเลขประจำตัวผู้ป่วย
                         </TableCell>
