@@ -328,6 +328,7 @@ function BillCreate(){
             PatientRightID:0,
             PaytypeID:0,
             Total:0,
+            EmployeeID : bill.EmployeeID,
             Telephone:"",
             BillTime: new Date(),
         });
