@@ -20,9 +20,14 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import DeleteIcon from "@material-ui/icons/Delete";
+import Backdrop from '@material-ui/core/Backdrop';
+
 
 import { BillItemInterface } from "../models/IBillItem";
 import { BillInterface } from "../models/IBill";
+import { ExaminationInterface } from "../models/IExamination";
+import { PayMedicineInterface } from "../models/IPayMedicine";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,38 +47,45 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: "1rem",
       //fontWeight: "bold",
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 
   })
 );
 
 
 export interface ListBillProps {
-  item : BillInterface,}
+  item : BillInterface,
+
+}
 
 function ListBillItem(row: ListBillProps){
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleToggle = () => {
+    setOpen(!open);
+  };
   
   return (
-                                <Fragment>    
+                                               
+                                <Fragment>
+                                  
                                   <TableRow>
-                                  <TableCell align="center" scope="row"> {row.item.ID}</TableCell>
-                                  <TableCell align="center" scope="row"> {row.item.Employee.Name}</TableCell>
-                                  <TableCell align="center" scope="row"> {(row.item.Total).toLocaleString('th-TH',{style:"currency",currency:"THB"})}</TableCell>
-                                  <TableCell align="center" scope="row"> {row.item.PatientRight.Name}</TableCell>
                                     <TableCell align="center" >
-                                    <IconButton
-                                              aria-label="expand row"
-                                              size="small"
-                                              onClick={() => setOpen(!open)}
-                                            >
-                                              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                                            </IconButton>
+                                        <Button variant="outlined" color="primary" onClick={handleToggle}>
+                                          แสดงผลการรักษา
+                                        </Button>
                                     </TableCell>
                                   </TableRow>
-                                  <TableRow>
+                                  <Backdrop className={classes.backdrop} open={open} onClick={handleClose}>
+                                    <Paper className={classes.paper}>
+                                      <TableRow>
                                   <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6} >
-                                    <Collapse in={open} timeout="auto" unmountOnExit>
                                       <Box sx={{ margin: 1 }}>
                                         <Typography variant="h6" gutterBottom component="div">
                                           ผลการรักษา
@@ -94,15 +106,20 @@ function ListBillItem(row: ListBillProps){
                                                           <TableCell align="center">{row.ExaminationID}</TableCell>
                                                           <TableCell align="center">{row.Examination?.Treatment}</TableCell>
                                                           <TableCell align="center">{row.Examination?.Medicine.Name}</TableCell>
-                                                          <TableCell align="center">{(row.Examination?.Cost+row.Examination?.Medicine.Cost).toLocaleString('th-TH', { style: "currency", currency: "THB" })}</TableCell>
+                                                          <TableCell align="center">{(row.Examination?.Cost+row.Examination?.Medicine.Cost).toLocaleString('th-TH', { style: "currency", currency: "THB" })}</TableCell>                                                  
                                                       </TableRow>
-                                                  )})}
+                                                  )
+                                              })}        
                                           </TableBody>
                                         </Table>
                                       </Box>
-                                    </Collapse>
                                   </TableCell>
                                 </TableRow>
+                                    </Paper>
+                                  
+                                  </Backdrop>
+
+                                 
                              
                                 </Fragment>
                                
@@ -115,6 +132,29 @@ function ListBill() {
   const classes = useStyles();
   const [bills,setBills] = useState<BillInterface[]>([]);
 
+  const removeBill= (id: number) => {
+    const apiUrl = "http://localhost:8080";
+    const requestOptions = {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+    fetch(`${apiUrl}/bill/`+id, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        console.log(res.data);
+        if (res.data) {
+          setBills(res.data);
+        } else {
+          console.log("else");
+        }
+      });
+    }
+ 
+  
+
   const getBills = async () => {
     const apiUrl = "http://localhost:8080";
     const requestOptions = {
@@ -126,6 +166,7 @@ function ListBill() {
     };
     fetch(`${apiUrl}/bills`, requestOptions)
       .then((response) => response.json())
+
       .then((res) => {
         console.log(res.data);
         if (res.data) {
@@ -180,6 +221,9 @@ function ListBill() {
           <TableHead>
             <TableRow >
               <TableCell  className={classes.title} align="center" >
+                ลบใบค่าใช้จ่าย
+              </TableCell>
+              <TableCell  className={classes.title} align="center" >
                 เลขที่ใบแจ้งค่าใช้จ่าย
               </TableCell>
               <TableCell  className={classes.title} align="center" >
@@ -191,15 +235,21 @@ function ListBill() {
               <TableCell  className={classes.title} align="center" >
                 สิทธิ์การรักษา
               </TableCell>
-              <TableCell  className={classes.title} align="center" >
-                ผลการรักษา
-              </TableCell>
+             
             </TableRow>
           </TableHead>
           <TableBody>
-          {bills.map((item: BillInterface) => (
-                                    
-                                        <ListBillItem key={item.ID} item={item}/>
+          {bills.map((item: BillInterface) => (      
+            <TableRow>
+                                  <TableCell align="center" width="auto"><IconButton size="small" onClick={() => removeBill(item.ID)}><DeleteIcon /></IconButton></TableCell>
+                                 <TableCell align="center" scope="row"> {item.ID}</TableCell>
+                                  <TableCell align="center" scope="row"> {item.Employee.Name}</TableCell>
+                                  <TableCell align="center" scope="row"> {(item.Total).toLocaleString('th-TH',{style:"currency",currency:"THB"})}</TableCell>
+                                  <TableCell align="center" scope="row"> {item.PatientRight.Name}</TableCell>
+                                  <ListBillItem key={item.ID} item={item}/>
+                                  
+            </TableRow>
+                                        
                                      
                                 ))}
           

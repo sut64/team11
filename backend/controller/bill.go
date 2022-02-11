@@ -24,6 +24,7 @@ func CreateBill(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	
 
 	// 10: ค้นหา patientright ด้วย id
 	if tx := entity.DB().Where("id = ?", bill.PatientRightID).First(&patientright); tx.RowsAffected == 0 {
@@ -49,6 +50,7 @@ func CreateBill(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "The data recorder should be a Cashier !!"})
 		return
 	}
+
 		
 	// 12: สร้าง Bill
 	bl := entity.Bill{       
@@ -78,6 +80,8 @@ func CreateBill(c *gin.Context) {
 		entity.DB().Joins("Medicine").Find(&exams)
 
 		total += (uint(exams.Cost) + exams.Medicine.Cost);
+
+
 	}
 
 	//ตรวจสอบฟิลด์ว่ามีค่าตรงกันกับ ค่าใช้จ่ายทั้งหมดหรือไหม
@@ -86,6 +90,7 @@ func CreateBill(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Total input not match !!"})
 		return
 	}
+	
 
 	// 13: บันทึก bill
 	if err := entity.DB().Create(&bl).Error; err != nil {
@@ -93,7 +98,7 @@ func CreateBill(c *gin.Context) {
 		return
 	}
 
-	// 14: สร้าง BillItem
+	
 	var items []entity.BillItem
 
 	for _,item := range bill.BillItems{
@@ -143,6 +148,29 @@ func GetBill(c *gin.Context) {
 // GET /bills
 func ListBills(c *gin.Context) {
 	var bills []entity.Bill
+	if err := entity.DB().Preload("BillItems").Preload("BillItems.Examination").Preload("BillItems.Examination.Medicine").Preload("PatientRight").Preload("PayType").Preload("Employee").Raw("SELECT * FROM bills").Find(&bills).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": bills})
+}
+
+// DELETE /bill/:id
+func DeleteBill(c *gin.Context) {
+	id := c.Param("id")
+	var bills []entity.Bill
+
+	if tx := entity.DB().Exec("DELETE FROM bills WHERE id = ?", id); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "bill not found"})
+		return
+	}
+
+	if tx := entity.DB().Exec("DELETE FROM bill_items WHERE bill_id = ?", id); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "examination not found"})
+		return
+	}
+
 	if err := entity.DB().Preload("BillItems").Preload("BillItems.Examination").Preload("BillItems.Examination.Medicine").Preload("PatientRight").Preload("PayType").Preload("Employee").Raw("SELECT * FROM bills").Find(&bills).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
