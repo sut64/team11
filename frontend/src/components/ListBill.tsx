@@ -23,8 +23,6 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 import { BillItemInterface } from "../models/IBillItem";
 import { BillInterface } from "../models/IBill";
-import { ExaminationInterface } from "../models/IExamination";
-import { PayMedicineInterface } from "../models/IPayMedicine";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -50,26 +48,19 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 export interface ListBillProps {
-  item : BillInterface,
-
-}
+  item : BillInterface,}
 
 function ListBillItem(row: ListBillProps){
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   
   return (
-                                
-                           
-                                
-                                <Fragment>
-                                  
+                                <Fragment>    
                                   <TableRow>
                                   <TableCell align="center" scope="row"> {row.item.ID}</TableCell>
                                   <TableCell align="center" scope="row"> {row.item.Employee.Name}</TableCell>
                                   <TableCell align="center" scope="row"> {(row.item.Total).toLocaleString('th-TH',{style:"currency",currency:"THB"})}</TableCell>
                                   <TableCell align="center" scope="row"> {row.item.PatientRight.Name}</TableCell>
-                             
                                     <TableCell align="center" >
                                     <IconButton
                                               aria-label="expand row"
@@ -80,7 +71,6 @@ function ListBillItem(row: ListBillProps){
                                             </IconButton>
                                     </TableCell>
                                   </TableRow>
-
                                   <TableRow>
                                   <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6} >
                                     <Collapse in={open} timeout="auto" unmountOnExit>
@@ -105,12 +95,8 @@ function ListBillItem(row: ListBillProps){
                                                           <TableCell align="center">{row.Examination?.Treatment}</TableCell>
                                                           <TableCell align="center">{row.Examination?.Medicine.Name}</TableCell>
                                                           <TableCell align="center">{(row.Examination?.Cost+row.Examination?.Medicine.Cost).toLocaleString('th-TH', { style: "currency", currency: "THB" })}</TableCell>
-
-                                                      
                                                       </TableRow>
-                                                  )
-                                              })}
-                                               
+                                                  )})}
                                           </TableBody>
                                         </Table>
                                       </Box>
@@ -128,8 +114,6 @@ function ListBillItem(row: ListBillProps){
 function ListBill() {
   const classes = useStyles();
   const [bills,setBills] = useState<BillInterface[]>([]);
- 
-  
 
   const getBills = async () => {
     const apiUrl = "http://localhost:8080";
@@ -142,7 +126,6 @@ function ListBill() {
     };
     fetch(`${apiUrl}/bills`, requestOptions)
       .then((response) => response.json())
-
       .then((res) => {
         console.log(res.data);
         if (res.data) {
@@ -211,7 +194,6 @@ function ListBill() {
               <TableCell  className={classes.title} align="center" >
                 ผลการรักษา
               </TableCell>
-             
             </TableRow>
           </TableHead>
           <TableBody>
