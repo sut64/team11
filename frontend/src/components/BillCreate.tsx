@@ -70,8 +70,9 @@ function BillCreate(){
     const [employees, setEmployees] = useState<Partial<EmployeeInterface>>({});
     const [cashier, setCashier] = useState<EmployeeInterface>();
     const [billitems,setBillitems] = useState<Partial<BillItemInterface>[]>([]);
+
     const [patientbill, setPatientbill] = useState<PatientInterface[]>([]);
-    
+    const [errorMessage, setErrorMessage] = useState("");
     const [bill, setBill] = useState<Partial<BillInterface>>(
         {PaytypeID:0,PatientRightID:0}
     );
@@ -79,7 +80,6 @@ function BillCreate(){
     //check data status
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
 
     const apilUrl = "http://localhost:8080";
     const requesstMenuItems = {
@@ -95,6 +95,7 @@ function BillCreate(){
         }
         setSuccess(false);
         setError(false);
+
     };
 
     const handleInputChange = (
@@ -121,6 +122,7 @@ function BillCreate(){
     // เพิ่ม examination ใส่ใน billitem
     const handleChangItem = (event: ChangeEvent<{name?: string, value: unknown}>) =>{
         let currentItem = [...billitems];
+        console.log("before push lenght:",currentItem)
         if (Number(event.target.value)===0)
             return
         if (currentItem.length === 0){
@@ -147,6 +149,9 @@ function BillCreate(){
                 setBillitems(currentItem);
             }
         }
+        
+        
+        console.log("after push lenght:",currentItem)
     }
 
     const handleDateChange = (date : Date | null) =>{
@@ -160,7 +165,8 @@ function BillCreate(){
         setBillitems(updatedItem);
       }
 
-    //get patient data
+
+
     const getPatient = async () =>{
         fetch(`${apilUrl}/patients`, requesstMenuItems)
             .then((response) => response.json())
@@ -188,7 +194,7 @@ function BillCreate(){
             });
     };
 
-    //get employee data
+
     const getCashier = async () => {
         let uid = localStorage.getItem("uid");
         fetch(`${apilUrl}/employee/${uid}`, requesstMenuItems)
@@ -204,7 +210,7 @@ function BillCreate(){
           });
       };
 
-    //get examination by patient data
+
     const getExaminationByID = async() => {
         const apiUrl = "http://localhost:8080/examination/patient/" + getp.ID;
         const requestMenuItems = {
@@ -225,7 +231,6 @@ function BillCreate(){
             });
     } 
 
-    //get paytype data
     const getPaytype = async () =>{
         if (getp.ID !== 0 ){
             fetch(`${apilUrl}/paytypes`, requesstMenuItems)
@@ -245,19 +250,24 @@ function BillCreate(){
         
     };
 
+    
+
+
+    
+
     useEffect(() => {
         getPatient();
         getCashier();
        
     } , []);
     
-    // change type data => number
+
     const convertType = (data: string | number | undefined) => {
         let val = typeof data === "string" ? parseInt(data) : data;
         return val;
     };
 
-    //create data function
+
     function submit(){
         let data = {
             PatientRightID: convertType(bill.PatientRightID),
@@ -269,6 +279,7 @@ function BillCreate(){
             BillItems : billitems,
             
         };
+        console.log(data)
 
         const requesstMenuItemsPost = {
             method : "POST",
@@ -284,9 +295,9 @@ function BillCreate(){
                 if(res.data) {
                     setSuccess(true);
                     setErrorMessage("");
-                    clearForm();              
+                    clearForm();
+                    
                 }
-                //check response error
                 else{
                     setError(true);
                     if(res.error == "Total input not match !!"){
@@ -307,11 +318,11 @@ function BillCreate(){
                     else {
                         setErrorMessage(res.error);
                     }
+                    
                 }
             });
     }
 
-    //clear form 
     const clearForm = () => {
         setBill({
             PatientRightID:0,
@@ -325,7 +336,9 @@ function BillCreate(){
         Setgetp({ID:0});
     }
 
+
     return (
+
         <Container className={classes.container} maxWidth="md" >
             <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="success">
@@ -342,12 +355,18 @@ function BillCreate(){
                     <Box flexGrow={1}>
                         <Typography
                             component="h2"
+
                             variant="h6"
+
                             color="primary"
+
                             className={classes.title}
-                            gutterBottom>
+
+                            gutterBottom
+                        >
                             ใบแจ้งค่าใช้จ่าย
                         </Typography>
+                        
                     </Box>
                 </Box>
                 <Divider />
@@ -372,6 +391,7 @@ function BillCreate(){
                                     {item.FirstName} {item.LastName}
                                 </MenuItem>
                             ))}
+                            
                             </Select>
                             </FormControl>
                         </Grid>
@@ -430,7 +450,9 @@ function BillCreate(){
                                     onChange={handleInputChange}
                                     />
                                 </FormControl>
+
                         </Grid>
+
                     </Grid>
                     
                     <Grid item xs={3}>
@@ -453,6 +475,8 @@ function BillCreate(){
                                     {item.Treatment} 
                                 </MenuItem>
                             ))}
+                            
+                
                             </Select>
                             </FormControl>
                         </Grid>
@@ -477,6 +501,7 @@ function BillCreate(){
                                     {item.Type}
                                 </MenuItem>
                             ))}
+
                             </Select>
                             </FormControl>
                         </Grid>
@@ -507,7 +532,9 @@ function BillCreate(){
                                     onChange={handleInputChange}
                                     />
                                 </FormControl>
+
                     </Grid>
+   
                     
                     <Grid item xs={6}>
                         <p>ผลการรักษาที่เลือก</p>
@@ -528,9 +555,11 @@ function BillCreate(){
                                             <TableCell align="center">{examinations.find(p => p.ID === row.ExaminationID)?.Treatment}</TableCell>
                                             <TableCell align="center">{examinations.find(p => p.ID === row.ExaminationID)?.Cost}</TableCell>
                                             <TableCell width="5%"><IconButton size="small" onClick={() => removeFromItem(index)}><DeleteIcon /></IconButton></TableCell>
+
                                         </TableRow>
                                     )
                                 })}
+                               
                             </TableBody>
                             </Table>
                         </TableContainer>
@@ -552,9 +581,12 @@ function BillCreate(){
                                             <TableCell align="center">{row.ExaminationID}</TableCell>
                                             <TableCell align="center">{examinations.find(p => p.ID === row.ExaminationID)?.Medicine.Name}</TableCell>
                                             <TableCell align="center">{examinations.find(p => p.ID === row.ExaminationID)?.Medicine.Cost}</TableCell>
+                                            
+
                                         </TableRow>
                                     )
                                 })}
+                               
                             </TableBody>
                             </Table>
                         </TableContainer>
@@ -573,11 +605,13 @@ function BillCreate(){
 
                     <Grid item xs={2}>
                         <Grid item xs={4}>
+                            
                         </Grid>  
                     </Grid>
 
                     <Grid item xs={2}>
                         <Grid item xs={4}>
+                           
                         </Grid>  
                     </Grid>
                     <Grid item xs={1}> 
@@ -593,8 +627,13 @@ function BillCreate(){
                                 กลับ
                             </Button>
                         </Grid>  
+                        
                     </Grid>
-                </Grid>   
+                    
+
+                </Grid>
+
+               
             </Paper>
         </Container>
     );
