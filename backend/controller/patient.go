@@ -8,7 +8,7 @@ import (
 	"github.com/asaskevich/govalidator"
 )
 
-// POST /patien
+// POST /patient
 func CreatePatients(c *gin.Context) {
 
 	var patient entity.Patient
