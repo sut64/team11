@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 
 	"golang.org/x/crypto/bcrypt"
@@ -125,6 +127,12 @@ func SetupDatabase() {
 		Email:    "pech@email.com",
 		Password: string(password),
 		Role:     cashier,
+	})
+	db.Model(&Employee{}).Create(&Employee{
+		Name:     "นายแพทย์คามาโดะ ทันจิโร่",
+		Email:    "kamado@email.com",
+		Password: string(password),
+		Role:     doctor,
 	})
 
 	//--Clinic Data
@@ -254,4 +262,37 @@ func SetupDatabase() {
 		Type: "บัตรเครดิต",
 	}
 	db.Model(&PayType{}).Create(&debit)
+
+	//Patient Data
+	P1 := Patient{
+		HN:           "HN000001",
+		Pid:          "1361001338630",
+		FirstName:    "อาจารย์แดง",
+		LastName:     "กีตาร์",
+		Birthdate:    time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
+		Age:          21,
+		DateAdmit:    time.Now(),
+		Symptom:      "",
+		Gender:       male,
+		PatientType:  t1,
+		PatientRight: Pr1,
+	}
+	db.Model(&Patient{}).Create(&P1)
+
+	var tanjiro Employee
+	db.Raw("SELECT * FROM employees WHERE email = ?", "kamado@email.com").Scan(&tanjiro)
+
+	//Examination Data
+	E1 := Examination{
+		ChiefComplaint: "ดับเบิ้ลปวดหัว",
+		Treatment:      "ให้ยา",
+		Cost:           100,
+		DiagnosisTime:  time.Now(),
+		Employee:       tanjiro,
+		Patient:        P1,
+		Clinic:         clinic01,
+		Disease:        di1,
+		Medicine:       medicine01,
+	}
+	db.Model(&Examination{}).Create(&E1)
 }
