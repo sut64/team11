@@ -1,7 +1,7 @@
 {
   "id": "f400aa62-a6fb-4a6e-a7c0-c1937411a9bd",
   "version": "2.0",
-  "name": "Lab10",
+  "name": "CreateExamination",
   "url": "http://localhost:3000/",
   "tests": [{
     "id": "10714a6c-5c71-4641-afff-ce61881b5cda",
@@ -90,7 +90,7 @@
       "command": "select",
       "target": "name=PatientID",
       "targets": [],
-      "value": "label=ภูมิชัย ศิริพันธ์พรชนะ"
+      "value": "label=อาจารย์แดง กีตาร์"
     }, {
       "id": "a3d050ae-271a-4181-9a87-2cfb190d90e8",
       "comment": "",
@@ -351,7 +351,7 @@
       "command": "select",
       "target": "name=PatientID",
       "targets": [],
-      "value": "label=ภูมิชัย ศิริพันธ์พรชนะ"
+      "value": "label=อาจารย์แดง กีตาร์"
     }, {
       "id": "ced7b26a-edc8-404b-a477-11c0d313105e",
       "comment": "",
@@ -636,7 +636,7 @@
       "command": "select",
       "target": "name=PatientID",
       "targets": [],
-      "value": "label=ภูมิชัย ศิริพันธ์พรชนะ"
+      "value": "label=อาจารย์แดง กีตาร์"
     }, {
       "id": "e8210a0e-a70a-41de-8e2c-f5d2cd8aac69",
       "comment": "",
@@ -895,7 +895,7 @@
       "command": "select",
       "target": "name=PatientID",
       "targets": [],
-      "value": "label=ภูมิชัย ศิริพันธ์พรชนะ"
+      "value": "label=อาจารย์แดง กีตาร์"
     }, {
       "id": "226d4c87-32f2-4854-87a8-6a898392d1c5",
       "comment": "",
