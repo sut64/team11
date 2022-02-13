@@ -54,7 +54,7 @@
         ["xpath=//div[@id='root']/div/main/div[2]/div/div/div/div/div[2]/div/div/input", "xpath:idRelative"],
         ["xpath=//input", "xpath:position"]
       ],
-      "value": "HN000001"
+      "value": "HN000002"
     }, {
       "id": "c0b8b403-a132-498e-aa74-8e1cf89e3f07",
       "comment": "",
