@@ -1411,7 +1411,7 @@
         ["xpath=//div[@id='root']/div/main/div[2]/div/div/div/div[2]", "xpath:idRelative"],
         ["xpath=//div/div/div[2]", "xpath:position"]
       ],
-      "value": "บันทึกข้อมูลไม่สำเร็จ : Telephone: 01234 does not validate as matches(^[0]{1}[0-9]{9})"
+      "value": "บันทึกข้อมูลไม่สำเร็จ : เบอร์โทรศัพท์ควรขึ้นต้นด้วย 0 และลงท้ายด้วยตัวเลข 9 หลัก"
     }, {
       "id": "8a13bf23-3c4c-4259-80cf-606f303f9851",
       "comment": "",
