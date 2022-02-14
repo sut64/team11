@@ -84,7 +84,7 @@ type Bill struct {
 
 	Total uint `valid:"required~Total cannot be zero"`
 
-	Telephone string `valid:"required~Telephone cannot be blank, matches(^[0]{1}[0-9]{9})"`
+	Telephone string `valid:"required~Telephone cannot be blank, matches(^[0]{1}[0-9]{9})~Telephone must be 10 digits"`
 
 	EmployeeID *uint
 	Employee   Employee `gorm:"references:id" valid:"-"`
