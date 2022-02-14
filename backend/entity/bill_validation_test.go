@@ -2,7 +2,6 @@ package entity
 
 import (
 	"testing"
-	"fmt"
 	"time"
 
 	"github.com/asaskevich/govalidator"
@@ -105,7 +104,7 @@ func TestTelephoneMustBeValid(t *testing.T) {
 		g.Expect(err).ToNot(BeNil())
 
 		// err.Error ต้องมี error message แสดงออกมา
-		g.Expect(err.Error()).To(Equal(fmt.Sprintf(`Telephone: %s does not validate as matches(^[0]{1}[0-9]{9})`, fixture)))
+		g.Expect(err.Error()).To(Equal("Telephone must be 10 digits"))
 	}
 }
 
