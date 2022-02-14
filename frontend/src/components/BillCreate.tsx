@@ -117,6 +117,7 @@ function BillCreate(){
     const handlePatientChange = (event: React.ChangeEvent<{name?: string; value: unknown}>) => {
         const name = event.target.name as keyof typeof getp;
         Setgetp({...getp, [name]: event.target.value, });
+        setBillitems([]);
     };
 
     // เพิ่ม examination ใส่ใน billitem
@@ -269,58 +270,73 @@ function BillCreate(){
 
 
     function submit(){
-        let data = {
-            PatientRightID: convertType(bill.PatientRightID),
-            PaytypeID: convertType(bill.PaytypeID),
-            Total : typeof bill.Total === "string" ? parseInt(bill.Total) : 0,
-            Telephone : bill.Telephone ?? "",
-            BillTime: selectedDate,
-            EmployeeID : convertType(bill.EmployeeID),
-            BillItems : billitems,
-            
-        };
-        console.log(data)
 
-        const requesstMenuItemsPost = {
-            method : "POST",
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                "Content-Type": "application/json"},
-            body: JSON.stringify(data),
-        };
-
-        fetch(`${apilUrl}/bills`, requesstMenuItemsPost)
-            .then((response) => response.json())
-            .then((res) => {
-                if(res.data) {
-                    setSuccess(true);
-                    setErrorMessage("");
-                    clearForm();
-                    
-                }
-                else{
-                    setError(true);
-                    if(res.error == "Total input not match !!"){
-                        setErrorMessage("จำนวนค่าใช้จ่ายที่กรอก ไม่ตรงกันกับค่าใช้จ่ายทั้งหมด")
+        if (getp.ID === 0){
+            setError(true);
+            setErrorMessage("กรุณาเลือกคนไข้")
+        }
+        else if (examinations.length == 0){
+            setError(true);
+            setErrorMessage("กรุณาเลือกรายการผลการรักษา")
+        }
+        else{
+            setError(false);
+            let data = {
+                PatientRightID: convertType(bill.PatientRightID),
+                PaytypeID: convertType(bill.PaytypeID),
+                Total : typeof bill.Total === "string" ? parseInt(bill.Total) : 0,
+                Telephone : bill.Telephone ?? "",
+                BillTime: selectedDate,
+                EmployeeID : convertType(bill.EmployeeID),
+                BillItems : billitems,
+                
+            };
+            console.log(data)
+    
+            const requesstMenuItemsPost = {
+                method : "POST",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json"},
+                body: JSON.stringify(data),
+            };
+    
+            fetch(`${apilUrl}/bills`, requesstMenuItemsPost)
+                .then((response) => response.json())
+                .then((res) => {
+                    if(res.data) {
+                        setSuccess(true);
+                        setErrorMessage("");
+                        clearForm();
+                        
                     }
-                    else if (res.error == "The data recorder should be a Cashier !!"){
-                        setErrorMessage("ผู้บันทึกข้อมูลต้องเป็นเจ้าหน้าที่การเงินเท่านั้น")
+                    else{
+                        setError(true);
+                        if(res.error == "Total input not match !!"){
+                            setErrorMessage("จำนวนค่าใช้จ่ายที่กรอก ไม่ตรงกันกับค่าใช้จ่ายทั้งหมด")
+                        }
+                        else if (res.error == "The data recorder should be a Cashier !!"){
+                            setErrorMessage("ผู้บันทึกข้อมูลต้องเป็นเจ้าหน้าที่การเงินเท่านั้น")
+                        }
+                        else if (res.error == "Total cannot be zero"){
+                            setErrorMessage("กรุณากรอกจำนวนค่าใช้จ่าย")
+                        }
+                        else if (res.error == "Telephone cannot be blank"){
+                            setErrorMessage("กรุณากรอกเบอร์โทรศัพท์")
+                        }
+                        else if (res.error == "BillTime must be past"){
+                            setErrorMessage("กรุณาเลือกวันและเวลาปัจจุบัน")
+                        }
+                        else if (res.error == "Telephone must be 10 digits"){
+                            setErrorMessage("เบอร์โทรศัพท์ควรขึ้นต้นด้วย 0 และลงท้ายด้วยตัวเลข 9 หลัก")
+                        }
+                        else {
+                            setErrorMessage(res.error);
+                        }
+                        
                     }
-                    else if (res.error == "Total cannot be zero"){
-                        setErrorMessage("กรุณากรอกจำนวนค่าใช้จ่าย")
-                    }
-                    else if (res.error == "Telephone cannot be blank"){
-                        setErrorMessage("กรุณากรอกเบอร์โทรศัพท์")
-                    }
-                    else if (res.error == "BillTime must be past"){
-                        setErrorMessage("กรุณาเลือกวันและเวลาปัจจุบัน")
-                    }
-                    else {
-                        setErrorMessage(res.error);
-                    }
-                    
-                }
-            });
+                });
+        }  
     }
 
     const clearForm = () => {
@@ -513,7 +529,7 @@ function BillCreate(){
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDateTimePicker
                             name="BillTime"
-                            value={bill.BillTime}
+                            value={selectedDate}
                              onChange={handleDateChange}
                              minDate={new Date("2018-01-01T00:00")}
                             format="yy/MM/dd hh:mm a"
