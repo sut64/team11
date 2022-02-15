@@ -66,8 +66,9 @@ function CreatePatient() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const {register,handleSubmit,watch,formState: { errors },} = useForm<PatientInterface>();
+  const {handleSubmit} = useForm<PatientInterface>();
   const [errorMsg, setErrorMsg] = useState<MsgError>();
+
 
   const [selectedDateAdmit, setDateAdmit] = React.useState<Date | null>(
     new Date()
@@ -93,21 +94,21 @@ function CreatePatient() {
     });
     setErrorMsg({ ...errorMsg, [name]: "" });
     let HN = new RegExp(/^HN\d{6}$/).test(event.target.value as string);
-    if (name == "HN" && !HN) {
+    if (name === "HN" && !HN) {
       setErrorMsg({
         ...errorMsg,
         [name]: "HN must be prefix with HN and number of 6 digits",
       });
     }
     let Pid = new RegExp(/^[1-9]\d{12}$/).test(event.target.value as string);
-    if (name == "Pid" && !Pid) {
+    if (name === "Pid" && !Pid) {
       setErrorMsg({
         ...errorMsg,
         [name]: "Pid must be prefix with 1 to 9 and number of 12 digits",
       });
     }
     let Age = event.target.value as number;
-    if (name == "Age" && (Age < 0 || Age > 120)) {
+    if (name === "Age" && (Age < 0 || Age > 120)) {
       setErrorMsg({
         ...errorMsg,
         [name]: "Age must be between 0 to 120",
@@ -226,24 +227,24 @@ function CreatePatient() {
         } else {
           console.error(res.error);
           setError(true);
-          if (res.error == "patienttype not found") {
-            setErrorMessage("กรุณาเลือกประเภทผู้ป่วย");
-            setErrorMsg({ ...errorMsg, PatientTypeID: "กรุณาเลือกประเภทผู้ป่วย" });
-          }if (res.error == "patientright not found") {
-            setErrorMessage("กรุณาเลือกสิทธิการรักษาของผู้ป่วย");
-            setErrorMsg({ ...errorMsg, PatientRightID: "กรุณาเลือกสิทธิการรักษาของผู้ป่วย" });
-          } else if (res.error == "Gender not found") {
-            setErrorMessage("กรุณาเลือกเพศของผู้ป่วย")
-            setErrorMsg({ ...errorMsg, GenderID:"กรุณาเลือกเพศของผู้ป่วย"})
+          if (res.error.includes("patienttype")) {
+            setErrorMessage("ไม่พบข้อมูล! กรุณาเลือกประเภทผู้ป่วย");
+            setErrorMsg({ ...errorMsg,PatientTypeID: "กรุณาเลือกประเภทผู้ป่วย",});
+          } else if (res.error.includes("patientright")) {
+            setErrorMessage("ไม่พบข้อมูล! กรุณาเลือกสิทธิการรักษาของผู้ป่วย");
+            setErrorMsg({...errorMsg,PatientRightID: "กรุณาเลือกสิทธิการรักษาของผู้ป่วย",});
+          } else if (res.error.includes("Gender")) {
+            setErrorMessage("ไม่พบข้อมูล! กรุณาเลือกเพศของผู้ป่วย");
+            setErrorMsg({ ...errorMsg, GenderID: "กรุณาเลือกเพศของผู้ป่วย" });
           } else if (res.error.includes("HN")) {
             setErrorMessage(`${res.error.split(" ")[1]} รูปแบบไม่ถูกต้อง! หมายเลขประจำตัวผู้ป่วยต้องขึ้นด้วย HN และตามด้วยตัวเลข 6 หลัก`);
           } else if (res.error.includes("Pid")) {
             setErrorMessage(`${res.error.split(" ")[1]} รูปแบบไม่ถูกต้อง! หมายเลขประจำตัวประชาชนประกอบด้วยตัวเลข 13 หลักเท่านั้นและต้องไม่ขึ้นด้วย 0`);
-          }else if (res.error.includes("Age")) {
+          } else if (res.error.includes("Age")) {
             setErrorMessage(`อายุ ${res.error.split(" ")[1]} ปี ไม่ถูกต้อง! อายุผู้ป่วยต้องอยู่ในช่วงตั้งแต่ 0 ถึง 120 ปี`);
-          }else if (res.error.includes("Birthdate")) {
+          } else if (res.error.includes("Birthdate")) {
             setErrorMessage(`วันเดือนปีเกิดไม่ถูกต้อง! ต้องไม่เกินวันที่ในปัจจุบัน`);
-          }else setErrorMessage(res.error);
+          } else setErrorMessage(res.error);
         }
       });
   }
@@ -496,6 +497,7 @@ function CreatePatient() {
                   inputProps={{
                     name: "PatientRightID",
                   }}
+                  error={Boolean(errorMsg?.PatientRightID)}
                 >
                   <option aria-label="None" value="">
                     กรุณาเลือกสิทธิการรักษา
