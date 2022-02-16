@@ -21,15 +21,15 @@ func CreateAppointment(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	// 9: ค้นหา employee ด้วย id
-	if tx := entity.DB().Where("id = ?", appointment.EmployeeID).First(&employee); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "nurse not found"})
-		return
-	}
-	// 10: ค้นหา patient ด้วย id
+	// 9: ค้นหา patient ด้วย id
 	if tx := entity.DB().Where("id = ?", appointment.PatientID).First(&patient); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "patient not found"})
+		return
+	}
+
+	// 10: ค้นหา employee ด้วย id
+	if tx := entity.DB().Where("id = ?", appointment.EmployeeID).First(&employee); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "doctor not found"})
 		return
 	}
 

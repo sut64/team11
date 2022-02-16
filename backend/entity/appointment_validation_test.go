@@ -32,8 +32,8 @@ func TestAppointmentTime(t *testing.T) {
 	g := NewGomegaWithT(t)
 
 	apmt := []time.Time{
-		time.Now(), //ผิดเพราะเวลาต้องไม่เป็นอีตและปัจจุบัน
-		time.Date(2019, 1, 1, 12, 00, 00, 00, time.UTC), //ผิดเพราะเวลาต้องไม่เป็นอีตและปัจจุบัน
+		time.Now(), //ผิดเพราะเวลาต้องไม่เป็นอดีตและปัจจุบัน
+		time.Date(2019, 1, 1, 12, 00, 00, 00, time.UTC), //ผิดเพราะเวลาต้องไม่เป็นอดีตและปัจจุบัน
 	}
 
 	for _, apmt := range apmt {
@@ -86,7 +86,7 @@ func TestAppointmentRoomNumber(t *testing.T) {
 	appointment := Appointment{
 		AppointmentTime: time.Date(2023, 1, 1, 12, 00, 00, 00, time.UTC),
 		Note:            "ฉีดวัคซีน",
-		RoomNumber:      0, //ผิดต้องมีค่ามากกว่า 0
+		RoomNumber:      -1, //ผิดต้องมีค่ามากกว่า 0
 	}
 
 	//ตรวจสอบ govalidator
@@ -99,6 +99,29 @@ func TestAppointmentRoomNumber(t *testing.T) {
 	g.Expect(err).ToNot(BeNil())
 
 	// err.Error ต้องมี error message แสดงออกมา
-	g.Expect(err.Error()).To(Equal("RoomNumber more than 0 and cannot be blank"))
+	g.Expect(err.Error()).To(Equal("RoomNumber more than 0"))
+
+}
+
+func TestAppointmentRoomNumbernotblank(t *testing.T) {
+	g := NewGomegaWithT(t)
+
+	appointment := Appointment{
+		AppointmentTime: time.Date(2023, 1, 1, 12, 00, 00, 00, time.UTC),
+		Note:            "ฉีดวัคซีน",
+		RoomNumber:      0, //ผิดต้องไม่เป็นค่าว่างหรือ0
+	}
+
+	//ตรวจสอบ govalidator
+	ok, err := govalidator.ValidateStruct(appointment)
+
+	// ok ต้องไม่เป็น true แปลว่าต้องจับ error ได้
+	g.Expect(ok).ToNot(BeTrue())
+
+	// err ต้องไม่เป็น nil แปลว่าต้องจับ error ได้
+	g.Expect(err).ToNot(BeNil())
+
+	// err.Error ต้องมี error message แสดงออกมา
+	g.Expect(err.Error()).To(Equal("RoomNumber cannot be blank"))
 
 }

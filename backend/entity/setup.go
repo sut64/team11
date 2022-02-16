@@ -279,6 +279,21 @@ func SetupDatabase() {
 	}
 	db.Model(&Patient{}).Create(&P1)
 
+	P2 := Patient{
+		HN:           "HN000002",
+		Pid:          "1000000000001",
+		FirstName:    "พิมลดา",
+		LastName:     "ดามี",
+		Birthdate:    time.Date(2022, 5, 11, 0, 0, 0, 0, time.UTC),
+		Age:          20,
+		DateAdmit:    time.Date(2002, 5, 11, 0, 0, 0, 0, time.UTC),
+		Symptom:      "",
+		Gender:       female,
+		PatientType:  t1,
+		PatientRight: Pr1,
+	}
+	db.Model(&Patient{}).Create(&P2)
+
 	var tanjiro Employee
 	db.Raw("SELECT * FROM employees WHERE email = ?", "kamado@email.com").Scan(&tanjiro)
 

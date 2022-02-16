@@ -107,7 +107,7 @@ type Appointment struct {
 
 	AppointmentTime time.Time `valid:"future~AppointmentTime must be in the future"`
 	Note            string    `valid:"required~Note cannot be blank"`
-	RoomNumber      uint      `valid:"required~RoomNumber more than 0 and cannot be blank"`
+	RoomNumber      int       `valid:"required~RoomNumber cannot be blank,positivenum~RoomNumber more than 0"`
 
 	//PatientID ทำหน้าที่เป็น FK
 	PatientID *uint
@@ -280,5 +280,9 @@ func init() {
 	govalidator.CustomTypeTagMap.Set("positive", func(i interface{}, context interface{}) bool {
 		num := i
 		return num.(int) >= 0
+	})
+	govalidator.CustomTypeTagMap.Set("positivenum", func(i interface{}, context interface{}) bool {
+		num := i
+		return num.(int) > 0
 	})
 }
