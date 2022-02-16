@@ -29,27 +29,27 @@ import { useForm } from "react-hook-form";
 
 
 const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            flexGrow: 1,
-        },
-        container: {
-            marginTop: theme.spacing(2),
-        },
-        paper: {
-            padding: theme.spacing(2),
-            color: theme.palette.text.secondary,
-        },
-        text: {
-            color: "#000000",
-            fontSize: "1rem",
-        }
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    container: {
+      marginTop: theme.spacing(2),
+    },
+    paper: {
+      padding: theme.spacing(2),
+      color: theme.palette.text.secondary,
+    },
+    text: {
+      color: "#000000",
+      fontSize: "1rem",
+    }
 
-    })
+  })
 );
 
 const Alert = (props: AlertProps) => {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
 
 function AppointmentCreate() {
@@ -63,7 +63,7 @@ function AppointmentCreate() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const {register,handleSubmit,watch,formState: { errors },} = useForm<AppointmentInterface>();
+  const { register, handleSubmit, watch, formState: { errors }, } = useForm<AppointmentInterface>();
 
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -82,7 +82,7 @@ function AppointmentCreate() {
       ...appointment,
       [name]: event.target.value,
     });
-    
+
   };
 
   const handleDateChange = (date: Date | null) => {
@@ -107,8 +107,8 @@ function AppointmentCreate() {
   //Get Data
   const apiUrl = "http://localhost:8080";
   const requestOptions = {
-      method: "GET",
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}`, "Content-Type": "application/json" },
+    method: "GET",
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}`, "Content-Type": "application/json" },
   };
 
   const getClinic = async () => {
@@ -134,7 +134,7 @@ function AppointmentCreate() {
         }
       });
   };
-  console.log("Patient",doctors);
+  console.log("Patient", doctors);
 
   const getDoctor = async () => {
     fetch(`${apiUrl}/employeerole/1`, requestOptions)
@@ -147,7 +147,7 @@ function AppointmentCreate() {
         }
       });
   };
-  console.log("Doctor",doctors);
+  console.log("Doctor", doctors);
 
   useEffect(() => {
     getClinic();
@@ -191,7 +191,23 @@ function AppointmentCreate() {
         } else {
           console.log("บันทึกไม่ได้")
           setError(true);
-          setErrorMessage(res.error)
+          if (res.error.includes("RoomNumber more than 0")) {
+            setErrorMessage("กรุณากรอกหมายเลขห้องตรวจที่มีค่ามากกว่า 0")
+          } else if (res.error.includes("RoomNumber cannot be blank")) {
+            setErrorMessage("กรุณากรอกหมายเลขห้องตรวจ")
+          } else if (res.error.includes("AppointmentTime must be in the future")) {
+            setErrorMessage("กรุณาเลือกวันเวลานัดหมายที่เป็นอนาคต")
+          } else if (res.error.includes("patient not found")) {
+            setErrorMessage("กรุณาเลือกหมายเลขบัตรประชาชนผู้ป่วย")
+          } else if (res.error.includes("doctor not found")) {
+            setErrorMessage("กรุณาเลือกเเพทย์")
+          } else if (res.error.includes("clinic not found")) {
+            setErrorMessage("กรุณาเลือกคลินิก")
+          } else if (res.error.includes("Note cannot be blank")) {
+            setErrorMessage("กรุณากรอกหมายเหตุการนัด")
+          }else {
+            setErrorMessage(res.error);
+          }
         }
       });
   }
@@ -202,7 +218,7 @@ function AppointmentCreate() {
       PatientID: 0,
       EmployeeID: 0,
       ClinicID: 0,
-			RoomNumber: 0,
+      RoomNumber: 0,
       Note: "",
     });
     setSelectedDate(new Date());
@@ -224,156 +240,156 @@ function AppointmentCreate() {
         </Alert>
       </Snackbar>
       <form onSubmit={handleSubmit(submit)}>
-      <Paper className={classes.paper}>
-        <Box display="flex" >
-          <Box flexGrow={1}>
+        <Paper className={classes.paper}>
+          <Box display="flex" >
+            <Box flexGrow={1}>
 
-            <Typography
-              component="h2"
-              variant="h6"
-              color="primary"
-              gutterBottom
-              
-            >
-               บันทึกรายการนัดหมาย
-            </Typography>
+              <Typography
+                component="h2"
+                variant="h6"
+                color="primary"
+                gutterBottom
+
+              >
+                บันทึกรายการนัดหมาย
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-        <Divider />
-        <Grid container spacing={3} className={classes.root}>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth variant="outlined">
-              <p style={{color:"#006A7D",fontSize: "10"}}>หมายเลขบัตรประชาชน</p>
-              <Select
-                native
-                value={appointment.PatientID}
-                onChange={handleChange}
-                inputProps={{
-                  name: "PatientID",
-                }}
-              >
-                <option aria-label="None" value="">
-                  กรุณาเลือกหมายเลขบัตรประชาชน
-                </option>
-                {patients.map((item: PatientInterface) => (
-                  <option value={item.ID} key={item.ID}>
-                    {item.Pid}
+          <Divider />
+          <Grid container spacing={3} className={classes.root}>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth variant="outlined">
+                <p style={{ color: "#006A7D", fontSize: "10" }}>หมายเลขบัตรประชาชน</p>
+                <Select
+                  native
+                  value={appointment.PatientID}
+                  onChange={handleChange}
+                  inputProps={{
+                    name: "PatientID",
+                  }}
+                >
+                  <option aria-label="None" value="">
+                    กรุณาเลือกหมายเลขบัตรประชาชน
                   </option>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6} >
-            <p></p>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth variant="outlined">
-              <p style={{color:"#006A7D",fontSize: "10"}}>แพทย์</p>
-              <Select
-                native
-                value={appointment.EmployeeID}
-                onChange={handleChange}
-                inputProps={{
-                  name: "EmployeeID",
-                }}
-              >
-                <option aria-label="None" value="">
-                  กรุณาเลือกแพทย์
-                </option>
-                {doctors.map((item: EmployeeInterface) => (
-                  <option value={item.ID} key={item.ID}>
-                    {item.Name}
+                  {patients.map((item: PatientInterface) => (
+                    <option value={item.ID} key={item.ID}>
+                      {item.Pid}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} >
+              <p></p>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth variant="outlined">
+                <p style={{ color: "#006A7D", fontSize: "10" }}>แพทย์</p>
+                <Select
+                  native
+                  value={appointment.EmployeeID}
+                  onChange={handleChange}
+                  inputProps={{
+                    name: "EmployeeID",
+                  }}
+                >
+                  <option aria-label="None" value="">
+                    กรุณาเลือกแพทย์
                   </option>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth variant="outlined">
-              <p style={{color:"#006A7D",fontSize: "10"}}>คลินิก</p>
-              <Select
-                native
-                value={appointment.ClinicID}
-                onChange={handleChange}
-                inputProps={{
-                  name: "ClinicID",
-                }}
-              >
-                <option aria-label="None" value="">
-                  กรุณาเลือกคลินิก
-                </option>
-                {clinics.map((item: ClinicInterface) => (
-                  <option value={item.ID} key={item.ID}>
-                    {item.ClinicName}
+                  {doctors.map((item: EmployeeInterface) => (
+                    <option value={item.ID} key={item.ID}>
+                      {item.Name}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth variant="outlined">
+                <p style={{ color: "#006A7D", fontSize: "10" }}>คลินิก</p>
+                <Select
+                  native
+                  value={appointment.ClinicID}
+                  onChange={handleChange}
+                  inputProps={{
+                    name: "ClinicID",
+                  }}
+                >
+                  <option aria-label="None" value="">
+                    กรุณาเลือกคลินิก
                   </option>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth variant="outlined">
-              <p style={{color:"#006A7D",fontSize: "10"}}>หมายเลขห้อง :</p>
-              <TextField
-                id="RoomNumber"
-                variant="outlined"
-                type="number"
-                size="medium"
-                value={appointment.RoomNumber}
-                onChange={handleInputChange}
-                inputProps={{min:0}}
-              />
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth variant="outlined">
-              <p style={{color:"#006A7D",fontSize: "10"}}>วันที่และเวลานัดหมาย</p>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDateTimePicker
-                  name="AppointmentTime"
-                  value={selectedDate}
-                  onChange={handleDateChange}
-                  label="กรุณาเลือกวันที่และเวลา"
-                  minDate={new Date("2018-01-01T00:00")}
-                  format="yyyy/MM/dd hh:mm a"
+                  {clinics.map((item: ClinicInterface) => (
+                    <option value={item.ID} key={item.ID}>
+                      {item.ClinicName}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth variant="outlined">
+                <p style={{ color: "#006A7D", fontSize: "10" }}>หมายเลขห้อง :</p>
+                <TextField
+                  id="RoomNumber"
+                  variant="outlined"
+                  type="number"
+                  size="medium"
+                  value={appointment.RoomNumber}
+                  onChange={handleInputChange}
+                  inputProps={{ min: 0 }}
                 />
-              </MuiPickersUtilsProvider>
-            </FormControl>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth variant="outlined">
+                <p style={{ color: "#006A7D", fontSize: "10" }}>วันที่และเวลานัดหมาย</p>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDateTimePicker
+                    name="AppointmentTime"
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                    label="กรุณาเลือกวันที่และเวลา"
+                    minDate={new Date("2018-01-01T00:00")}
+                    format="yyyy/MM/dd hh:mm a"
+                  />
+                </MuiPickersUtilsProvider>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth variant="outlined">
+                <p style={{ color: "#006A7D", fontSize: "10" }}>หมายเหตุ :</p>
+                <TextField
+                  id="Note"
+                  variant="outlined"
+                  type="string"
+                  size="medium"
+                  value={appointment.Note || ""}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={12} >
+              <p></p>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                component={RouterLink}
+                to="/appointment"
+                variant="contained"
+              >
+                กลับ
+              </Button>
+              <Button
+                style={{ float: "right" }}
+                variant="contained"
+                onClick={submit}
+                color="primary"
+              >
+                บันทึก
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth variant="outlined">
-              <p style={{color:"#006A7D",fontSize: "10"}}>หมายเหตุ :</p>
-              <TextField
-                id="Note"
-                variant="outlined"
-                type="string"
-                size="medium"
-                value={appointment.Note || ""}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={12} >
-            <p></p>
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              component={RouterLink}
-              to="/appointment"
-              variant="contained"
-            >
-              กลับ
-            </Button>
-            <Button
-              style={{ float: "right" }}
-              variant="contained"
-              onClick={submit}
-              color="primary"
-            >
-              บันทึก
-            </Button>
-          </Grid>
-        </Grid>
-      </Paper>
+        </Paper>
       </form>
     </Container>
   );
