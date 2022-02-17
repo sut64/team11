@@ -97,6 +97,7 @@ function ListBillItem(row: ListBillProps){
                                               <TableCell align="center">ผลการรักษา</TableCell>
                                               <TableCell align="center">ยาที่จ่าย</TableCell>
                                               <TableCell align="center">ค่าใช้จ่ายทั้งหมด</TableCell>
+                                              <TableCell align="center">ผู้ได้รับการรักษา</TableCell>
                                             </TableRow>
                                           </TableHead>
                                           <TableBody>
@@ -106,7 +107,8 @@ function ListBillItem(row: ListBillProps){
                                                           <TableCell align="center">{row.ExaminationID}</TableCell>
                                                           <TableCell align="center">{row.Examination?.Treatment}</TableCell>
                                                           <TableCell align="center">{row.Examination?.Medicine.Name}</TableCell>
-                                                          <TableCell align="center">{(row.Examination?.Cost+row.Examination?.Medicine.Cost).toLocaleString('th-TH', { style: "currency", currency: "THB" })}</TableCell>                                                  
+                                                          <TableCell align="center">{(row.Examination?.Cost+row.Examination?.Medicine.Cost).toLocaleString('th-TH', { style: "currency", currency: "THB" })}</TableCell>                
+                                                          <TableCell align="center">{row.Examination?.Patient.FirstName} {row.Examination?.Patient.LastName}</TableCell>                            
                                                       </TableRow>
                                                   )
                                               })}        
@@ -235,6 +237,9 @@ function ListBill() {
               <TableCell  className={classes.title} align="center" >
                 สิทธิ์การรักษา
               </TableCell>
+              <TableCell  className={classes.title} align="center" >
+                เบอร์โทรศัพท์
+              </TableCell>
              
             </TableRow>
           </TableHead>
@@ -246,6 +251,7 @@ function ListBill() {
                                   <TableCell align="center" scope="row"> {item.Employee.Name}</TableCell>
                                   <TableCell align="center" scope="row"> {(item.Total).toLocaleString('th-TH',{style:"currency",currency:"THB"})}</TableCell>
                                   <TableCell align="center" scope="row"> {item.PatientRight.Name}</TableCell>
+                                  <TableCell align="center" scope="row"> {item.Telephone}</TableCell>
                                   <ListBillItem key={item.ID} item={item}/>
                                   
             </TableRow>
