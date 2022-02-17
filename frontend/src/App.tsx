@@ -217,7 +217,7 @@ export default function MiniDrawer() {
     }
   }, []);
 
-  if (!token) {
+  if (!token || !employee) {
     return <SignIn />;
   }
 
