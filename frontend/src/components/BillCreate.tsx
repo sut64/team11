@@ -118,6 +118,14 @@ function BillCreate(){
         const name = event.target.name as keyof typeof getp;
         Setgetp({...getp, [name]: event.target.value, });
         setBillitems([]);
+        setBill({
+            PatientRightID:0,
+            PaytypeID:0,
+            Total:0,
+            EmployeeID : bill.EmployeeID,
+            Telephone:"",
+            BillTime: new Date(),
+        });
     };
 
     // เพิ่ม examination ใส่ใน billitem
