@@ -3,9 +3,9 @@ package controller
 import (
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/sut64/team11/entity"
 	"github.com/sut64/team11/service"
-	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -51,7 +51,7 @@ func Login(c *gin.Context) {
 	jwtWrapper := service.JwtWrapper{
 		SecretKey:       "SvNQpBN8y3qlVrsGAYYWoJJk56LtzFHx",
 		Issuer:          "AuthService",
-		ExpirationHours: 24,
+		ExpirationHours: 6,
 	}
 
 	signedToken, err := jwtWrapper.GenerateToken(Employee.Email)
