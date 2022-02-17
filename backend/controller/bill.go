@@ -148,7 +148,7 @@ func GetBill(c *gin.Context) {
 // GET /bills
 func ListBills(c *gin.Context) {
 	var bills []entity.Bill
-	if err := entity.DB().Preload("BillItems").Preload("BillItems.Examination").Preload("BillItems.Examination.Medicine").Preload("PatientRight").Preload("PayType").Preload("Employee").Raw("SELECT * FROM bills").Find(&bills).Error; err != nil {
+	if err := entity.DB().Preload("BillItems").Preload("BillItems.Examination").Preload("BillItems.Examination.Medicine").Preload("BillItems.Examination.Patient").Preload("PatientRight").Preload("PayType").Preload("Employee").Raw("SELECT * FROM bills").Find(&bills).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -171,7 +171,7 @@ func DeleteBill(c *gin.Context) {
 		return
 	}
 
-	if err := entity.DB().Preload("BillItems").Preload("BillItems.Examination").Preload("BillItems.Examination.Medicine").Preload("PatientRight").Preload("PayType").Preload("Employee").Raw("SELECT * FROM bills").Find(&bills).Error; err != nil {
+	if err := entity.DB().Preload("BillItems").Preload("BillItems.Examination").Preload("BillItems.Examination.Medicine").Preload("BillItems.Examination.Patient").Preload("PatientRight").Preload("PayType").Preload("Employee").Raw("SELECT * FROM bills").Find(&bills).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
