@@ -30,6 +30,14 @@ func CreateExamination(c *gin.Context) {
 		return
 	}
 
+	// : ค้าหา rold ของ employee
+	entity.DB().Joins("Role").Find(&employee)
+
+	if employee.Role.Position != "Doctor" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "The data recorder should be a Doctor !!"})
+		return
+	}
+
 	// 12: ค้นหา patient ด้วย id
 	if tx := entity.DB().Where("id = ?", examination.PatientID).First(&patient); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "patient not found"})
@@ -51,14 +59,6 @@ func CreateExamination(c *gin.Context) {
 	// 15: ค้นหา medicine ด้วย id
 	if tx := entity.DB().Where("id = ?", examination.MedicineID).First(&medicine); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "medicine not found"})
-		return
-	}
-
-	// : ค้าหา rold ของ employee
-	entity.DB().Joins("Role").Find(&employee)
-
-	if employee.Role.Position != "Doctor" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "The data recorder should be a Doctor !!"})
 		return
 	}
 
