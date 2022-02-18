@@ -54,7 +54,7 @@
         ["xpath=//div[@id='root']/div/main/div[2]/div/div/div/div/div[2]/div/div/input", "xpath:idRelative"],
         ["xpath=//input", "xpath:position"]
       ],
-      "value": "HN000002"
+      "value": "HN123456"
     }, {
       "id": "c0b8b403-a132-498e-aa74-8e1cf89e3f07",
       "comment": "",
@@ -100,7 +100,7 @@
         ["xpath=//div[@id='root']/div/main/div[2]/div/div/div[2]/div/div[2]/div/div/input", "xpath:idRelative"],
         ["xpath=//div[2]/div/div[2]/div/div/input", "xpath:position"]
       ],
-      "value": "1000000000001"
+      "value": "1212480032665"
     }, {
       "id": "087e30ae-d212-412f-b8ff-97831da5caa9",
       "comment": "",
