@@ -24,7 +24,6 @@ import {
   KeyboardDateTimePicker,
 } from "@material-ui/pickers";
 import Select from "@material-ui/core/Select";
-import { useForm } from "react-hook-form";
 //import Models
 import { PatientTypeInterface } from "../models/IPatienttype";
 import { PatientInterface } from "../models/IPatient";
@@ -66,16 +65,10 @@ function CreatePatient() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const {handleSubmit} = useForm<PatientInterface>();
   const [errorMsg, setErrorMsg] = useState<MsgError>();
 
-
-  const [selectedDateAdmit, setDateAdmit] = React.useState<Date | null>(
-    new Date()
-  );
-  const [selectedBirthdate, setBirthdate] = React.useState<Date | null>(
-    new Date()
-  );
+  const [selectedDateAdmit, setDateAdmit] = React.useState<Date | null>(new Date());
+  const [selectedBirthdate, setBirthdate] = React.useState<Date | null>(new Date());
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
@@ -191,7 +184,9 @@ function CreatePatient() {
     return val;
   };
 
-  function submit() {
+
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
     let data = {
       HN: patient.HN,
       Pid: patient.Pid,
@@ -200,12 +195,12 @@ function CreatePatient() {
       Birthdate: selectedBirthdate,
       Age: convertType(patient.Age),
       DateAdmit: selectedDateAdmit,
-      Symptom: patient.Symptom,
+      Symptom: patient.Symptom || "-",
       GenderID: convertType(patient.GenderID),
       PatientTypeID: convertType(patient.PatientTypeID),
       PatientRightID: convertType(patient.PatientRightID),
     };
-    console.log(data);
+    console.table(data);
 
     const requestOptionsPost = {
       method: "POST",
@@ -219,32 +214,38 @@ function CreatePatient() {
     fetch(`${apiUrl}/patients`, requestOptionsPost)
       .then((response) => response.json())
       .then((res) => {
-        console.log(res.data);
         if (res.data) {
           setSuccess(true);
           setErrorMessage("");
           ClearForm();
         } else {
-          console.error(res.error);
+          var msg = res.error;
+          var msgE = [];
           setError(true);
-          if (res.error.includes("patienttype")) {
+          if (msg.includes("patienttype")) {
             setErrorMessage("ไม่พบข้อมูล! กรุณาเลือกประเภทผู้ป่วย");
             setErrorMsg({ ...errorMsg,PatientTypeID: "กรุณาเลือกประเภทผู้ป่วย",});
-          } else if (res.error.includes("patientright")) {
+          } else if (msg.includes("patientright")) {
             setErrorMessage("ไม่พบข้อมูล! กรุณาเลือกสิทธิการรักษาของผู้ป่วย");
             setErrorMsg({...errorMsg,PatientRightID: "กรุณาเลือกสิทธิการรักษาของผู้ป่วย",});
-          } else if (res.error.includes("Gender")) {
+          } else if (msg.includes("Gender")) {
             setErrorMessage("ไม่พบข้อมูล! กรุณาเลือกเพศของผู้ป่วย");
             setErrorMsg({ ...errorMsg, GenderID: "กรุณาเลือกเพศของผู้ป่วย" });
-          } else if (res.error.includes("HN")) {
-            setErrorMessage(`${res.error.split(" ")[1]} รูปแบบไม่ถูกต้อง! หมายเลขประจำตัวผู้ป่วยต้องขึ้นด้วย HN และตามด้วยตัวเลข 6 หลัก`);
-          } else if (res.error.includes("Pid")) {
-            setErrorMessage(`${res.error.split(" ")[1]} รูปแบบไม่ถูกต้อง! หมายเลขประจำตัวประชาชนประกอบด้วยตัวเลข 13 หลักเท่านั้นและต้องไม่ขึ้นด้วย 0`);
-          } else if (res.error.includes("Age")) {
-            setErrorMessage(`อายุ ${res.error.split(" ")[1]} ปี ไม่ถูกต้อง! อายุผู้ป่วยต้องอยู่ในช่วงตั้งแต่ 0 ถึง 120 ปี`);
-          } else if (res.error.includes("Birthdate")) {
-            setErrorMessage(`วันเดือนปีเกิดไม่ถูกต้อง! ต้องไม่เกินวันที่ในปัจจุบัน`);
-          } else setErrorMessage(res.error);
+          }else {
+            if (msg.includes("HN")) {
+              msgE.push(`${(msg.slice(msg.indexOf("HN:"))).split(" ")[1]} รูปแบบไม่ถูกต้อง! หมายเลขประจำตัวผู้ป่วยต้องขึ้นด้วย HN และตามด้วยตัวเลข 6 หลัก`);
+            }
+            if (msg.includes("Pid")) {
+              msgE.push(`${(msg.slice(msg.indexOf("Pid:"))).split(" ")[1]} รูปแบบไม่ถูกต้อง! หมายเลขประจำตัวประชาชนประกอบด้วยตัวเลข 13 หลักเท่านั้นและต้องไม่ขึ้นด้วย 0`);
+            }
+            if (msg.includes("Age")) {
+              msgE.push(`อายุ ${(msg.slice(msg.indexOf("Age:"))).split(" ")[1]} ปี ไม่ถูกต้อง! อายุผู้ป่วยต้องอยู่ในช่วงตั้งแต่ 0 ถึง 120 ปี`);
+            }
+            if (msg.includes("Birthdate")) {
+              msgE.push(`วันเดือนปีเกิดไม่ถูกต้อง! ต้องไม่เกินวันที่ในปัจจุบัน`);
+            }
+            setErrorMessage((msgE).toString());
+          }
         }
       });
   }
@@ -285,290 +286,289 @@ function CreatePatient() {
           ลงทะเบียนไม่สำเร็จ : {errorMessage}
         </Alert>
       </Snackbar>
-      <form onSubmit={handleSubmit(submit)}>
-      <Paper className={classes.paper}>
-        <Typography variant="h5" color="primary">
-          <p>ระบบบันทึกการรับเข้าผู้ป่วย</p>
-        </Typography>
-        <Divider />
+      <form onSubmit={handleSubmit}>
+        <Paper className={classes.paper}>
+          <Typography variant="h5" color="primary">
+            <p>ระบบบันทึกการรับเข้าผู้ป่วย</p>
+          </Typography>
+          <Divider />
 
-        <div style={{ marginBottom: 5 }}>
-          <Grid container spacing={3} style={{ marginTop: 2 }}>
-            <Grid item xs={3}>
-              <p className={classes.text}>หมายเลขประจำตัวผู้ป่วย</p>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                required
-                inputProps={{
-                  name: "HN",
-                }}
-                placeholder="กรุณากรอกเลขประจำตัวผู้ป่วย"
-                value={patient.HN}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                size="small"
-                error={Boolean(errorMsg?.HN)}
-                helperText={errorMsg?.HN}
-              />
-            </Grid>
-          </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <p className={classes.text}>วันที่เข้ารับการรักษา</p>
-            </Grid>
-            <Grid item xs={4}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDateTimePicker
-                  fullWidth
-                  name="DateAdmit"
-                  inputVariant="outlined"
-                  size="small"
-                  format="dd/MM/yyyy HH:mm"
-                  value={selectedDateAdmit}
-                  onChange={handleDateAdmit}
-                />
-              </MuiPickersUtilsProvider>
-            </Grid>
-          </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <p className={classes.text}>ประเภทผู้ป่วย</p>
-            </Grid>
-            <Grid item xs={4}>
-              <FormControl fullWidth variant="outlined" size="small">
-                <Select
-                  native
-                  value={patient.PatientTypeID}
-                  onChange={handleChange}
-                  inputProps={{ name: "PatientTypeID" }}
-                  error={Boolean(errorMsg?.PatientTypeID)}
-                >
-                  <option aria-label="None" value="">
-                    กรุณาเลือกประเภทผู้ป่วย
-                  </option>
-                  {patienttype.map((item: PatientTypeInterface) => (
-                    <option value={item.ID} key={item.ID}>
-                      {item.Typename}
-                    </option>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-          <Divider />
-        </div>
-        <div style={{ marginBottom: 5 }}>
-          <Grid container spacing={3} style={{ marginTop: 2 }}>
-            <Grid item xs={3}>
-              <p className={classes.text}>หมายเลขประจำตัวประชาชน</p>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                required
-                inputProps={{ name: "Pid" }}
-                value={patient.Pid}
-                onChange={handleChange}
-                placeholder="กรุณากรอกเลขบัตรประจำตัวประชาชน"
-                variant="outlined"
-                fullWidth
-                size="small"
-                error={Boolean(errorMsg?.Pid)}
-                helperText={errorMsg?.Pid}
-              />
-            </Grid>
-          </Grid>
-          <Grid container spacing={3}>
-            <Grid item>
-              {" "}
-              <p className={classes.text}>ชื่อ</p>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                required
-                inputProps={{ name: "FirstName" }}
-                value={patient.FirstName}
-                placeholder="กรุณากรอกชื่อ"
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                size="small"
-              />
-            </Grid>
-            <Grid item>
-              {" "}
-              <p className={classes.text}>นามสกุล</p>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                required
-                inputProps={{ name: "LastName" }}
-                value={patient.LastName}
-                placeholder="กรุณากรอกนามสกุล"
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-                size="small"
-              />
-            </Grid>
-          </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <p className={classes.text}>เพศของผู้ป่วย</p>
-            </Grid>
-            <Grid item xs={4}>
-              <FormControl fullWidth variant="outlined" size="small">
-                <Select
-                  native
-                  value={patient.GenderID}
-                  onChange={handleChange}
+          <div style={{ marginBottom: 5 }}>
+            <Grid container spacing={3} style={{ marginTop: 2 }}>
+              <Grid item xs={3}>
+                <p className={classes.text}>หมายเลขประจำตัวผู้ป่วย</p>
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  required
                   inputProps={{
-                    name: "GenderID",
+                    name: "HN",
                   }}
-                  error={Boolean(errorMsg?.GenderID)}
-                >
-                  <option aria-label="None" value="">
-                    กรุณาเลือกเพศของผู้ป่วย
-                  </option>
-                  {genders.map((item: GenderInterface) => (
-                    <option value={item.ID} key={item.ID}>
-                      {item.Identity}
-                    </option>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <p className={classes.text}>วัน/เดือน/ปีเกิด</p>
-            </Grid>
-            <Grid item xs={4}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  fullWidth
-                  name="Birthdate"
-                  inputVariant="outlined"
-                  size="small"
-                  format="dd/MM/yyyy"
-                  value={selectedBirthdate}
-                  onChange={handleBirthdate}
-                  error={Boolean(errorMsg?.Birthdate)}
-                  helperText={errorMsg?.Birthdate}
-                />
-              </MuiPickersUtilsProvider>
-            </Grid>
-          </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              {" "}
-              <p className={classes.text}>อายุ</p>
-            </Grid>
-            <Grid item xs={3}>
-              <TextField
-                required
-                inputProps={{ name: "Age", min: 0}}
-                value={patient.Age}
-                placeholder="กรุณากรอกอายุ"
-                onChange={handleChange}
-                variant="outlined"
-                type="number"
-                fullWidth
-                size="small"
-                error={Boolean(errorMsg?.Age)}
-                helperText={errorMsg?.Age}
-              />
-            </Grid>
-          </Grid>
-          <Divider />
-        </div>
-        <div style={{ marginBottom: 5 }}>
-          <Grid container spacing={3} style={{ marginTop: 3 }}>
-            <Grid item xs={3}>
-              <p className={classes.text}>สิทธิการรักษาพยาบาล</p>
-            </Grid>
-            <Grid item xs={4}>
-              <FormControl fullWidth variant="outlined" size="small">
-                <Select
-                  native
-                  value={patient.PatientRightID}
+                  placeholder="กรุณากรอกเลขประจำตัวผู้ป่วย"
+                  value={patient.HN}
                   onChange={handleChange}
-                  inputProps={{
-                    name: "PatientRightID",
-                  }}
-                  error={Boolean(errorMsg?.PatientRightID)}
-                >
-                  <option aria-label="None" value="">
-                    กรุณาเลือกสิทธิการรักษา
-                  </option>
-                  {patientright.map((item: PatientRightInterface) => (
-                    <option value={item.ID} key={item.ID}>
-                      {item.Name}
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  error={Boolean(errorMsg?.HN)}
+                  helperText={errorMsg?.HN}
+                />
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={3}>
+                <p className={classes.text}>วันที่เข้ารับการรักษา</p>
+              </Grid>
+              <Grid item xs={4}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDateTimePicker
+                    fullWidth
+                    name="DateAdmit"
+                    inputVariant="outlined"
+                    size="small"
+                    format="dd/MM/yyyy HH:mm"
+                    value={selectedDateAdmit}
+                    onChange={handleDateAdmit}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={3}>
+                <p className={classes.text}>ประเภทผู้ป่วย</p>
+              </Grid>
+              <Grid item xs={4}>
+                <FormControl fullWidth variant="outlined" size="small">
+                  <Select
+                    native
+                    value={patient.PatientTypeID}
+                    onChange={handleChange}
+                    inputProps={{ name: "PatientTypeID" }}
+                    error={Boolean(errorMsg?.PatientTypeID)}
+                  >
+                    <option aria-label="None" value="">
+                      กรุณาเลือกประเภทผู้ป่วย
                     </option>
-                  ))}
-                </Select>
-              </FormControl>
+                    {patienttype.map((item: PatientTypeInterface) => (
+                      <option value={item.ID} key={item.ID}>
+                        {item.Typename}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Divider />
+          </div>
+          <div style={{ marginBottom: 5 }}>
+            <Grid container spacing={3} style={{ marginTop: 2 }}>
+              <Grid item xs={3}>
+                <p className={classes.text}>หมายเลขประจำตัวประชาชน</p>
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  required
+                  inputProps={{ name: "Pid" }}
+                  value={patient.Pid}
+                  onChange={handleChange}
+                  placeholder="กรุณากรอกเลขบัตรประจำตัวประชาชน"
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  error={Boolean(errorMsg?.Pid)}
+                  helperText={errorMsg?.Pid}
+                />
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item>
+                {" "}
+                <p className={classes.text}>ชื่อ</p>
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  required
+                  inputProps={{ name: "FirstName" }}
+                  value={patient.FirstName}
+                  placeholder="กรุณากรอกชื่อ"
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                />
+              </Grid>
+              <Grid item>
+                {" "}
+                <p className={classes.text}>นามสกุล</p>
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  required
+                  inputProps={{ name: "LastName" }}
+                  value={patient.LastName}
+                  placeholder="กรุณากรอกนามสกุล"
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                />
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={3}>
+                <p className={classes.text}>เพศของผู้ป่วย</p>
+              </Grid>
+              <Grid item xs={4}>
+                <FormControl fullWidth variant="outlined" size="small">
+                  <Select
+                    native
+                    value={patient.GenderID}
+                    onChange={handleChange}
+                    inputProps={{
+                      name: "GenderID",
+                    }}
+                    error={Boolean(errorMsg?.GenderID)}
+                  >
+                    <option aria-label="None" value="">
+                      กรุณาเลือกเพศของผู้ป่วย
+                    </option>
+                    {genders.map((item: GenderInterface) => (
+                      <option value={item.ID} key={item.ID}>
+                        {item.Identity}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={3}>
+                <p className={classes.text}>วัน/เดือน/ปีเกิด</p>
+              </Grid>
+              <Grid item xs={4}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    fullWidth
+                    name="Birthdate"
+                    inputVariant="outlined"
+                    size="small"
+                    format="dd/MM/yyyy"
+                    value={selectedBirthdate}
+                    onChange={handleBirthdate}
+                    error={Boolean(errorMsg?.Birthdate)}
+                    helperText={errorMsg?.Birthdate}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={3}>
+                {" "}
+                <p className={classes.text}>อายุ</p>
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  required
+                  inputProps={{ name: "Age", min: 0}}
+                  value={patient.Age}
+                  placeholder="กรุณากรอกอายุ"
+                  onChange={handleChange}
+                  variant="outlined"
+                  type="number"
+                  fullWidth
+                  size="small"
+                  error={Boolean(errorMsg?.Age)}
+                  helperText={errorMsg?.Age}
+                />
+              </Grid>
+            </Grid>
+            <Divider />
+          </div>
+          <div style={{ marginBottom: 5 }}>
+            <Grid container spacing={3} style={{ marginTop: 3 }}>
+              <Grid item xs={3}>
+                <p className={classes.text}>สิทธิการรักษาพยาบาล</p>
+              </Grid>
+              <Grid item xs={4}>
+                <FormControl fullWidth variant="outlined" size="small">
+                  <Select
+                    native
+                    value={patient.PatientRightID}
+                    onChange={handleChange}
+                    inputProps={{
+                      name: "PatientRightID",
+                    }}
+                    error={Boolean(errorMsg?.PatientRightID)}
+                  >
+                    <option aria-label="None" value="">
+                      กรุณาเลือกสิทธิการรักษา
+                    </option>
+                    {patientright.map((item: PatientRightInterface) => (
+                      <option value={item.ID} key={item.ID}>
+                        {item.Name}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={3}>
+                {" "}
+                <p className={classes.text}>อาการสำคัญ</p>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  inputProps={{ name: "Symptom" }}
+                  value={patient.Symptom}
+                  placeholder="-"
+                  onChange={handleChange}
+                  variant="outlined"
+                  multiline
+                  fullWidth
+                  size="small"
+                />
+              </Grid>
+            </Grid>
+          </div>
+          <Grid container justifyContent="center" spacing={2}>
+            <Grid item xs={12} sm={2}>
+              <Button
+                style={{ backgroundColor: "#ff4081", color: "white" }}
+                variant="contained"
+                size="medium"
+                type="submit"
+                startIcon={<SaveIcon />}
+              >
+                บันทึกข้อมูล
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <Button
+                style={{ backgroundColor: "#7c4dff", color: "white" }}
+                variant="contained"
+                size="medium"
+                startIcon={<ListIcon />}
+                component={RouterLink}
+                to="/listPatient"
+              >
+                รายชื่อผู้ป่วย
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <Button
+                style={{ backgroundColor: "#03a9f4", color: "white" }}
+                component={RouterLink}
+                to="/"
+                variant="contained"
+                size="medium"
+                startIcon={<HomeIcon />}
+              >
+                หน้าแรก
+              </Button>
             </Grid>
           </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              {" "}
-              <p className={classes.text}>อาการสำคัญ</p>
-            </Grid>
-            <Grid item xs={9}>
-              <TextField
-                inputProps={{ name: "Symptom" }}
-                value={patient.Symptom || ""}
-                placeholder="-"
-                onChange={handleChange}
-                variant="outlined"
-                multiline
-                fullWidth
-                size="small"
-              />
-            </Grid>
-          </Grid>
-        </div>
-        <Grid container justifyContent="center" spacing={2}>
-          <Grid item xs={12} sm={2}>
-            <Button
-              style={{ backgroundColor: "#ff4081", color: "white" }}
-              variant="contained"
-              size="medium"
-              //onClick={submit}
-              type="submit"
-              startIcon={<SaveIcon />}
-            >
-              บันทึกข้อมูล
-            </Button>
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <Button
-              style={{ backgroundColor: "#7c4dff", color: "white" }}
-              variant="contained"
-              size="medium"
-              startIcon={<ListIcon />}
-              component={RouterLink}
-              to="/listPatient"
-            >
-              รายชื่อผู้ป่วย
-            </Button>
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <Button
-              style={{ backgroundColor: "#03a9f4", color: "white" }}
-              component={RouterLink}
-              to="/"
-              variant="contained"
-              size="medium"
-              startIcon={<HomeIcon />}
-            >
-              หน้าแรก
-            </Button>
-          </Grid>
-        </Grid>
-      </Paper>
+        </Paper>
       </form>
     </Container>
   );
