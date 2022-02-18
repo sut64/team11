@@ -64,9 +64,6 @@ function CreateExamination() {
 
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
-  const [costError, setCostError] = useState(false);
-  const [treatmentError, setTreatmentError] = useState(false);
-  const [dateError, setDateError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [userError, setUserError] = useState(false);
 
@@ -90,11 +87,7 @@ function CreateExamination() {
     }
     setSuccess(false);
     setError(false);
-    setCostError(false);
-    setTreatmentError(false);
-    setDateError(false);
     setUserError(false);
-    setErrorMessage("");
   };
 
   const handleChange = (
@@ -198,6 +191,7 @@ function CreateExamination() {
   };
 
   function submit() {
+
     let data = {
       EmployeeID: convertType(examination.EmployeeID),
       PatientID: convertType(examination.PatientID),
@@ -223,36 +217,42 @@ function CreateExamination() {
       .then((response) => response.json())
       .then((res) => {
         console.log("RES" , res)
-        var finevalid = null;
-        if (res.error) {
-          var resError = res.error.split(";", 3)
-          var validError = ['Cost cannot less than zero', 'DiagnosisTime must not be past', 'Treatment Not Blank']
-          finevalid = validError.filter(item => resError.indexOf(item) > -1)
-          console.log("Log", finevalid)
-        }
-        if (finevalid?.length != 0 && finevalid) {
-          if (finevalid[0] == 'Cost cannot less than zero') {
-            ClearCost();
-            setCostError(true);
-          }
-          else if (finevalid[0] == 'DiagnosisTime must not be past') {
-            ClearDiagnosisTime();
-            setDateError(true);
-          }
-          else if (finevalid[0] == 'Treatment Not Blank') {
-            setTreatmentError(true);
-          }
-        }
-        else if (res.data) {
+        if (res.data) {
           setSuccess(true);
+          setErrorMessage("")
           ClearForm();
-        } 
+        }
         else if (res.error == "The data recorder should be a Doctor !!") {
           setUserError(true);
         }
         else {
           setError(true);
-          setErrorMessage(res.error)
+          if (res.error.includes("patient not found")) {
+            setErrorMessage("กรุณาเลือกชื่อ-นามสกุลผู้ป่วย")
+          }
+          else if (res.error.includes("clinic not found")) {
+            setErrorMessage("กรุณาเลือกคลินิก")
+          }
+          else if (res.error.includes("disease not found")) {
+            setErrorMessage("กรุณาเลือกโรคจากการวินิจฉัย")
+          }
+          else if (res.error.includes("Treatment Not Blank")) {
+            setErrorMessage("วิธีการรักษาไม่สามารถเป็นค่าว่างได้")
+          }
+          else if (res.error.includes("Cost cannot less than zero")) {
+            setErrorMessage("ราคาการรักษาไม่สามารถเป็นค่าคิดลบได้")
+            ClearCost();
+          }
+          else if (res.error.includes("medicine not found")) {
+            setErrorMessage("กรุณาเลือกยาที่ต้องจ่าย")
+          }
+          else if (res.error.includes("DiagnosisTime must not be past")) {
+            setErrorMessage("เลือกวันที่และเวลาปัจจุบัน")
+            setSelectedDate(new Date());
+          }
+          else {
+            setErrorMessage(res.error);
+          }
         }
       });
   }
@@ -285,38 +285,19 @@ function CreateExamination() {
     });
   }
 
-  function ClearDiagnosisTime() {
-    setSelectedDate(new Date());
-  }
-
   return (
     <Container className={classes.container} maxWidth="md">
-      <Snackbar open={success} autoHideDuration={2000} onClose={handleClose}>
+      <Snackbar open={success} autoHideDuration={3000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
           บันทึกข้อมูลสำเร็จ
         </Alert>
       </Snackbar>
-      <Snackbar open={error} autoHideDuration={2000} onClose={handleClose}>
+      <Snackbar open={error} autoHideDuration={3000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
           บันทึกข้อมูลไม่สำเร็จ: {errorMessage}
         </Alert>
       </Snackbar>
-      <Snackbar open={treatmentError} autoHideDuration={2000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error">
-          บันทึกข้อมูลไม่สำเร็จ: วิธีการรักษาไม่สามารถเป็นค่าว่างได้
-        </Alert>
-      </Snackbar>
-      <Snackbar open={costError} autoHideDuration={2000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error">
-          บันทึกข้อมูลไม่สำเร็จ: ราคาการรักษาไม่สามารถเป็นค่าคิดลบได้
-        </Alert>
-      </Snackbar>
-      <Snackbar open={dateError} autoHideDuration={2000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error">
-          บันทึกข้อมูลไม่สำเร็จ: เลือกวันที่และเวลาปัจจุบัน
-        </Alert>
-      </Snackbar>
-      <Snackbar open={userError} autoHideDuration={2000} onClose={handleClose}>
+      <Snackbar open={userError} autoHideDuration={3000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
           บันทึกข้อมูลไม่สำเร็จ: ผู้บันทึกข้อมูลต้องเป็นแพทย์
           <p></p>
@@ -491,7 +472,7 @@ function CreateExamination() {
                 type="number"
                 size="medium"
                 placeholder="กรุณากรอกราคาการรักษา"
-                value={examination.Cost || ""}
+                value={examination.Cost}
                 onChange={handleInputChange}
               />
             </FormControl>
