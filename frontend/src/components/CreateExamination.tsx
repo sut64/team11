@@ -200,7 +200,7 @@ function CreateExamination() {
       MedicineID: convertType(examination.MedicineID),
       ChiefComplaint: examination.ChiefComplaint,
       Treatment: examination.Treatment,
-      Cost: convertType(examination.Cost),
+      Cost: typeof examination.Cost === "string" ? (examination.Cost === "" ? 0 : examination.Cost) : examination.Cost,
       DiagnosisTime: selectedDate,
     };
 
