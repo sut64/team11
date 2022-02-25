@@ -140,18 +140,18 @@ function BillCreate(){
             })
             setBillitems(currentItem);
         }
-        var error = true;
+        var NotDuplicate = true;
         if (currentItem.length !== 0){
             for(var index in currentItem){
                 if(currentItem[index].ExaminationID === event.target.value){
-                     error = false;
+                    NotDuplicate = false;
                      break;
                 }
                 else{
-                     error = true;
+                    NotDuplicate = true;
                 }
             }
-            if (error){
+            if (NotDuplicate){
                 currentItem.push({
                     ExaminationID : event.target.value as number
                 })
